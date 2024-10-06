@@ -43,9 +43,13 @@ O **Space301** foi desenvolvido para atender à necessidade de monitoramento com
 ## 👨‍🚀 Autores
 
 - **Shelton Agostinho** - 115697
+    > **Role:** Product owner
 - **Edivaldo Bonfim** - 110124
+    > **Role:** Architect
 - **Giovanni Santos** - 115637
+    > **Role:** DevOps master
 - **Rafael Semedo** - 115665
+    > **Role:** Team manager
 
 ---
 
