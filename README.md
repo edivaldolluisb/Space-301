@@ -60,7 +60,7 @@ O **Space301** foi desenvolvido para atender à necessidade de monitoramento com
 **Como** engenheiro de dados, **quero** acessar os dados do histórico dos lançamentos anteriores, **para** que possa analisar o desempenho dos foguetões e detetar padrões que possam melhorar próximos lançamentos.  
 
 **Critérios de Aceitação**:
-- Acesso aos dados em formato JSON.
+- Acesso aos dados por REST API e/ou Websockets.
 - Filtros por missão, tipo de foguete e parâmetros específicos.
 - Ferramentas de visualização de padrões em gráficos e tabelas.
 
@@ -186,7 +186,7 @@ O **Space301** foi desenvolvido para atender à necessidade de monitoramento com
 | R09  | **Login e permissões dos membros da missão** | Permitir login seguro e gerenciamento de permissões para diferentes níveis de acesso. | 3 | Média | N/A | Diferentes níveis de acesso (admin, operador, visualizador). | Não Iniciado |
 | R10  | **Monitoramento de estágios reutilizáveis** | Acompanhar os estágios do foguete que se separam e que podem ser reutilizados. | 4 | Baixa | N/A | Monitoramento de localização e integridade dos estágios reutilizáveis. | Não Iniciado   |
 | R11  | **Dashboard dentro da nave** | Interface dentro da nave para monitorar parâmetros críticos do voo. | 3 | Baixa | N/A | Exibição de dados críticos como velocidade, combustível e temperatura. | Não Iniciado |
-| R12  | **Acesso aos dados históricos de lançamentos** | Acesso aos dados de lançamentos anteriores para análise e identificação de padrões. | 3 | Média | N/A | Acesso a dados JSON com ferramentas de visualização e gráficos. | Não Iniciado |
+| R12  | **Acesso aos dados históricos de lançamentos** | Acesso aos dados de lançamentos anteriores para análise e identificação de padrões. | 3 | Média | N/A | Acesso a dados de lançamentos anteriores. | Não Iniciado |
 | R13  | **Análise do foguete em tempo real** | Permitir análise em tempo real dos parâmetros do foguete, nível de integridade e estados da tripulação e carga. | 3 | Alta | N/A | Visualização contínua e alertas automáticos para parâmetros fora do normal. | Não Iniciado |
 | R14  | **Acompanhamento público de lançamentos** | Permitir que o público acompanhe os lançamentos em tempo real através de gráficos e dados. | 2 | Média | N/A | Exibição pública de gráficos com dados em tempo real (velocidade, altitude, posicao). | Não Iniciado |
 | R15  | **Monitoramento do sinal de comunicação** | Acompanhar o estado de comunicação entre o foguete e a base. | 2 | Alta | N/A | Monitoramento contínuo da qualidade do sinal e alertas de queda de comunicação. | Não Iniciado   |
