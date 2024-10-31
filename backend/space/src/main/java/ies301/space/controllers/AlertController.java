@@ -28,6 +28,13 @@ public class AlertController {
         return (List<Alert>) alertRepository.findAll();
     }
 
+    // Get all alerts from a rocket
+    @GetMapping("/alerts/rocket/{rocketId}")
+    public List<Alert> getAlertsByRocketId(@PathVariable Long rocketId) {
+        return alertRepository.findByRocket(rocketId);
+    }
+
+
     @GetMapping("/alerts/{id}")
     public ResponseEntity<Alert> getAlertById(@PathVariable Long id) {
         Alert alert = alertRepository.findById(id)
