@@ -1,7 +1,9 @@
 package ies301.space.controllers;
 
 
+import ies301.space.infra.security.TokenService;
 import ies301.space.models.user.AuthenticationDTO;
+import ies301.space.models.user.LoginResponseDTO;
 import ies301.space.models.user.RegisterDTO;
 import ies301.space.models.user.User;
 import ies301.space.repositories.UserRepository;
@@ -28,6 +30,9 @@ public class AuthenticationController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private TokenService tokenService;
+
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data) {
 
@@ -36,7 +41,9 @@ public class AuthenticationController {
         var usernamepassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
         var authentication = this.authenticationManager.authenticate(usernamepassword);
 
-        return ResponseEntity.ok().build();
+        var token = tokenService.generateToken((User) authentication.getPrincipal());
+
+        return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
     @PostMapping("/register")
