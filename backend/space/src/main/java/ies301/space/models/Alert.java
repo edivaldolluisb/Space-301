@@ -2,6 +2,7 @@ package ies301.space.models;
 
 import java.time.LocalDateTime;
 
+import ies301.space.entities.Launch;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -32,8 +33,8 @@ public class Alert {
     private boolean viewed = false;
 
     @ManyToOne
-    @JoinColumn(name = "rocket_id")
-    private Rocket rocket;
+    @JoinColumn(name = "lauch")
+    private Launch lauch; // TODO: review
 
     public Alert(String message) {
         this.message = message;
@@ -50,9 +51,13 @@ public class Alert {
         this.createdAt = createdAt;
     }
 
-    public Alert(String message, Rocket rocket) {
+    public Alert(String message, Launch lauch) {
         this.message = message;
-        this.rocket = rocket;
+        this.lauch = lauch;
+    }
+
+    public Alert() {
+
     }
 
     public Long getId() {
@@ -83,8 +88,8 @@ public class Alert {
         this.createdAt = createdAt;
     }
 
-    public Rocket getRocket() {
-        return rocket;
+    public Launch getLauch() {
+        return lauch;
     }
 
     
