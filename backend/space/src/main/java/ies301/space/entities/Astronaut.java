@@ -1,5 +1,7 @@
 package  ies301.space.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,6 +24,7 @@ public class Astronaut {
 
     @ManyToOne
     @JoinColumn(name = "launch_id")
+    @JsonIgnore
     private Launch launch;
 
     public Astronaut() {

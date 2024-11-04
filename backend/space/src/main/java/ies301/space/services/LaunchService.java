@@ -1,6 +1,7 @@
 package ies301.space.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -21,5 +22,9 @@ public class LaunchService {
 
     public List<Launch> getAllLaunches() {
         return launchRepository.findAll();
+    }
+
+    public Optional<Launch> getLaunchById(Long id) {
+        return launchRepository.findById(id);
     }
 }

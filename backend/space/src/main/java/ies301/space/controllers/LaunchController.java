@@ -43,7 +43,7 @@ public class LaunchController {
         if (astronaut.isPresent()) {
             return new ResponseEntity<>(astronaut.get(), HttpStatus.OK);
         } else {
-            return ResponseEntity.status(404).body("Astronaut not found for the specified launch and astronaut IDs");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Astronaut not found for the specified launch and astronaut IDs");
         }
     }
 
@@ -57,5 +57,24 @@ public class LaunchController {
     public ResponseEntity<List<Launch>> getAllLaunches() {
         List<Launch> launches = launchService.getAllLaunches();
         return ResponseEntity.ok(launches);
+    }
+
+    @PostMapping("/{launchId}/add-astronaut/{astronautId}")
+    public ResponseEntity<String> addAstronautToLaunch(
+            @PathVariable Long launchId,
+            @PathVariable Long astronautId) {
+        
+        Optional<Launch> launchOpt = launchService.getLaunchById(launchId);
+        Optional<Astronaut> astronautOpt = astronautService.getAstronautById(astronautId);
+
+        if (launchOpt.isPresent() && astronautOpt.isPresent()) {
+            Launch launch = launchOpt.get();
+            Astronaut astronaut = astronautOpt.get();
+            astronaut.setLaunch(launch);
+            astronautService.saveAstronaut(astronaut);
+            return new ResponseEntity<>("Astronaut added to launch successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Launch or Astronaut not found", HttpStatus.NOT_FOUND);
+        }
     }
 }
