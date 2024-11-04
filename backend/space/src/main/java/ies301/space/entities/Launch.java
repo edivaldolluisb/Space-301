@@ -16,22 +16,25 @@ public class Launch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank(message="Mission's name is mandotory")
     private String missionName;
+    @NotBlank(message="Date is mandotory")
     private Date lauchDate;
+    @NotBlank(message="Rocket is mandotory")
     private int rocketId;
-    private String location;
-
+    @NotBlank(message="Address is mandotory")
+    private String address;
 
     @OneToMany(mappedBy = "launch")
     private List<Astronaut> astronauts;
 
     public Launch() {}
     
-    public Launch(String missionName, Date lauchDate, int rocketId, String location) {
+    public Launch(String missionName, Date lauchDate, int rocketId, String address) {
         this.missionName = missionName;
         this.lauchDate = lauchDate;
         this.rocketId = rocketId;
-        this.location = location;
+        this.address = address;
     }
 
     public double getId() {
@@ -80,11 +83,11 @@ public class Launch {
         this.rocketId = rocketId;
     }
 
-    public String getLocation() {
-        return location;
+    public String getAddress() {
+        return address;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setAddress(String address) {
+        this.address = address;
     }
 }
