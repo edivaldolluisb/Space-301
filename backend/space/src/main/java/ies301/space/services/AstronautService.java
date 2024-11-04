@@ -21,6 +21,18 @@ public class AstronautService {
     }
 
     public Optional<Astronaut> getAstronautByLaunchIdAndAstronautId(Long launchId, Long astronautId) {
-        return astronautRepository.findByIdAndLaunchId(astronautId, launchId);
+        return astronautRepository.findByLaunchIdAndId(launchId, astronautId);
+    }
+
+    public Astronaut saveAstronaut(Astronaut astronaut) {
+        return astronautRepository.save(astronaut);
+    }
+
+    public List<Astronaut> getAllAstronauts() {
+        return astronautRepository.findAll();
+    }
+
+    public Optional<Astronaut> getAstronautById(Long id) {
+        return astronautRepository.findById(id);
     }
 }

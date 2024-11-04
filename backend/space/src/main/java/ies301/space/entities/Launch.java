@@ -1,4 +1,3 @@
-
 package ies301.space.entities;
 
 import java.util.Date;
@@ -21,7 +20,6 @@ public class Launch {
     private Date lauchDate;
     private int rocketId;
     private String location;
-    
 
     @OneToMany(mappedBy = "launch")
     private List<Astronaut> astronauts;
