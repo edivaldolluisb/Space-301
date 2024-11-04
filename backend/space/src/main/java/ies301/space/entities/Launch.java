@@ -3,6 +3,7 @@ package ies301.space.entities;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,21 +17,25 @@ public class Launch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank(message = "Mission name is mandatory")
     private String missionName;
+    @NotBlank(message = "Date is mandatory")
     private Date lauchDate;
+    @NotBlank(message = "Rocket is mandatory")
     private int rocketId;
-    private String location;
+    @NotBlank(message = "Address is mandatory")
+    private String address;
 
     @OneToMany(mappedBy = "launch")
     private List<Astronaut> astronauts;
 
     public Launch() {}
     
-    public Launch(String missionName, Date lauchDate, int rocketId, String location) {
+    public Launch(String missionName, Date lauchDate, int rocketId, String address) {
         this.missionName = missionName;
         this.lauchDate = lauchDate;
         this.rocketId = rocketId;
-        this.location = location;
+        this.address = address;
     }
 
     public double getId() {
@@ -79,11 +84,11 @@ public class Launch {
         this.rocketId = rocketId;
     }
 
-    public String getLocation() {
-        return location;
+    public String getAddress() {
+        return address;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setAddress(String address) {
+        this.address = address;
     }
 }
