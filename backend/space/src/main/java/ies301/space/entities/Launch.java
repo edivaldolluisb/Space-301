@@ -21,7 +21,6 @@ public class Launch {
     private int rocketId;
     private String location;
 
-
     @OneToMany(mappedBy = "launch")
     private List<Astronaut> astronauts;
 
