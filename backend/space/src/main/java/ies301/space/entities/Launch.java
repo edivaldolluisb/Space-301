@@ -1,4 +1,3 @@
-
 package ies301.space.entities;
 
 import java.util.Date;
@@ -25,7 +24,6 @@ public class Launch {
     private int rocketId;
     @NotBlank(message="Address is mandotory")
     private String address;
-    
 
     @OneToMany(mappedBy = "launch")
     private List<Astronaut> astronauts;

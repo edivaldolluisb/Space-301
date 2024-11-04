@@ -47,6 +47,7 @@ public class LaunchController {
         }
     }
 
+
     @PostMapping("/new")
     public ResponseEntity<Launch> createLaunch(@RequestBody Launch launch) {
         Launch savedLaunch = launchService.saveLaunch(launch);
