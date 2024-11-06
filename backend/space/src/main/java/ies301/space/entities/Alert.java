@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "alert")
@@ -22,7 +23,7 @@ public class Alert {
     private Long id;
     @NotBlank(message="Alert's message is mandotory")
     private String message;
-    @NotBlank(message="Date is mandotory")
+    @NotNull(message="Date is mandotory")
     private Date date; 
     
     private boolean status = false;
