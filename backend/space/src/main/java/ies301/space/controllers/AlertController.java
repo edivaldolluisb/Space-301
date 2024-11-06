@@ -42,5 +42,13 @@ public class AlertController {
     public Alert getaAlertById(@PathVariable(value = "id") Long alertId) {
         return alertService.getAlertById(alertId);
     }
+
+    //to create a new alert
+    @PostMapping("/alert")
+    public ResponseEntity<Alert> createAlert(@RequestBody Alert alert) {
+        Alert savedAlert = alertService.saveAlert(alert);
+        return new ResponseEntity<>(savedAlert, HttpStatus.CREATED);
+    }
+
     
 }

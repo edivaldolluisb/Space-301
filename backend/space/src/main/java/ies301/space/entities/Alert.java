@@ -16,14 +16,14 @@ import jakarta.validation.constraints.NotBlank;
 @Entity
 @Table(name = "alert")
 public class Alert {
- 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotBlank(message="Alert's message is mandotory")
     private String message;
     @NotBlank(message="Date is mandotory")
-    private Date date = new Date(); 
+    private Date date; 
     
     private boolean status = false;
     
@@ -57,6 +57,14 @@ public class Alert {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public Launch getLaunch() {
+        return launch;
+    }
+
+    public void setLaunch(Launch launch) {
+        this.launch = launch;
     }
 
     

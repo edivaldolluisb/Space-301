@@ -99,5 +99,19 @@ public class Launch {
     public List<Alert> getAlerts() {
         return alerts;
     }
+
+    public void setAlerts(List<Alert> alerts) {
+        this.alerts = alerts;
+    }
+
+    public void addAlert(Alert alert) {
+        alerts.add(alert);
+        alert.setLaunch(this);
+    }
+
+    public void removeAlert(Alert alert) {
+        alerts.remove(alert);
+        alert.setLaunch(null);
+    }
     
 }
