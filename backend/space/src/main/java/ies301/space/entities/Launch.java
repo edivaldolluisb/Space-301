@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "launch")
@@ -19,9 +20,9 @@ public class Launch {
     private Long id;
     @NotBlank(message="Mission's name is mandotory")
     private String missionName;
-    @NotBlank(message="Date is mandotory")
+    @NotNull(message="Date is mandotory")
     private Date lauchDate;
-    @NotBlank(message="Rocket is mandotory")
+    @NotNull(message="Rocket is mandotory")
     private int rocketId;
     @NotBlank(message="Address is mandotory")
     private String address;
