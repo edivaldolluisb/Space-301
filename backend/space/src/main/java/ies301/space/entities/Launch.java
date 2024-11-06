@@ -29,6 +29,9 @@ public class Launch {
     @OneToMany(mappedBy = "launch")
     private List<Astronaut> astronauts;
 
+    @OneToMany(mappedBy = "launch")
+    private List<Alert> alerts;
+
     public Launch() {}
     
     public Launch(String missionName, Date lauchDate, int rocketId, String address) {
@@ -91,4 +94,10 @@ public class Launch {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    // alerts  
+    public List<Alert> getAlerts() {
+        return alerts;
+    }
+    
 }
