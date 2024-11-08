@@ -1,13 +1,7 @@
 package ies301.space.controllers;
 
-import ies301.space.entities.user.User;
-import ies301.space.dto.LoginRequestDTO;
-import ies301.space.dto.RegisterRequestDTO;
-import ies301.space.dto.ResponseDTO;
-import ies301.space.infra.security.TokenService;
-import ies301.space.repositories.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Optional;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +9,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
+import ies301.space.dto.LoginRequestDTO;
+import ies301.space.dto.RegisterRequestDTO;
+import ies301.space.dto.ResponseDTO;
+import ies301.space.entities.user.User;
+import ies301.space.infra.security.TokenService;
+import ies301.space.repositories.UserRepository;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/auth")
