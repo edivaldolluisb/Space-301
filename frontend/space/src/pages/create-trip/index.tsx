@@ -4,7 +4,58 @@ import { DateRange } from "react-day-picker";
 import { api } from "../../lib/axios";
 import { Button } from "../../components/button";
 
+import { InviteGuestsModal } from "./invite-guests-modal";
+import { ConfirmTripModal } from "./confirm-trip-modal";
+import { LoginModal } from "./login";
+
 export function CreateTripPage() {
+  const navigate = useNavigate()
+  // const [isGuestsInputOpen, setIsGuestsInputOpen] = useState(false)
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
+  const [isConfirmTripModalOpen, setIsConfirmTripModalOpen] = useState(false)
+
+  const [companyName, setCompanyName] = useState("");
+  const [companyEmail, setCompanyEmail] = useState("");
+  const [companyPassword, setCompanyPassword] = useState("");
+
+  
+  function openLoginModal() {
+    setIsLoginModalOpen(true)
+  }
+
+  function closeLoginModal() {
+    setIsLoginModalOpen(false)
+  }
+
+  function openConfirmTripModal() {
+    setIsConfirmTripModalOpen(true)
+  }
+
+  function closeConfirmTripModal() {
+    setIsConfirmTripModalOpen(false)
+  }
+
+  
+  async function createTrip(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    if (!companyName || !companyPassword || !companyEmail) {
+      return
+    }
+
+    console.log("Creating trip...")
+  }
+
+  async function loginTrip(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    if (!companyPassword || !companyEmail) {
+      return
+    }
+
+    console.log("Iniciando sessão...")
+  }
+
 
   return (
     <div className="h-screen flex items-center justify-center bg-pattern bg-no-repeat bg-center">
@@ -18,8 +69,8 @@ export function CreateTripPage() {
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <Button >Entrar</Button>
-          <Button variant="secondary">Registar</Button>
+          <Button onClick={openLoginModal} >Entrar</Button>
+          <Button onClick={openConfirmTripModal} variant="secondary">Registar</Button>
           <div className="col-span-2">
             <Button size="full">Visitante</Button>
           </div>
@@ -29,7 +80,28 @@ export function CreateTripPage() {
           Acedendo aos nossos serviços você automaticamente concorda <br />
           com nossos <a className="text-zinc-300 underline" href="#">termos de uso</a> e <a className="text-zinc-300 underline" href="#">políticas de privacidade</a>.
         </p>
+
       </div>
+
+
+      {isLoginModalOpen && (
+        <LoginModal 
+          closeConfirmTripModal={closeLoginModal}
+          createTrip={loginTrip}
+          setCompanyEmail={setCompanyEmail}
+          setCompanyPassword={setCompanyPassword}
+        />
+      )}
+
+      {isConfirmTripModalOpen && (
+        <ConfirmTripModal 
+          closeConfirmTripModal={closeConfirmTripModal}
+          createTrip={createTrip}
+          setCompanyName={setCompanyName}
+          setCompanyEmail={setCompanyEmail}
+          setCompanyPassword={setCompanyPassword}
+        />
+      )}
 
 
     </div>
