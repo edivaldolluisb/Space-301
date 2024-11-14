@@ -1,7 +1,7 @@
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DateRange } from "react-day-picker";
-import { api } from "../../lib/axios";
+import { registerUser, loginUser } from "../../lib/axios";
 import { Button } from "../../components/button";
 
 import { InviteGuestsModal } from "./invite-guests-modal";
@@ -18,7 +18,7 @@ export function CreateTripPage() {
   const [companyEmail, setCompanyEmail] = useState("");
   const [companyPassword, setCompanyPassword] = useState("");
 
-  
+
   function openLoginModal() {
     setIsLoginModalOpen(true)
   }
@@ -35,7 +35,7 @@ export function CreateTripPage() {
     setIsConfirmTripModalOpen(false)
   }
 
-  
+
   async function createTrip(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
@@ -44,6 +44,16 @@ export function CreateTripPage() {
     }
 
     console.log("Creating trip...")
+    const newUser = ({
+      "name": companyName,
+      "email": companyEmail,
+      "password": companyPassword
+    })
+    registerUser(newUser)
+      .then(response => console.log('User registered successfully:', response))
+      .catch(error => console.error('Registration failed:', error.message));
+    console.log("finished")
+
   }
 
   async function loginTrip(event: FormEvent<HTMLFormElement>) {
@@ -63,8 +73,8 @@ export function CreateTripPage() {
         <div className="flex flex-col items-center gap-3">
           <img src="/icons8-rocket-emoji-32.png" alt="Space301" />
           <p className="text-zinc-300 text-lg">
-          Manage lunches 
-          and your rockets as you always wanted!
+            Manage lunches
+            and your rockets as you always wanted!
           </p>
         </div>
 
@@ -85,7 +95,7 @@ export function CreateTripPage() {
 
 
       {isLoginModalOpen && (
-        <LoginModal 
+        <LoginModal
           closeConfirmTripModal={closeLoginModal}
           createTrip={loginTrip}
           setCompanyEmail={setCompanyEmail}
@@ -94,7 +104,7 @@ export function CreateTripPage() {
       )}
 
       {isConfirmTripModalOpen && (
-        <ConfirmTripModal 
+        <ConfirmTripModal
           closeConfirmTripModal={closeConfirmTripModal}
           createTrip={createTrip}
           setCompanyName={setCompanyName}
