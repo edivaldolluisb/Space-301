@@ -4,7 +4,7 @@ import { DateRange } from "react-day-picker";
 import { registerUser, loginUser } from "../../lib/axios";
 import { Button } from "../../components/button";
 
-import { InviteGuestsModal } from "./invite-guests-modal";
+// import { InviteGuestsModal } from "./invite-guests-modal";
 import { ConfirmTripModal } from "./confirm-trip-modal";
 import { LoginModal } from "./login";
 
@@ -53,6 +53,8 @@ export function CreateTripPage() {
       .then(response => console.log('User registered successfully:', response))
       .catch(error => console.error('Registration failed:', error.message));
     console.log("finished")
+    
+    navigate(`/alerts`)
 
   }
 
@@ -62,8 +64,18 @@ export function CreateTripPage() {
     if (!companyPassword || !companyEmail) {
       return
     }
+    const user = ({
+      "email": companyEmail,
+      "password": companyPassword
+    })
+    loginUser(user)
+      .then(response => console.log('User loged successfully:', response))
+      .catch(error => console.error('Login failed:', error.message));
+    console.log("finished")
 
     console.log("Iniciando sessão...")
+    
+    navigate(`/alerts`)
   }
 
 
