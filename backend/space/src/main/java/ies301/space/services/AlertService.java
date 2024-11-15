@@ -58,5 +58,15 @@ public class AlertService {
             super(message);
         }
     }
+
+
+    public int updateAllStatusesToTrue() {
+        List<Alert> alerts = alertRepository.findAlertsByStatus(false);
+        alerts.forEach(alert -> {
+            alert.setStatus(true);
+        });
+        alertRepository.saveAll(alerts);
+        return alerts.size();
+    }
     
 }

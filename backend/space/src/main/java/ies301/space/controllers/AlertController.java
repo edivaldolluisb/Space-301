@@ -1,6 +1,8 @@
 package ies301.space.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -63,6 +65,14 @@ public class AlertController {
         public boolean getStatus() {
             return status;
         }
+    }
+
+    @PatchMapping("/alerts/update-all")
+    public ResponseEntity<Map<String, Integer>> updateAllAlertStatuses() {
+        int updatedAlerts = alertService.updateAllStatusesToTrue();
+            Map<String, Integer> response = new HashMap<>();
+            response.put("updated", updatedAlerts);
+            return ResponseEntity.ok(response);
     }
 
 }
