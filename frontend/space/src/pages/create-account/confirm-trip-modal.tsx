@@ -1,4 +1,4 @@
-import { User, X, AtSign } from "lucide-react";
+import { User, X, AtSign, Loader2, KeyRound } from "lucide-react";
 import { FormEvent } from "react";
 import { Button } from "../../components/button";
 
@@ -8,6 +8,8 @@ interface ConfirmTripModalProps {
   setCompanyName: (name: string) => void;
   setCompanyEmail: (email: string) => void;
   setCompanyPassword: (password: string) => void;
+  error: string | null;
+  isLoading: boolean;
 }
 
 export function ConfirmTripModal({
@@ -16,6 +18,8 @@ export function ConfirmTripModal({
   setCompanyName,
   setCompanyEmail,
   setCompanyPassword,
+  error,
+  isLoading,
 }: ConfirmTripModalProps) {
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
@@ -31,10 +35,16 @@ export function ConfirmTripModal({
           <p className="text-sm text-zinc-400">
           Vamos embarcar e projetar a tua viagem ao espaço!
           </p>
-        </div>
+        </div>    
+
+        {error && (
+          <div className="bg-red-500/10 text-red-400 px-4 py-2 rounded-lg text-sm">
+            {error}
+          </div>
+        )}
         
         <form onSubmit={createTrip} className="space-y-3">
-          <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2">
+          <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2 focus-within:ring-2 focus-within:ring-violet-500/20 transition-all">
             <User className="text-zinc-400 size-5" />
             <input
               type="text"
@@ -42,32 +52,51 @@ export function ConfirmTripModal({
               placeholder="Nome completo da empresa"
               className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
               onChange={event => setCompanyName(event.target.value)}
+              disabled={isLoading}
+              required
             />
           </div>
 
           <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2">
-            <User className="text-zinc-400 size-5" />
+            <AtSign className="text-zinc-400 size-5" />
             <input
               type="email"
               name="email"
               placeholder="E-mail da empresa"
               className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
               onChange={event => setCompanyEmail(event.target.value)}
+              disabled={isLoading}
+              required
             />
           </div>
           <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2">
-            <User className="text-zinc-400 size-5" />
+            <KeyRound className="text-zinc-400 size-5" />
             <input
               type="password"
               name="password"
               placeholder="Password da empresa"
               className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
               onChange={event => setCompanyPassword(event.target.value)}
+              disabled={isLoading}
+              required
+              minLength={6}
             />
           </div>
 
-          <Button type="submit" size="full">
-            Confirmar conta
+          <Button
+            type="submit" 
+            size="full"
+            disabled={isLoading}
+            className="flex items-center justify-center gap-2"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="size-4 animate-spin" />
+                Entrando...
+              </>
+            ) : (
+              'Registar'
+            )}
           </Button>
         </form>
       </div>

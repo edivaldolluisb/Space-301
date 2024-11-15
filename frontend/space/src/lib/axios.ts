@@ -1,99 +1,119 @@
-const API_BASE_URL = 'http://localhost:8080/auth';
+import axios, { AxiosInstance } from 'axios';
 
-// Função para requisições GET
-async function get(endpoint: string) {
-	const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-		headers: {
-			'Authorization': `Bearer ${localStorage.getItem('token')}`
-		}
-	});
-	if (!response.ok) {
-		throw new Error(`Error fetching data: ${response.statusText}`);
-	}
-	return await response.json();
+// Constantes
+const API_BASE_AUTH_URL = 'http://localhost:8080/auth';
+const API_BASE_URL = 'http://localhost:8080/api/v1';
+
+// Interfaces
+interface Credentials {
+  email: string;
+  password: string;
 }
 
-// Função para requisições POST
-async function post(endpoint: string, data: object, requiresAuth: boolean = false) {
-	const headers: HeadersInit = {
-		'Content-Type': 'application/json'
-	};
-
-	if (requiresAuth) {
-		const token = localStorage.getItem('token');
-		if (token) {
-			headers['Authorization'] = `Bearer ${token}`;
-		}
-	}
-
-	const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-		method: 'POST',
-		headers,
-		body: JSON.stringify(data)
-	});
-	if (!response.ok) {
-		throw new Error(`Error posting data: ${response.statusText}`);
-	}
-	return await response.json();
+interface User extends Credentials {
+  name: string;
 }
 
-// Função para requisições PUT
-async function put(endpoint: string, id: number, data: object) {
-	const response = await fetch(`${API_BASE_URL}${endpoint}/${id}`, {
-		method: 'PUT',
-		headers: {
-			'Content-Type': 'application/json',
-			'Authorization': `Bearer ${localStorage.getItem('token')}`
-		},
-		body: JSON.stringify(data)
-	});
-	if (!response.ok) {
-		throw new Error(`Error updating data: ${response.statusText}`);
-	}
-	return await response.json();
+interface AuthResponse {
+  token: string;
+  user: User;
 }
 
-// Função para requisições DELETE
-async function del(endpoint: string) {
-	const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-		method: 'DELETE',
-		headers: {
-			'Authorization': `Bearer ${localStorage.getItem('token')}`
-		}
-	});
-	if (!response.ok) {
-		throw new Error(`Error deleting data: ${response.statusText}`);
-	}
-	return response.text();
+interface Alert {
+  id: number;
+  message: string;
+  type: 'info' | 'warning' | 'error' | 'success';
+  createdAt: string;
 }
 
-// Funções específicas para o controlador de autenticação
-
-// Registrar um novo usuário
-async function registerUser(user: object) {
-	return await post('/register', user);
+// Type para dados genéricos de POST/PUT
+interface ApiData {
+  [key: string]: string | number | boolean | object | null;
 }
 
-// Login de usuário
-async function loginUser(credentials: object) {
-	const response = await post('/login', credentials);
-	if (response.token) {
-		localStorage.setItem('token', response.token);
-	}
-	return response;
-}
+// Criação da instância do Axios
+const api: AxiosInstance = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
 
-// Logout do usuário
-function logoutUser() {
-	localStorage.removeItem('token');
-}
+// Instância específica para autenticação
+const authApi: AxiosInstance = axios.create({
+  baseURL: API_BASE_AUTH_URL,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
 
-export {
-	get,
-	post,
-	put,
-	del,
-	registerUser,
-	loginUser,
-	logoutUser
+// Interceptor para adicionar token nas requisições
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Funções de autenticação
+export const auth = {
+  async register(user: User): Promise<AuthResponse> {
+    const response = await authApi.post<AuthResponse>('/register', user);
+    if (response.data.token) {
+      localStorage.setItem('token', response.data.token);
+    }
+    return response.data;
+  },
+
+  async login(credentials: Credentials): Promise<AuthResponse> {
+    const response = await authApi.post<AuthResponse>('/login', credentials);
+    if (response.data.token) {
+      localStorage.setItem('token', response.data.token);
+    }
+    return response.data;
+  },
+
+  logout(): void {
+    localStorage.removeItem('token');
+  },
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
 };
+
+// Funções de API
+export const apiService = {
+  // GET request
+  async get<T>(endpoint: string): Promise<T> {
+    const response = await api.get<T>(endpoint);
+    return response.data;
+  },
+
+  // POST request
+  async post<T>(endpoint: string, data: ApiData): Promise<T> {
+    const response = await api.post<T>(endpoint, data);
+    return response.data;
+  },
+
+  // PUT request
+  async put<T>(endpoint: string, id: number, data: ApiData): Promise<T> {
+    const response = await api.put<T>(`${endpoint}/${id}`, data);
+    return response.data;
+  },
+
+  // DELETE request
+  async delete<T>(endpoint: string): Promise<T> {
+    const response = await api.delete<T>(endpoint);
+    return response.data;
+  },
+
+  // Função específica para alerts
+  async getAlerts(): Promise<Alert[]> {
+    return this.get<Alert[]>('/alerts');
+  }
+};
+
+// Export das instâncias
+export { api, authApi };
