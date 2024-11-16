@@ -67,7 +67,7 @@ public class AlertController {
         }
     }
 
-    @PatchMapping("/alerts/update-all")
+    @PatchMapping("/alerts")
     public ResponseEntity<Map<String, Integer>> updateAllAlertStatuses() {
         int updatedAlerts = alertService.updateAllStatusesToTrue();
             Map<String, Integer> response = new HashMap<>();
