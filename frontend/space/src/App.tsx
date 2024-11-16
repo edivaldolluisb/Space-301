@@ -1,10 +1,14 @@
 
 // import './App.css'
+import SinaisVitais from './pages/SinaisVitais';
 
 export function App() {
 
   return (
-    <h1 className="bg-black text-white text-xl">Hello Space</h1>
+    <>
+      <SinaisVitais />
+    </>
+    
   )
 }
 
