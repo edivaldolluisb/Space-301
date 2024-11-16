@@ -1,6 +1,7 @@
 package ies301.space.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,5 +40,33 @@ public class AlertService {
     // public Alert updateAlert(Long id, Alert alert) {
 
     // }
+
+    public Alert updateAlertStatus(Long alertId, boolean newStatus) {
+        Optional<Alert> optionalAlert = alertRepository.findById(alertId);
+
+        if (optionalAlert.isPresent()) {
+            Alert alert = optionalAlert.get();
+            alert.setStatus(newStatus);
+            return alertRepository.save(alert);
+        }
+        else {
+            throw new ResourceNotFoundException("Alert not found");
+        }
+    }
+    public static class ResourceNotFoundException extends RuntimeException {
+        public ResourceNotFoundException(String message) {
+            super(message);
+        }
+    }
+
+
+    public int updateAllStatusesToTrue() {
+        List<Alert> alerts = alertRepository.findAlertsByStatus(false);
+        alerts.forEach(alert -> {
+            alert.setStatus(true);
+        });
+        alertRepository.saveAll(alerts);
+        return alerts.size();
+    }
     
 }
