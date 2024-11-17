@@ -1,5 +1,7 @@
 package  ies301.space.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,21 +18,29 @@ public class Astronaut {
     private Long id;
     private String name;
     private String gender;
+    private String photo;
     private int age;
     private float height;
     private double weight;
 
+    private double heartRate;
+    private double bloodPressure;
+    private double bodyTemperature;
+    private double respiratoryRate;
+
     @ManyToOne
     @JoinColumn(name = "launch_id")
+    @JsonIgnore
     private Launch launch;
 
     public Astronaut() {
 
     }
 
-    public Astronaut(String name, String gender, int age, float height, double weight) {
+    public Astronaut(String name, String gender, String photo, int age, float height, double weight) {
         this.name = name;
         this.gender = gender;
+        this.photo = photo;
         this.age = age;
         this.height = height;
         this.weight = weight;
@@ -58,6 +68,14 @@ public class Astronaut {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
     public int getAge() {
@@ -90,5 +108,37 @@ public class Astronaut {
 
     public void setHeight(float height) {
         this.height = height;
+    }
+
+    public double getHeartRate() {
+        return heartRate;
+    }
+
+    public void setHeartRate(double heartRate) {
+        this.heartRate = heartRate;
+    }
+
+    public double getBloodPressure() {
+        return bloodPressure;
+    }
+
+    public void setBloodPressure(double bloodPressure) {
+        this.bloodPressure = bloodPressure;
+    }
+
+    public double getBodyTemperature() {
+        return bodyTemperature;
+    }
+
+    public void setBodyTemperature(double bodyTemperature) {
+        this.bodyTemperature = bodyTemperature;
+    }
+
+    public double getRespiratoryRate() {
+        return respiratoryRate;
+    }
+
+    public void setRespiratoryRate(double respiratoryRate) {
+        this.respiratoryRate = respiratoryRate;
     }
 }

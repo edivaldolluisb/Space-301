@@ -2,51 +2,116 @@ import React, {useEffect, useState} from 'react';
 import ParametroVital from '../components/ParametroVital';
 import Profile from '../components/Profile';
 import '../styles/sinaisvitais.css';
+import api from '../util/api';
 
 export default function SinaisVitais() {
     const [currentAstronautId, setCurrentAstronautId] = useState(individuals[0].id);
     const [currentAstronaut, setCurrentAstronaut] = useState(individuals[currentAstronautId]);
+    const [astronauts, setAstronauts] = useState(individuals);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const fetchAstronauts = async () => {
+        try {
+            const response = await api.get('/api/v1/launches');
+            const astronautsList: Astronaut[] = response.data[0].astronauts.map((astronaut: Astronaut) => ({
+                ...astronaut,
+                parametros: [
+                    {
+                        name: 'Batimento Cardíaco',
+                        valor: astronaut.heartRate.toFixed(2),
+                        unidade: 'bpm',
+                        status: 'Normal',
+                    },
+                    {
+                        name: 'Pressão Sanguinea',
+                        valor: astronaut.bloodPressure.toFixed(2),
+                        unidade: '/ 80 mmhg',
+                        status: 'Normal',
+                    },
+                    {
+                        name: 'Temperatura corporal',
+                        valor: astronaut.bodyTemperature.toFixed(2),
+                        unidade: 'ºc',
+                        status: 'Normal',
+                    },
+                    {
+                        name: 'Ritmo respiratório',
+                        valor: astronaut.respiratoryRate.toFixed(2),
+                        unidade: 'rpm',
+                        status: 'Normal',
+                    },
+                ],
+            }));
+            setAstronauts(astronautsList);
+            console.log(astronautsList);
+        } catch (err) {
+            setError('Erro ao buscar os dados dos astronautas');
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
-        setCurrentAstronaut(individuals.filter((astronaut) => astronaut.id == currentAstronautId)[0]);
+        const intervalId = setInterval(() => {
+            fetchAstronauts();
+        }, 1000);
+
+        return () => clearInterval(intervalId);
+    }, []);
+
+    useEffect(() => {
+        setCurrentAstronaut(astronauts.filter((astronaut) => astronaut.id == currentAstronautId)[0]);
     });
+
+    if (loading) {
+        return <h1>Loading...</h1>;
+    }
+
+    if (error) {
+        return <h1>Ocorreu um erro ao carregar os dados...</h1>;
+    }
+
     return (
         <div className='main-content'>
             <div className="content">
                 <div className='target-astronaut'>
-                    <h1 className='astronaut-name'>{currentAstronaut.nome}</h1>
+                    <h1 className='astronaut-name'>{currentAstronaut.name}</h1>
                     <h2>Informações pessoais</h2>
                     <div className='personal-info'>
                         <div className='info'>
-                            <span className='info-name'>Gênero</span> <span className='info-value'>{currentAstronaut.genero}</span>
+                            <span className='info-name'>Gênero</span> <span className='info-value'>{currentAstronaut.gender}</span>
                         </div>
                         <div className='info'>
-                            <span className='info-name'>Altura</span> <span className='info-value'>{currentAstronaut.altura} cm</span>
+                            <span className='info-name'>Altura</span> <span className='info-value'>{currentAstronaut.height} cm</span>
                         </div>
                         <div className='info'>
-                            <span className='info-name'>Idade</span> <span className='info-value'>{currentAstronaut.idade}</span>
+                            <span className='info-name'>Idade</span> <span className='info-value'>{currentAstronaut.age}</span>
                         </div>
                         <div className='info'>
-                            <span className='info-name'>Peso</span> <span className='info-value'>{currentAstronaut.peso} Kg</span>
+                            <span className='info-name'>Peso</span> <span className='info-value'>{currentAstronaut.weight} Kg</span>
                         </div>
                         <div className='info'>
-                            <span className='info-name'>BMI</span> <span className='info-value'>{currentAstronaut.peso/Math.pow(currentAstronaut.altura/100, 2)}</span>
+                            <span className='info-name'>BMI</span> <span className='info-value'>{currentAstronaut.weight/Math.pow(currentAstronaut.height/100, 2)}</span>
                         </div>
                     </div>
                     <div className='parametros'>
-                        {currentAstronaut.parametros.map((parametro, index) => <ParametroVital
+                        {currentAstronaut.parametros ? currentAstronaut.parametros.map((parametro, index) => <ParametroVital
                                                         key={index}
-                                                        nome={parametro.nome}
+                                                        nome={parametro.name}
                                                         valor={parametro.valor}
                                                         unidade={parametro.unidade}
-                                                        status={parametro.status} />)}
+                                                        status={parametro.status} />)
+                                                    : 'None'}
                     </div>
                 </div>
                 <div className='astronauts-list'>
                     <h2>Astronautas</h2>
-                    {individuals.map((astronaut) => <Profile photo={astronaut.photo}
+                    {astronauts.map((astronaut) => <Profile photo={astronaut.photo}
                                                           key={astronaut.id}
                                                           id={astronaut.id}
-                                                          name={astronaut.nome}
+                                                          name={astronaut.name}
                                                           setAstronaut={setCurrentAstronautId} />)}
                 </div>
             </div>
@@ -54,36 +119,59 @@ export default function SinaisVitais() {
     )
 }
 
+interface VitalParameter {
+    name: string;
+    valor: number;
+    unidade: string;
+    status: string;
+}
+
+interface Astronaut {
+    id: number;
+    name: string;
+    gender: string;
+    age: number;
+    photo: '../../public/Neil_Armstrong.webp',
+    height: number;
+    weight: number;
+    heartRate: number;
+    bloodPressure: number;
+    bodyTemperature: number;
+    respiratoryRate: number;
+    parametros?: VitalParameter[];
+}
+
+// Para testes
 const individuals = [
     {
         id: 1,
-        nome: 'Amelia Earhart',
-        genero: 'Feminino',
-        altura: 165,
-        idade: 39,
-        peso: 60,
+        name: 'Amelia Earhart',
+        gender: 'Feminino',
+        height: 165,
+        age: 39,
+        weight: 60,
         photo: '../../public/Amelia_Earhart.webp',
         parametros: [
             {
-                nome: 'Batimento Cardíaco',
+                name: 'Batimento Cardíaco',
                 valor: 92,
                 unidade: 'bpm',
                 status: 'Normal'
             },
             {
-                nome: 'Pressão Sanguinea',
+                name: 'Pressão Sanguinea',
                 valor: 110,
                 unidade: '/ 70 mmhg',
                 status: 'Normal'
             },
             {
-                nome: 'Temperatura corporal',
+                name: 'Temperatura corporal',
                 valor: 36.8,
                 unidade: 'ºc',
                 status: 'Normal'
             },
             {
-                nome: 'Ritmo respiratório',
+                name: 'Ritmo respiratório',
                 valor: 18,
                 unidade: 'rpm',
                 status: 'Normal'
@@ -92,33 +180,33 @@ const individuals = [
     },
     {
         id: 2,
-        nome: 'Neil Armstrong',
-        genero: 'Masculino',
-        altura: 180,
-        idade: 39,
-        peso: 75,
+        name: 'Neil Armstrong',
+        gender: 'Masculino',
+        height: 180,
+        age: 39,
+        weight: 75,
         photo: '../../public/Neil_Armstrong.webp',
         parametros: [
             {
-                nome: 'Batimento Cardíaco',
+                name: 'Batimento Cardíaco',
                 valor: 85,
                 unidade: 'bpm',
                 status: 'Normal'
             },
             {
-                nome: 'Pressão Sanguinea',
+                name: 'Pressão Sanguinea',
                 valor: 120,
                 unidade: '/ 80 mmhg',
                 status: 'Normal'
             },
             {
-                nome: 'Temperatura corporal',
+                name: 'Temperatura corporal',
                 valor: 36.9,
                 unidade: 'ºc',
                 status: 'Normal'
             },
             {
-                nome: 'Ritmo respiratório',
+                name: 'Ritmo respiratório',
                 valor: 16,
                 unidade: 'rpm',
                 status: 'Normal'
@@ -127,33 +215,33 @@ const individuals = [
     },
     {
         id: 3,
-        nome: 'Katherine Johnson',
-        genero: 'Feminino',
-        altura: 160,
-        idade: 50,
-        peso: 62,
+        name: 'Katherine Johnson',
+        gender: 'Feminino',
+        height: 160,
+        age: 50,
+        weight: 62,
         photo: '../../public/Katherine_Johnson.webp',
         parametros: [
             {
-                nome: 'Batimento Cardíaco',
+                name: 'Batimento Cardíaco',
                 valor: 78,
                 unidade: 'bpm',
                 status: 'Normal'
             },
             {
-                nome: 'Pressão Sanguinea',
+                name: 'Pressão Sanguinea',
                 valor: 118,
                 unidade: '/ 75 mmhg',
                 status: 'Normal'
             },
             {
-                nome: 'Temperatura corporal',
+                name: 'Temperatura corporal',
                 valor: 36.5,
                 unidade: 'ºc',
                 status: 'Normal'
             },
             {
-                nome: 'Ritmo respiratório',
+                name: 'Ritmo respiratório',
                 valor: 17,
                 unidade: 'rpm',
                 status: 'Normal'
@@ -162,33 +250,33 @@ const individuals = [
     },
     {
         id: 4,
-        nome: 'Buzz Aldrin',
-        genero: 'Masculino',
-        altura: 175,
-        idade: 40,
-        peso: 78,
+        name: 'Buzz Aldrin',
+        gender: 'Masculino',
+        height: 175,
+        age: 40,
+        weight: 78,
         photo: '../../public/Buzz_Aldrin.webp',
         parametros: [
             {
-                nome: 'Batimento Cardíaco',
+                name: 'Batimento Cardíaco',
                 valor: 90,
                 unidade: 'bpm',
                 status: 'Normal'
             },
             {
-                nome: 'Pressão Sanguinea',
+                name: 'Pressão Sanguinea',
                 valor: 115,
                 unidade: '/ 75 mmhg',
                 status: 'Normal'
             },
             {
-                nome: 'Temperatura corporal',
+                name: 'Temperatura corporal',
                 valor: 37.1,
                 unidade: 'ºc',
                 status: 'Normal'
             },
             {
-                nome: 'Ritmo respiratório',
+                name: 'Ritmo respiratório',
                 valor: 19,
                 unidade: 'rpm',
                 status: 'Normal'

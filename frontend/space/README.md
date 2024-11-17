@@ -5,3 +5,4 @@
  `$ npm i`
  `$ npm run dev`
  `$ npm install lucide-react`
+ `$ npm install axios`

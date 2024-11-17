@@ -48,7 +48,28 @@ public class LaunchController {
     }
 
 
-    @PostMapping("/launches/new")
+    @PostMapping("launches/{launchId}/astronaut/{astronautId}")
+    public ResponseEntity<String> addAstronautToLaunch(
+            @PathVariable Long launchId,
+            @PathVariable Long astronautId) {
+        
+        Optional<Launch> launchOpt = launchService.getLaunchById(launchId);
+        Optional<Astronaut> astronautOpt = astronautService.getAstronautById(astronautId);
+
+        if (launchOpt.isPresent() && astronautOpt.isPresent()) {
+            Launch launch = launchOpt.get();
+            Astronaut astronaut = astronautOpt.get();
+            astronaut.setLaunch(launch);
+            astronautService.saveAstronaut(astronaut);
+            return new ResponseEntity<>("Astronaut added to launch successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Launch or Astronaut not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+
+    @PostMapping("/launches")
     public ResponseEntity<Launch> createLaunch(@RequestBody Launch launch) {
         Launch savedLaunch = launchService.saveLaunch(launch);
         return new ResponseEntity<>(savedLaunch, HttpStatus.CREATED);
