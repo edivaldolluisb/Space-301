@@ -31,6 +31,7 @@ export function Activities() {
     async function loadActivities() {
       try {
         const response = await apiService.get<Activity[]>('/alerts');
+        // console.log(response)
         // setActivities(response);
         
         const grouped = response.reduce<GroupedActivities>(
@@ -91,7 +92,7 @@ export function Activities() {
           <div>
             {groupedActivities.true.map(activity => {
               return (
-                <div key={activity.id} className="space-y-2.5">
+                <div key={activity.id} className="space-y-2.5 mb-2">
                   <div className="px-4 py-2.5 bg-zinc-900 rounded-xl shadow-shape flex items-center gap-3">
                     <CircleCheck className="size-5 text-zinc-500" />
                     <span className="text-zinc-100">{activity.message}</span>

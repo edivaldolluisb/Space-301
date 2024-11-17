@@ -109,10 +109,23 @@ export const apiService = {
     return response.data;
   },
 
+  // PATCH request
+  async patch<T>(endpoint: string, data?: ApiData): Promise<T> {
+    const response = await api.patch<T>(endpoint, data || {});
+    return response.data;
+  },
+
+
   // Função específica para alerts
   async getAlerts(): Promise<Alert[]> {
     return this.get<Alert[]>('/alerts');
+  },
+
+  // Método específico para atualizar alerts
+  async updateAlerts(data?: ApiData): Promise<{ updated: number }> {
+    return this.patch<{ updated: number }>('/alerts', data);
   }
+
 };
 
 // Export das instâncias
