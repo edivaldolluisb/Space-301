@@ -10,6 +10,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "launch")
@@ -17,17 +19,20 @@ public class Launch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message = "Mission name is mandatory")
+    @NotBlank(message="Mission's name is mandotory")
     private String missionName;
-    @NotBlank(message = "Date is mandatory")
+    @NotNull(message="Date is mandotory")
     private Date lauchDate;
-    @NotBlank(message = "Rocket is mandatory")
+    @NotNull(message="Rocket is mandotory")
     private int rocketId;
-    @NotBlank(message = "Address is mandatory")
+    @NotBlank(message="Address is mandotory")
     private String address;
 
     @OneToMany(mappedBy = "launch")
     private List<Astronaut> astronauts;
+
+    @OneToMany(mappedBy = "launch")
+    private List<Alert> alerts;
 
     public Launch() {}
     
@@ -91,4 +96,24 @@ public class Launch {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    // alerts  
+    public List<Alert> getAlerts() {
+        return alerts;
+    }
+
+    public void setAlerts(List<Alert> alerts) {
+        this.alerts = alerts;
+    }
+
+    public void addAlert(Alert alert) {
+        alerts.add(alert);
+        alert.setLaunch(this);
+    }
+
+    public void removeAlert(Alert alert) {
+        alerts.remove(alert);
+        alert.setLaunch(null);
+    }
+    
 }

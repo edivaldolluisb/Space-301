@@ -18,7 +18,7 @@ import ies301.space.services.AstronautService;
 import ies301.space.services.LaunchService;
 
 @RestController
-@RequestMapping("/launches")
+@RequestMapping("/api/v1")
 public class LaunchController {
     private final AstronautService astronautService;
     private final LaunchService launchService;
@@ -28,12 +28,12 @@ public class LaunchController {
         this.launchService = launchService;
     }
 
-    @GetMapping("/{id}/astronauts")
+    @GetMapping("/launches/{id}/astronauts")
     public List<Astronaut> getAstronautsByLaunchId(@PathVariable Long id) {
         return astronautService.getAstronautsByLaunchId(id);
     }
 
-    @GetMapping("/{launchId}/astronaut/{astronautId}")
+    @GetMapping("/launches/{launchId}/astronaut/{astronautId}")
     public ResponseEntity<?> getAstronautByLaunchAndAstronautId(
             @PathVariable Long launchId,
             @PathVariable Long astronautId) {
@@ -47,19 +47,20 @@ public class LaunchController {
         }
     }
 
-    @PostMapping("/new")
+
+    @PostMapping("/launches/new")
     public ResponseEntity<Launch> createLaunch(@RequestBody Launch launch) {
         Launch savedLaunch = launchService.saveLaunch(launch);
         return new ResponseEntity<>(savedLaunch, HttpStatus.CREATED);
     }
 
-    @GetMapping
+    @GetMapping("/launches")
     public ResponseEntity<List<Launch>> getAllLaunches() {
         List<Launch> launches = launchService.getAllLaunches();
         return ResponseEntity.ok(launches);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/launches/{id}")
     public ResponseEntity<Launch> getLaunchById(@PathVariable Long id) {
         Optional<Launch> launch = launchService.getLaunchById(id);
         if (launch.isPresent()) {
