@@ -1,5 +1,5 @@
 
-// import './App.css'
+import './index.css'
 import SinaisVitais from './pages/SinaisVitais';
 
 export function App() {

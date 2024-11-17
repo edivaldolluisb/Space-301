@@ -1,3 +1,5 @@
+import '../styles/paramero.css';
+
 interface ParametroVitalProps {
     nome: string;
     valor: string | number;
@@ -16,7 +18,7 @@ export default function ParametroVital(props: ParametroVitalProps) {
                 <div className="parametro-valor">
                     {props.valor} <span className="parametro-unidade">{props.unidade}</span>
                 </div>
-                <div className="parametro-status">
+                <div className="parametro-status normal">
                     {props.status}
                 </div>
             </div>

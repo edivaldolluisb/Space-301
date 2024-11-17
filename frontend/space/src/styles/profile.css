@@ -1,0 +1,15 @@
+.profile {
+    width: 320px;
+    height: 93px;
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-image {
+    width: 58px;
+    height: 57px;
+    border-radius: 50%;
+}

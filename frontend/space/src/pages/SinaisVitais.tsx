@@ -1,44 +1,49 @@
 import React from 'react';
 import ParametroVital from '../components/ParametroVital';
 import Profile from '../components/Profile';
+import '../styles/sinaisvitais.css';
 
 export default function SinaisVitais() {
     return (
-        <>
+        <div className='main-content'>
             <div className="content">
                 <div className='target-astronaut'>
-                    <h1>{target.nome}</h1>
+                    <h1 className='astronaut-name'>{target.nome}</h1>
                     <h2>Informações pessoais</h2>
                     <div className='personal-info'>
                         <div className='info'>
-                            <span>Gênero</span> <span>{target.genero}</span>
+                            <span className='info-name'>Gênero</span> <span className='info-value'>{target.genero}</span>
                         </div>
                         <div className='info'>
-                            <span>Altura</span> <span>{target.altura} cm</span>
+                            <span className='info-name'>Altura</span> <span className='info-value'>{target.altura} cm</span>
                         </div>
                         <div className='info'>
-                            <span>Idade</span> <span>{target.idade}</span>
+                            <span className='info-name'>Idade</span> <span className='info-value'>{target.idade}</span>
                         </div>
                         <div className='info'>
-                            <span>Peso</span> <span>{target.peso} Kg</span>
+                            <span className='info-name'>Peso</span> <span className='info-value'>{target.peso} Kg</span>
                         </div>
                         <div className='info'>
-                            <span>BMI</span> <span>{target.peso/Math.pow(target.altura/100, 2)}</span>
+                            <span className='info-name'>BMI</span> <span className='info-value'>{target.peso/Math.pow(target.altura/100, 2)}</span>
                         </div>
                     </div>
-                    {target.parametros.map(parametro => <ParametroVital
+                    <div className='parametros'>
+                        {target.parametros.map((parametro, index) => <ParametroVital
+                                                        key={index}
                                                         nome={parametro.nome}
                                                         valor={parametro.valor}
                                                         unidade={parametro.unidade}
                                                         status={parametro.status} />)}
+                    </div>
                 </div>
                 <div className='astronauts-list'>
                     <h2>Astronautas</h2>
-                    {astronauts.map(astronaut => <Profile photo={astronaut.photo}
+                    {astronauts.map((astronaut, index) => <Profile photo={astronaut.photo}
+                                                          key={index}
                                                           name={astronaut.nome} />)}
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 

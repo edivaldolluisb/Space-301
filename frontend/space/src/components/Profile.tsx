@@ -1,3 +1,5 @@
+import '../styles/profile.css';
+
 interface ProfileProps {
     photo: string;
     name: string;
