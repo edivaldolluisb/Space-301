@@ -1,10 +1,13 @@
 
 // import './App.css'
 
+import NewLaunch from "./pages/NewLaunch";
+
 export function App() {
 
   return (
-    <h1 className="bg-black text-white text-xl">Hello Space</h1>
+    <NewLaunch/>
+    // <h1 className="bg-black text-white text-xl">Hello Space</h1>
   )
 }
 
