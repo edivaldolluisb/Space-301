@@ -4,3 +4,4 @@
  # Iniciar:
  `$ npm i`
  `$ npm run dev`
+ `$ npm install lucide-react`

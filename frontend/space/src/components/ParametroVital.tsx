@@ -1,4 +1,5 @@
 import '../styles/paramero.css';
+import {getIcon} from '../util/icon';
 
 interface ParametroVitalProps {
     nome: string;
@@ -12,7 +13,7 @@ export default function ParametroVital(props: ParametroVitalProps) {
         <>
             <div className="parametro-container">
                 <div className="parametro-info">
-                    <img className="parametro-photo" />
+                    {getIcon(props.nome)}
                     <div>{props.nome}</div>
                 </div>
                 <div className="parametro-valor">

@@ -8,6 +8,10 @@
     gap: 10px;
 }
 
+.profile:hover {
+    cursor: pointer;
+}
+
 .profile-image {
     width: 58px;
     height: 57px;
