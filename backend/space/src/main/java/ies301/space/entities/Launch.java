@@ -3,6 +3,7 @@ package ies301.space.entities;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,6 +30,9 @@ public class Launch {
 
     @OneToMany(mappedBy = "launch")
     private List<Astronaut> astronauts;
+
+    @OneToMany(mappedBy = "launch")
+    private List<Alert> alerts;
 
     public Launch() {}
     
@@ -92,4 +96,24 @@ public class Launch {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    // alerts  
+    public List<Alert> getAlerts() {
+        return alerts;
+    }
+
+    public void setAlerts(List<Alert> alerts) {
+        this.alerts = alerts;
+    }
+
+    public void addAlert(Alert alert) {
+        alerts.add(alert);
+        alert.setLaunch(this);
+    }
+
+    public void removeAlert(Alert alert) {
+        alerts.remove(alert);
+        alert.setLaunch(null);
+    }
+    
 }
