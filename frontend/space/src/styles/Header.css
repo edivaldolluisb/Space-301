@@ -1,4 +1,4 @@
-  header {
+header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -6,16 +6,16 @@
     background-color: #222;
   }
   
-  .location {
+.location {
     font-size: 14px;
     color: #ccc;
-  }
+}
   
-  .home-button {
+.home-button {
     background: #1f1f1f;
     border: 1px solid #444;
     color: white;
     padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
-  }
+}

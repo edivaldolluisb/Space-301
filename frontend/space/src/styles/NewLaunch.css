@@ -12,11 +12,9 @@ body {
 }
 
 .container {
-    width: 1100px;
-    padding: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    
-  margin: 0 auto; /* Centralizar horizontalmente */
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -29,7 +27,6 @@ h1 {
 }
   
 .form-section {
-  display: flex;
   flex-direction: column;
   gap: 15px;
 }
@@ -40,14 +37,13 @@ option {
 }
 
 label {
-    display: flex;
     flex-direction: column;
     font-weight: bold;
     color: #444444;
     width: 100%;
 }
 
-input,
+/* input, */
 select {
   width: 100%;
   padding: 10px 0px 10px 10px;

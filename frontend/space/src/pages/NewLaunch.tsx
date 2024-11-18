@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
-import Header from "../components/Header";
 import "../styles/NewLaunch.css";
+import { DestinationAndDateHeader } from "../components/destination-and-date-header";
+import { Button } from "../components/button";
 
 export default function NewLaunch() {
     const [tripulantes, setTripulantes] = useState(individuals);
@@ -44,80 +45,85 @@ export default function NewLaunch() {
       };
     
       const handleSave = (): void => {
-        setShowTripulantes(!showTripulantes);
+        setShowTripulantes(false);
       };
 
     return (
-        <div className="container">
-            <Header/>
-            <h1>Novo lançamento</h1>
+        <div className="max-w-6xl px-6 py-10 mx-auto space-y-8">
+            <DestinationAndDateHeader/>
+            <h1 className="text-3xl font-semibold">Novo lançamento</h1>
             <section className="form-section">
-            <label>
-                <input
-                type="text"
-                placeholder="Nome da missão"
-                value={missionName}
-                onChange={(e) => setMissionName(e.target.value)}
-                />
-            </label>
+                <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2">
+                    <input
+                    type="text"
+                    placeholder="Nome da missão"
+                    className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
+                    value={missionName}
+                    onChange={(e) => setMissionName(e.target.value)}
+                    />
+                </div>
 
-            <label>
-                <input
-                type="date"
-                placeholder="Data do lançamento"
-                value={launchDate}
-                onChange={(e) => setLaunchDate(e.target.value)}
-                />
-            </label>
+                <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2">
+                    <input
+                    type="date"
+                    placeholder="Data do lançamento"
+                    className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
+                    value={launchDate}
+                    onChange={(e) => setLaunchDate(e.target.value)}
+                    />
+                </div>
 
-            <label>
-                <input
-                type="text"
-                placeholder="Local do lançamento"
-                value={launchDate}
-                onChange={(e) => setLaunchLocation(e.target.value)}
-                />
-            </label>
+                <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2">
+                    <input
+                    type="text"
+                    placeholder="Local do lançamento"
+                    className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
+                    value={launchLocation}
+                    onChange={(e) => setLaunchLocation(e.target.value)}
+                    />
+                </div>
 
-            <label>
-                <select
-                value={selectedFoguete}
-                onChange={(e) => setSelectedFoguete(e.target.value)}
-                >
-                <option value="">Selecionar foguete</option>
-                {foguete.map((foguete) => (
-                    <option key={foguete.id} value={foguete.id}>
-                    {foguete.nome}
-                    </option>
-                ))}
-                </select>
-            </label>
-
-            <label>
-                <span>{selectedTripulantes.length} tripulante(s) adicionado(s)</span>
-                <button className="tribulantesButton" onClick={handleConfirmClick}>
-                Confirmar tripulantes →
-                </button>
-
-                {showTripulantes && (
-                    <div>
-                    <h4>Selecionar tripulantes</h4>
-                    {tripulantes.map((tripulante) => (
-                        <div key={tripulante.id} style={{ marginBottom: "5px" }}>
-                        <label>
-                            <input
-                            type="checkbox"
-                            checked={selectedTripulantes.includes(tripulante.id)}
-                            onChange={() => handleCheckboxChange(tripulante.id)}
-                            />
-                            {tripulante.nome}
-                        </label>
-                        </div>
+                <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2">
+                    <select
+                    value={selectedFoguete}
+                    onChange={(e) => setSelectedFoguete(e.target.value)}
+                    >
+                    <option value="">Selecionar foguete</option>
+                    {foguete.map((foguete) => (
+                        <option key={foguete.id} value={foguete.id}>
+                        {foguete.nome}
+                        </option>
                     ))}
-                    <button onClick={handleSave}>Salvar Seleção</button>
+                    </select>
+                </div>
+
+                <div>
+                    <div>
+                        <span>{selectedTripulantes.length} tripulante(s) adicionado(s)</span>
+                        <Button className="tribulantesButton" onClick={handleConfirmClick}>
+                        Confirmar tripulantes →
+                        </Button>
                     </div>
-                )}
-            </label>
+
+                    {showTripulantes && (
+                        <div>
+                        <h4>Selecionar tripulantes</h4>
+                        {tripulantes.map((tripulante) => (
+                            <div key={tripulante.id} style={{ marginBottom: "5px" }}>
+                            <label>
+                                <input
+                                type="checkbox"
+                                checked={selectedTripulantes.includes(tripulante.id)}
+                                onChange={() => handleCheckboxChange(tripulante.id)}
+                                />
+                                {tripulante.nome}
+                            </label>
+                            </div>
+                        ))}
+                        <Button onClick={handleSave}>Salvar Seleção</Button>
+                        </div>
+                    )}
+                </div>
 
             <button className="register-button" onClick={handleSubmit} >Registar lançamento</button>
             </section>
