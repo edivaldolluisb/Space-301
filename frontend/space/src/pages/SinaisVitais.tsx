@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import ParametroVital from '../components/ParametroVital';
 import Profile from '../components/Profile';
 import '../styles/sinaisvitais.css';
-import api from '../util/api';
+import {api} from '../lib/axios';
 
 export default function SinaisVitais() {
     const [currentAstronautId, setCurrentAstronautId] = useState(individuals[0].id);
@@ -13,7 +13,7 @@ export default function SinaisVitais() {
 
     const fetchAstronauts = async () => {
         try {
-            const response = await api.get('/api/v1/launches');
+            const response = await api.get('/launches');
             const astronautsList: Astronaut[] = response.data[0].astronauts.map((astronaut: Astronaut) => ({
                 ...astronaut,
                 parametros: [
