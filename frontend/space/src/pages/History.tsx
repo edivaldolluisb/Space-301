@@ -27,7 +27,7 @@ export default function History() {
             <div className="launch-history">
                 <h1>Histórico de Lançamentos</h1>
 
-                {Object.entries(historyLaunches).map(([month, launches]) => (
+                {Object.entries(launchHistory).map(([month, launches]) => (
                     <div key={month}>
                         <h2>{month}</h2>
                         {launches.map((launch, index) => (
