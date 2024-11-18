@@ -1,0 +1,66 @@
+.main-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f3f4f6;
+}
+
+.astronaut-name {
+    font-size: 32px;
+    margin-bottom: 100px;
+}
+
+h2 {
+    font-size: 20px;
+}
+
+.content {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    padding: 0px 24px;
+    max-width: 1440px;
+    gap: 64px;
+    background-color: #09090B;
+    color: #FAFAFA;
+    padding: 40px 10px;
+}
+
+.target-astronaut {
+    min-width: 668px;
+}
+
+.personal-info {
+    max-width: 667px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.info {
+    width: 276px;
+    display: flex;
+    flex-direction: column;
+}
+
+.info-name {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.info-value {
+    font-size: 14px;
+}
+
+.parametros {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 20px;
+    margin-top: 70px;
+}
+
+.astronauts-list {
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

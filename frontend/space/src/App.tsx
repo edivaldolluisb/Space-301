@@ -5,6 +5,7 @@ import { CreateTripPage } from "./pages/create-account"
 import { AlertsPage } from "./pages/trip-details"
 import { DashboardPage } from "./pages/company"
 import { RocketDetailsPage } from "./pages/company/rocket-dashboard"
+import SinaisVitais from "./pages/SinaisVitais"
 
 
 const router = createBrowserRouter([
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
   {
     path: "/alerts",
     element: <AlertsPage />
+  },
+  {
+    path: "/sinais-vitais",
+    element: <SinaisVitais />
   },
   {
     path: "/dashboard",
