@@ -7,4 +7,6 @@ import ies301.space.entities.Alert;
 
 public interface AlertRepository extends JpaRepository <Alert, Long> {
     List<Alert> findAlertsByLaunchId(Long launch_id);
+
+    List<Alert> findAlertsByStatus(boolean status);
 }
