@@ -3,6 +3,7 @@ import ParametroVital from '../components/ParametroVital';
 import Profile from '../components/Profile';
 import '../styles/sinaisvitais.css';
 import {api} from '../lib/axios';
+import {DestinationAndDateHeader} from '../components/destination-and-date-header';
 
 export default function SinaisVitais() {
     const [currentAstronautId, setCurrentAstronautId] = useState(individuals[0].id);
@@ -74,8 +75,13 @@ export default function SinaisVitais() {
     }
 
     return (
-        <div className='main-content'>
-            <div className="content">
+        <>
+        <div className="max-w-6xl px-6 py-10 mx-auto space-y-8">
+            <DestinationAndDateHeader />
+
+            <main className="flex gap-16 px-4">
+                <div className="flex-1 space-y-6">
+                <div className="content">
                 <div className='target-astronaut'>
                     <h1 className='astronaut-name'>{currentAstronaut.name}</h1>
                     <h2>Informações pessoais</h2>
@@ -105,17 +111,20 @@ export default function SinaisVitais() {
                                                         status={parametro.status} />)
                                                     : 'None'}
                     </div>
+                    </div>
+                    <div className='astronauts-list'>
+                        <h2>Astronautas</h2>
+                        {astronauts.map((astronaut) => <Profile photo={astronaut.photo}
+                                                            key={astronaut.id}
+                                                            id={astronaut.id}
+                                                            name={astronaut.name}
+                                                            setAstronaut={setCurrentAstronautId} />)}
+                    </div>
                 </div>
-                <div className='astronauts-list'>
-                    <h2>Astronautas</h2>
-                    {astronauts.map((astronaut) => <Profile photo={astronaut.photo}
-                                                          key={astronaut.id}
-                                                          id={astronaut.id}
-                                                          name={astronaut.name}
-                                                          setAstronaut={setCurrentAstronautId} />)}
                 </div>
+            </main>
             </div>
-        </div>
+        </>
     )
 }
 
