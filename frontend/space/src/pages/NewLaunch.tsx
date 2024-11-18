@@ -1,11 +1,24 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
+import Header from "../components/Header";
+import "../styles/NewLaunch.css";
+
+// Define o tipo para os tripulantes
+interface Tripulante {
+    id: number;
+    nome: string;
+  }
+  
+  interface TripulantesList {
+    tripulantes: Tripulante[]; // Lista de tripulantes recebida como prop
+  }
 
 export default function NewLaunch() {
     const [tripulantes, setTripulantes] = useState(individuals);
     const [foguete, setFoguete] = useState(foguetes);
 
     const [selectedFoguete, setSelectedFoguete] = useState('');
-    const [selectedTripulantes, setSelectedTripulantes] = useState<string[]>([]);
+    const [selectedTripulantes, setSelectedTripulantes] = useState<number[]>([]);
+    const [showTripulantes, setShowTripulantes] = useState<boolean>(false);
     const [missionName, setMissionName] = useState("");
     const [launchDate, setLaunchDate] = useState("");
     const [launchLocation, setLaunchLocation] = useState("");
@@ -21,62 +34,68 @@ export default function NewLaunch() {
     
         console.log("Novo lançamento registrado:", novoLancamento);
     
-        // fetch("/api/lancamentos", {
+        // fetch("/api/launch", {
         //   method: "POST",
         //   headers: { "Content-Type": "application/json" },
         //   body: JSON.stringify(novoLancamento),
         // });
       };
 
-    const handleTripulanteChange = (e: ChangeEvent<HTMLSelectElement>) => {
-        const selectedOptions = Array.from(e.target.selectedOptions).map(
-          (option) => option.value
+      const handleConfirmClick = (): void => {
+        setShowTripulantes(!showTripulantes);
+      };
+    
+      const handleCheckboxChange = (tripulanteId: number): void => {
+        setSelectedTripulantes((prevSelected) =>
+          prevSelected.includes(tripulanteId)
+            ? prevSelected.filter((id) => id !== tripulanteId)
+            : [...prevSelected, tripulanteId]
         );
-        setSelectedTripulantes(selectedOptions);
+      };
+    
+      const handleSave = (): void => {
+        setShowTripulantes(!showTripulantes);
       };
 
     return (
-        <div>
+        <div className="container">
+            <Header/>
             <h1>Novo lançamento</h1>
             <section className="form-section">
             <label>
-                Nome da missão
                 <input
                 type="text"
-                placeholder="Digite o nome da missão"
+                placeholder="Nome da missão"
                 value={missionName}
                 onChange={(e) => setMissionName(e.target.value)}
                 />
             </label>
 
             <label>
-                Data do lançamento
                 <input
                 type="date"
-                placeholder="Digite a data do lançamento"
+                placeholder="Data do lançamento"
                 value={launchDate}
                 onChange={(e) => setLaunchDate(e.target.value)}
                 />
             </label>
 
             <label>
-                Local do lançamento
                 <input
                 type="text"
-                placeholder="Digite o local do lançamento"
+                placeholder="Local do lançamento"
                 value={launchDate}
                 onChange={(e) => setLaunchLocation(e.target.value)}
                 />
             </label>
 
             <label>
-                Selecionar foguete
                 <select
                 value={selectedFoguete}
                 onChange={(e) => setSelectedFoguete(e.target.value)}
                 >
-                <option value="">Escolha um foguete</option>
-                {foguetes.map((foguete) => (
+                <option value="">Selecionar foguete</option>
+                {foguete.map((foguete) => (
                     <option key={foguete.id} value={foguete.id}>
                     {foguete.nome}
                     </option>
@@ -85,19 +104,29 @@ export default function NewLaunch() {
             </label>
 
             <label>
-                Selecionar tripulantes
-                <select
-                multiple
-                value={selectedTripulantes}
-                onChange={handleTripulanteChange}
-                >
-                {tripulantes.map((tripulante) => (
-                    <option key={tripulante.id} value={tripulante.id}>
-                    {tripulante.nome}
-                    </option>
-                ))}
-                </select>
-                <small>Segure Ctrl (Windows) ou Command (Mac) para selecionar vários</small>
+                <span>{selectedTripulantes.length} tripulante(s) adicionado(s)</span>
+                <button className="tribulantesButton" onClick={handleConfirmClick}>
+                Confirmar tripulantes →
+                </button>
+
+                {showTripulantes && (
+                    <div>
+                    <h4>Selecionar tripulantes</h4>
+                    {tripulantes.map((tripulante) => (
+                        <div key={tripulante.id} style={{ marginBottom: "5px" }}>
+                        <label>
+                            <input
+                            type="checkbox"
+                            checked={selectedTripulantes.includes(tripulante.id)}
+                            onChange={() => handleCheckboxChange(tripulante.id)}
+                            />
+                            {tripulante.nome}
+                        </label>
+                        </div>
+                    ))}
+                    <button onClick={handleSave}>Salvar Seleção</button>
+                    </div>
+                )}
             </label>
 
             <button className="register-button" onClick={handleSubmit} >Registar lançamento</button>
