@@ -5,12 +5,13 @@ interface ProfileProps {
     name: string;
     id: number;
     setAstronaut: (id: number) => void;
+    isActive: boolean;
 }
 
 export default function Profile(props: ProfileProps) {
     return (
         <>
-            <div className="profile" onClick={() => props.setAstronaut(props.id)}>
+            <div className={`profile ${props.isActive ? 'active-astronaut' : ''}`} onClick={() => props.setAstronaut(props.id)}>
                 <img className="profile-image" src={props.photo} />
                 <div>
                     {props.name}

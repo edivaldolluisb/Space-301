@@ -20,3 +20,7 @@
     height: 57px;
     border-radius: 50%;
 }
+
+.active-astronaut {
+    border: 3px solid #BEF264;
+  }

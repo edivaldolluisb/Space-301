@@ -54,6 +54,11 @@ export default function SinaisVitais() {
         }
     };
 
+    if (error) {
+        setAstronauts(individuals);
+        console.log(`Ocorreu um erro ao carregar os dados...${error}`);
+    }
+
     useEffect(() => {
         const intervalId = setInterval(() => {
             fetchAstronauts();
@@ -69,10 +74,7 @@ export default function SinaisVitais() {
     if (loading) {
         return <h1>Loading...</h1>;
     }
-
-    if (error) {
-        return <h1>Ocorreu um erro ao carregar os dados...</h1>;
-    }
+    
 
     return (
         <>
@@ -118,7 +120,8 @@ export default function SinaisVitais() {
                                                             key={astronaut.id}
                                                             id={astronaut.id}
                                                             name={astronaut.name}
-                                                            setAstronaut={setCurrentAstronautId} />)}
+                                                            setAstronaut={setCurrentAstronautId} 
+                                                            isActive={currentAstronautId === astronaut.id} />)}
                     </div>
                 </div>
                 </div>
