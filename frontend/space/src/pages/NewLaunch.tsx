@@ -2,15 +2,6 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import Header from "../components/Header";
 import "../styles/NewLaunch.css";
 
-interface Tripulante {
-    id: number;
-    nome: string;
-}
-  
-interface TripulantesList {
-    tripulantes: Tripulante[];
-}
-
 export default function NewLaunch() {
     const [tripulantes, setTripulantes] = useState(individuals);
     const [foguete, setFoguete] = useState(foguetes);
@@ -33,7 +24,7 @@ export default function NewLaunch() {
     
         console.log("Novo lançamento registrado:", novoLancamento);
     
-        // fetch("/api/launch", {
+        // fetch("/api/v1/launches/new", {
         //   method: "POST",
         //   headers: { "Content-Type": "application/json" },
         //   body: JSON.stringify(novoLancamento),

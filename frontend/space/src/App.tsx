@@ -1,13 +1,25 @@
+import { createBrowserRouter, RouterProvider } from "react-router-dom"
+import { CreateTripPage } from "./pages/create-account"
+import { TripDetailsPage } from "./pages/trip-details"
+import NewLaunch from "./pages/NewLaunch"
 
-// import './App.css'
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <CreateTripPage />
+  },
+  {
+    path: "/alerts",
+    element: <TripDetailsPage />
+  },
+  {
+    path: "/launches",
+    element: <NewLaunch />
+  }
+])
 
-import NewLaunch from "./pages/NewLaunch";
+
 
 export function App() {
-
-  return (
-    <NewLaunch/>
-    // <h1 className="bg-black text-white text-xl">Hello Space</h1>
-  )
+  return <RouterProvider router={router} />
 }
-
