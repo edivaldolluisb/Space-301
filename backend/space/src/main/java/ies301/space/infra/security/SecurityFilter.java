@@ -28,6 +28,12 @@ public class SecurityFilter extends OncePerRequestFilter {
         var token = this.recoverToken(request);
         var login = tokenService.validateToken(token);
 
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        response.setHeader("Access-Control-Allow-Headers", "origin, content-type, accept, authorization");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PATCH");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+
+
         if(login != null){
             User user = userRepository.findByEmail(login).orElseThrow(() -> new RuntimeException("User Not Found"));
             var authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
