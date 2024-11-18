@@ -2,15 +2,14 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import Header from "../components/Header";
 import "../styles/NewLaunch.css";
 
-// Define o tipo para os tripulantes
 interface Tripulante {
     id: number;
     nome: string;
-  }
+}
   
-  interface TripulantesList {
-    tripulantes: Tripulante[]; // Lista de tripulantes recebida como prop
-  }
+interface TripulantesList {
+    tripulantes: Tripulante[];
+}
 
 export default function NewLaunch() {
     const [tripulantes, setTripulantes] = useState(individuals);
