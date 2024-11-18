@@ -1,4 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
+import History from "./pages/History"
+import HistoryDetails from "./pages/HistoryDetails"
 import { CreateTripPage } from "./pages/create-account"
 import { AlertsPage } from "./pages/trip-details"
 import { DashboardPage } from "./pages/company"
@@ -22,6 +24,14 @@ const router = createBrowserRouter([
     path: "/rocket/:rocketId",
     element: <RocketDetailsPage />
   },
+  {
+    path: "/history",
+    element: <History />
+  },
+  {
+    path: "/details/:id",
+    element: <HistoryDetails />
+  }
 ])
 
 export function App() {
