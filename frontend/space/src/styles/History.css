@@ -51,17 +51,17 @@ h1 {
     align-items: center;
 }
 
-.launch-item .icon {
-    margin-right: 10px;
-}
-  
 .launch-item .name {
     color: #ffffff;
     padding: 4px 8px;
     border-radius: 4px;
+    display: flex;
+    align-items: center;
 }
   
 .launch-item .date {
     color: #aaaaaa;
     text-align: right;
+    gap: 15px;
+    display: flex;
 }

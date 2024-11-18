@@ -1,11 +1,14 @@
+import { Link } from 'react-router-dom';
 
 interface LaunchItemProps {
+    id: number;
     name: string;
     date: string;
     status: string;
 };
 
 export default function LaunchItem(LaunchItemProps: LaunchItemProps) {
+    let id = LaunchItemProps.id
     let name = LaunchItemProps.name
     let date = LaunchItemProps.date
     let status = LaunchItemProps.status
@@ -17,9 +20,15 @@ export default function LaunchItem(LaunchItemProps: LaunchItemProps) {
     
     return (
         <div className="launch-item">
-          <span className="icon">{getStatusIcon()}</span>
-          <span className="name">{name}</span>
-          <span className="date">{date}</span>
+            <div className="name">
+                <span className="icon">{getStatusIcon()}</span>
+                <Link to={`/details/${id}`} className="name">
+                    {name}
+                </Link>
+            </div>
+            <div className="date">
+                <span>{date}</span>
+            </div>
         </div>
     );
 }

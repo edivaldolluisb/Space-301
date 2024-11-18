@@ -1,13 +1,20 @@
-
-// import './App.css'
-import Header from "./components/Header"
+import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import History from "./pages/History"
+import HistoryDetails from "./pages/HistoryDetails"
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <History />
+  },
+  {
+    path: "/details/:id",
+    element: <HistoryDetails />
+  },
+])
 
 export function App() {
 
-  return (
-    <History></History>
-    // <h1 className="bg-black text-white text-xl">Hello Space</h1>
-  )
+  return <RouterProvider router={router} />
 }
 
