@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import History from "./pages/History"
-import HistoryDetails from "./pages/HistoryDetails"
+import { History } from "./pages/LaunchHistory/History"
+import HistoryDetails from "./pages/LaunchHistory/HistoryDetails"
 import { CreateTripPage } from "./pages/create-account"
 import { AlertsPage } from "./pages/trip-details"
 import { DashboardPage } from "./pages/company"
@@ -29,7 +29,7 @@ const router = createBrowserRouter([
     element: <History />
   },
   {
-    path: "/details/:id",
+    path: "/history/details/:id",
     element: <HistoryDetails />
   }
 ])
