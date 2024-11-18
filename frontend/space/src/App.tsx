@@ -1,10 +1,20 @@
+import { createBrowserRouter, RouterProvider } from "react-router-dom"
 
-// import './App.css'
+import DashBoardEmpresa from "./pages/DashBoardEmpresa"
+import SettingsPage from "./pages/SettingsPage"
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <DashBoardEmpresa />
+  },
+  {
+    path: "/settings",
+    element: <SettingsPage />
+  },
+])
 
 export function App() {
 
-  return (
-    <h1 className="bg-black text-white text-xl">Hello Space</h1>
-  )
+  return <RouterProvider router={router} />
 }
-
