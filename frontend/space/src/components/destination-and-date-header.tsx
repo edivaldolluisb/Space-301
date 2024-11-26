@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 // import { api } from "../../lib/axios";
 import { format } from "date-fns";
+import { Link } from "react-router-dom";
 
 interface Trip {
   id: string;
@@ -41,10 +42,19 @@ export function DestinationAndDateHeader() {
 
           <div className="w-px h-6 bg-zinc-800" />
 
-          <Button variant="secondary">
+          {/* <Button variant="secondary">
             Página inicial
             <Rocket className="size-5" />
+          </Button> */}
+                
+      
+        <Link to={"/dashboard"} className="">
+          <Button variant="secondary">
+            <Rocket className="size-5" />
+            Página inicial
           </Button>
+        </Link>
+      
 
           <Button variant="secondary">
             Definições
