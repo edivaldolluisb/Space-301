@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="0cd835bc-c0ee-42e7-aaf9-1f2771c7b2d2" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/ies-24-25-group-project-301.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/components.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/eslint.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/public/bg.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/public/rockets/frederick-wallace-ijskXrOYctc-unsplash.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/public/rockets/maciej-ruminkiewicz-l2ioLM9iOuY-unsplash.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/public/rockets/spacex--p-KCm6xB9I-unsplash.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/components/Header.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/components/LauchItem.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/components/button.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/components/destination-and-date-header.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/components/ui/card.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/components/ui/chart.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/lib/axios.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/lib/utils.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/pages/DashBoardEmpresa.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/pages/History.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/pages/HistoryDetails.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/pages/SettingsPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/pages/company/activities.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/pages/company/create-activity-modal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/pages/company/dashboard.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/pages/company/destination-and-date-header.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/pages/company/graph.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/pages/company/guests.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/pages/company/important-links.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/pages/company/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/pages/company/rocket-dashboard.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/pages/create-account/confirm-trip-modal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/pages/create-account/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/pages/create-account/invite-guests-modal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/pages/create-account/login.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/pages/create-account/steps/destination-and-date-step.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/pages/create-account/steps/invite-guests-step.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/pages/trip-details/activities.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/pages/trip-details/create-activity-modal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/pages/trip-details/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/styles/Header.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/styles/History.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/space/src/styles/dashboard.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/settings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/space/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/space/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/space/src/main/java/ies301/space/controllers/AlertController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/space/src/main/java/ies301/space/controllers/AlertController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/space/src/main/java/ies301/space/controllers/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/space/src/main/java/ies301/space/controllers/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/space/src/main/java/ies301/space/controllers/HistoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/space/src/main/java/ies301/space/controllers/HistoryController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/space/src/main/java/ies301/space/controllers/LaunchController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/space/src/main/java/ies301/space/controllers/LaunchController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/space/src/main/java/ies301/space/controllers/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/space/src/main/java/ies301/space/controllers/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/space/src/main/java/ies301/space/entities/Launch.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/space/src/main/java/ies301/space/entities/Launch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/space/src/main/java/ies301/space/infra/cors/CorsConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/space/src/main/java/ies301/space/infra/cors/CorsConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/space/src/main/java/ies301/space/infra/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/space/src/main/java/ies301/space/infra/security/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/space/src/main/java/ies301/space/infra/security/SecurityFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/space/src/main/java/ies301/space/infra/security/SecurityFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/space/src/main/java/ies301/space/repositories/AlertRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/space/src/main/java/ies301/space/repositories/AlertRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/space/src/main/java/ies301/space/services/AlertService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/space/src/main/java/ies301/space/services/AlertService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/space/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/space/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/space/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/space/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/space/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/space/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/space/public/vite.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/space/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/space/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/space/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/space/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/space/src/main.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/space/src/main.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/space/tailwind.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/space/tailwind.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/space/tsconfig.app.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/space/tsconfig.app.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/space/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/space/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/space/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/space/vite.config.ts" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="dev" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="2ox7pbl15jkhjZIaFwVSCC22krU" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "Merging new/front__end/dashboard__empresa",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/rafae/OneDrive/Ambiente de Trabalho/rafa/1º Semestre/SO/Processos e IPC/Aula 09",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "C:\\Users\\rafae\\OneDrive\\Ambiente de Trabalho\\rafa\\1º Semestre\\IES\\ies-24-25-group-project-301\\frontend\\space\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23339.11" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23339.11" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0cd835bc-c0ee-42e7-aaf9-1f2771c7b2d2" name="Changes" comment="" />
+      <created>1731799556907</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1731799556907</updated>
+      <workItem from="1731799558019" duration="2566000" />
+      <workItem from="1731803668739" duration="625000" />
+      <workItem from="1731809335657" duration="18000" />
+      <workItem from="1732189387756" duration="81000" />
+      <workItem from="1732225797767" duration="53000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/new/front_end/dashboard_empresa" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

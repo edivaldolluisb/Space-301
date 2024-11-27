@@ -6,6 +6,8 @@ import { AlertsPage } from "./pages/trip-details"
 import { DashboardPage } from "./pages/company"
 import { RocketDetailsPage } from "./pages/company/rocket-dashboard"
 import SinaisVitais from "./pages/SinaisVitais"
+import SpaceSettings from "./pages/SpaceSettings"
+import VisitorDashboard from "./pages/VisitorDashboard"
 
 
 const router = createBrowserRouter([
@@ -36,6 +38,14 @@ const router = createBrowserRouter([
   {
     path: "/history/details/:id",
     element: <HistoryDetails />
+  },
+  {
+    path: "/settings",
+    element: <SpaceSettings />
+  },
+  {
+    path: "/visitor",
+    element: <VisitorDashboard />
   }
 ])
 
