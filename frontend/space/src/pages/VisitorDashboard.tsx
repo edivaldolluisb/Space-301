@@ -1,5 +1,5 @@
-import { Activities } from "./company/activities";
 import { VisitorHeader } from "@/components/visitor-header";
+import { Activities } from "./company/activities";
 
 
 
