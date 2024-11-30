@@ -1,0 +1,49 @@
+h2 {
+    margin-bottom: 20px;
+}
+
+.parametro-container {
+    width: 276px;
+    height: 185px;
+    background-color: #3F3F46;
+    padding: 30px;
+    border-radius: 8px;
+}
+
+.parametro-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+
+}
+
+.parametro-photo {
+    width: 58px;
+    height: 57px;
+}
+
+.parametro-valor {
+    font-size: 32px;
+}
+
+.parametro-unidade {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.parametro-status {
+    max-width: 70px;
+    height: 23px;
+    border-radius: 4px;
+    color: #1A2E05;
+    text-align: center;
+}
+
+.normal {
+    background-color: #BEF264;
+}
+
+.anormal {
+    background-color: #F27E64;
+}

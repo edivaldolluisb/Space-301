@@ -1,10 +1,11 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import History from "./pages/History"
-import HistoryDetails from "./pages/HistoryDetails"
+import { History } from "./pages/LaunchHistory/History"
+import HistoryDetails from "./pages/LaunchHistory/HistoryDetails"
 import { CreateTripPage } from "./pages/create-account"
 import { AlertsPage } from "./pages/trip-details"
 import { DashboardPage } from "./pages/company"
 import { RocketDetailsPage } from "./pages/company/rocket-dashboard"
+import SinaisVitais from "./pages/SinaisVitais"
 
 
 const router = createBrowserRouter([
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
   {
     path: "/alerts",
     element: <AlertsPage />
+  },
+  {
+    path: "/sinais-vitais",
+    element: <SinaisVitais />
   },
   {
     path: "/dashboard",
@@ -29,7 +34,7 @@ const router = createBrowserRouter([
     element: <History />
   },
   {
-    path: "/details/:id",
+    path: "/history/details/:id",
     element: <HistoryDetails />
   }
 ])

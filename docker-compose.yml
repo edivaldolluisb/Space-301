@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:14
+    container_name: meu_postgres
+    environment:
+      POSTGRES_USER: space
+      POSTGRES_PASSWORD: space
+      POSTGRES_DB: space
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend/space
+    container_name: meu_spring_boot_app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/space
+      SPRING_DATASOURCE_USERNAME: space
+      SPRING_DATASOURCE_PASSWORD: space
+    depends_on:
+      - postgres
+
+  frontend:
+    build:
+      context: ./frontend/space
+    container_name: meu_react_app
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

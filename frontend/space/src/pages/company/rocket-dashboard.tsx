@@ -1,23 +1,13 @@
-import { Plus, Siren } from "lucide-react";
-import { useState } from "react";
-import { CreateActivityModal } from "./create-activity-modal";
-import { Guests } from "./guests";
-import { Activities } from "./activities";
+import { Plus } from "lucide-react";
 import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
 import { Button } from "../../components/button";
 import  Dashboard  from "./dashboard";
 import { SpeedGraph, TemperatureGraph } from "./graph";
+import { ListTelemetricData } from "./list-rocket-data";
 
 export function RocketDetailsPage() {
-  const [isCreateActivityModalOpen, setIsCreateActivityModalOpen] = useState(false)
 
-  function openCreateActivityModal() {
-    setIsCreateActivityModalOpen(true)
-  }
-
-  function closeCreateActivityModal() {
-    setIsCreateActivityModalOpen(false)
-  }
+  
 
   return (
     <div className="max-w-6xl px-6 py-10 mx-auto space-y-8">
@@ -39,25 +29,20 @@ export function RocketDetailsPage() {
           {/* <ImportantLinks /> */}
           
         <Button variant="secondary" size="full">
-            <Siren className="size-5" />
+            <Plus className="size-5" />
             Dados gerais
         </Button>
         <Button variant="secondary" size="full">
-            <Siren className="size-5" />
+            <Plus className="size-5" />
             Ver tripulantes
         </Button>
 
           <div className="w-full h-px bg-zinc-800" />
 
-          <Guests />
+          <ListTelemetricData />
         </div>
       </main>
 
-      {isCreateActivityModalOpen && (
-        <CreateActivityModal 
-          closeCreateActivityModal={closeCreateActivityModal}
-        />
-      )}
     </div>
   )
 }

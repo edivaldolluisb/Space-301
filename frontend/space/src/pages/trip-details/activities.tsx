@@ -1,7 +1,7 @@
 import { CircleCheck } from "lucide-react";
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { pt } from "date-fns/locale";
 import { apiService } from "../../lib/axios";
 
 interface Activity {
@@ -97,7 +97,7 @@ export function Activities() {
                     <CircleCheck className="size-5 text-zinc-500" />
                     <span className="text-zinc-100">{activity.message}</span>
                     <span className="text-xs text-zinc-500">
-                      {format(new Date(activity.date), 'EEEE', { locale: ptBR })}
+                      {format(new Date(activity.date), 'EEEE', { locale: pt })}
                     </span>
                     <span className="text-zinc-400 text-sm ml-auto">
                       {format(new Date(activity.date), 'HH:mm')}h
@@ -108,7 +108,7 @@ export function Activities() {
             })}
           </div>
         ) : (
-          <p className="text-zinc-500 text-sm">Nenhuma alerta a ser apresentado.</p>
+          <p className="text-zinc-500 text-sm">Nenhum alerta a ser apresentado.</p>
         )}
       </div>
     </div>
