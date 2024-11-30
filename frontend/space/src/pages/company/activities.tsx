@@ -18,78 +18,70 @@ export function Activities() {
   const { tripId } = useParams()
   const [activities, setActivities] = useState<Activity[]>([])
 
-  // useEffect(() => {
-  //   api.get(`trips/${tripId}/activities`).then(response => setActivities(response.data.activities))
-  //   api.get(`trips/${tripId}/activities`).then(response => console.log(response))
-  //   console.log()
-  // }, [tripId])
+  const transformData = (missions: any[]): Activity[] => {
+    // Agrupar missões por data
+    const grouped = missions.reduce((acc: Record<string, { id: string; title: string; occurs_at: string }[]>, mission) => {
+      const date = mission.lauchDate.split("T")[0]; // Extrai apenas a data
+      if (!acc[date]) acc[date] = [];
+      acc[date].push({
+        id: mission.id.toString(),
+        title: mission.missionName,
+        occurs_at: mission.lauchDate,
+      });
+      return acc;
+    }, {});
+  
+    // Converter para o formato desejado
+    return Object.entries(grouped).map(([date, activities]) => ({
+      date,
+      activities,
+    }));
+  };
+
+  const fetchLancamentos = async () => {
+    try {
+      const response = await api.get('/launches');
+      const data =await response.data
+      return data
+      
+    } catch (error) {
+      console.log("Erro ao buscar lançamentos:", error)
+      return null
+    }
+    
+  }
 
   useEffect(() => {
-    setActivities([
-      {
-        date: '2022-12-10',
-        activities: [
+    const fetchData = async () => {
+      const result = await fetchLancamentos();
+      if (result) {
+        setActivities(transformData(result));
+      } else {
+        // Fallback com dados estáticos
+        setActivities([
           {
-            id: '1',
-            title: 'Antares',
-            occurs_at: '2022-12-10T08:00:00'
+            date: '2022-12-10',
+            activities: [
+              { id: '1', title: 'Antares', occurs_at: '2022-12-10T08:00:00' },
+              { id: '2', title: 'Atlas V', occurs_at: '2022-12-10T12:00:00' },
+              { id: '3', title: 'LauncherOne', occurs_at: '2022-12-10T19:00:00' },
+            ],
           },
           {
-            id: '2',
-            title: 'Atlas V',
-            occurs_at: '2022-12-10T12:00:00'
+            date: '2022-12-11',
+            activities: [
+              { id: '4', title: 'LauncherOne', occurs_at: '2022-12-11T08:00:00' },
+              { id: '5', title: 'LauncherOne', occurs_at: '2022-12-11T12:00:00' },
+              { id: '6', title: 'Atlas V', occurs_at: '2022-12-11T19:00:00' },
+            ],
           },
-          {
-            id: '3',
-            title: 'LauncherOne',
-            occurs_at: '2022-12-10T19:00:00'
-          }
-        ]
-      },
-      {
-        date: '2022-12-11',
-        activities: [
-          {
-            id: '4',
-            title: 'LauncherOne',
-            occurs_at: '2022-12-11T08:00:00'
-          },
-          {
-            id: '5',
-            title: 'LauncherOne',
-            occurs_at: '2022-12-11T12:00:00'
-          },
-          {
-            id: '6',
-            title: 'Atlas V',
-            occurs_at: '2022-12-11T19:00:00'
-          }
-        ]
-      },
-      {
-        date: '2022-12-12',
-        activities: [
-          {
-            id: '7',
-            title: 'Atlas V',
-            occurs_at: '2022-12-12T08:00:00'
-          },
-          {
-            id: '8',
-            title: 'Antares',
-            occurs_at: '2022-12-12T12:00:00'
-          },
-          {
-            id: '9',
-            title: 'Antares',
-            occurs_at: '2022-11-12T19:00:00'
-          }
-        ]
+        ]);
       }
-    ])
-  }
-  , [tripId])
+    };
 
+    fetchData();
+  }, [tripId]);
+  
   return (
     <div className="space-y-8">
       {activities.map(category => {
