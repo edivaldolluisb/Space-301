@@ -43,20 +43,31 @@ export function CreateActivityModal({
     const launchDate = data.get('date')?.toString()
     const launchLocation = data.get('location')?.toString()
 
-    await api.post(`/trips/${tripId}/activities`, {
-      missionName,
-      launchDate,
-      launchLocation,
-      rocket,
-      selectedCrew
-    })
+    if (!missionName || !launchDate || !launchLocation || !rocket) {
+      alert("Preencha todos os campos obrigatórios!");
+      return;
+    }
+  
+    try {
+      await api.post(`/launches`, {
+        missionName,
+        launchDate,
+        launchLocation,
+        rocket,
+        selectedCrew,
+      });
+      window.document.location.reload();
+    } catch (error) {
+      console.error("Erro ao criar lançamento:", error);
+      alert("Não foi possível criar o lançamento. Tente novamente.");
+    }
 
     window.document.location.reload()
   }
 
-  const handleConfirmClick = (): void => {
-    setShowCrew(!showCrew);
-  };
+  // const handleConfirmClick = (): void => {
+  //   setShowCrew(!showCrew);
+  // };
 
   const handleCheckboxChange = (tripulanteId: number): void => {
     setSelectedCrew((prevSelected) =>
@@ -66,9 +77,9 @@ export function CreateActivityModal({
     );
   };
 
-  const handleSave = (): void => {
-    setShowCrew(false);
-  };
+  // const handleSave = (): void => {
+  //   setShowCrew(false);
+  // };
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
@@ -76,8 +87,8 @@ export function CreateActivityModal({
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <h2 className="font-lg font-semibold">Cadastrar Lançamento</h2>
-            <button>
-              <X className="size-5 text-zinc-400" onClick={closeCreateActivityModal} />
+            <button onClick={closeCreateActivityModal} aria-label="Fechar modal">
+              <X className="size-5 text-zinc-400" />
             </button>
           </div>
 
@@ -92,6 +103,7 @@ export function CreateActivityModal({
             <input
               name="mission"
               placeholder="Nome da missão"
+              aria-label="Nome da missão"
               className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
             />
           </div>
@@ -101,7 +113,8 @@ export function CreateActivityModal({
             <input
               type="datetime-local"
               name="date"
-              placeholder="Data do ançamento"
+              placeholder="Data do lançamento"
+              aria-label="Data do lançamento"
               className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
             />
           </div>
@@ -110,6 +123,7 @@ export function CreateActivityModal({
             <input
               name="location"
               placeholder="Local do lançamento"
+              aria-label="Local do lançamento"
               className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
             />
           </div>
@@ -135,22 +149,25 @@ export function CreateActivityModal({
           </div>
           <div>
               <h4>Selecionar tripulantes</h4>
-              {crew.map((tripulante) => (
-                  <div key={tripulante.id} style={{ marginBottom: "5px" }}>
-                  <label>
+              <div>
+                {crew.map((tripulante) => (
+                  <div key={tripulante.id} className="flex items-center gap-3">
+                    <img src={tripulante.photo} alt={tripulante.nome} className="w-10 h-10 rounded-full" />
+                    <label>
                       <input
-                      type="checkbox"
-                      checked={selectedCrew.includes(tripulante.id)}
-                      onChange={() => handleCheckboxChange(tripulante.id)}
+                        type="checkbox"
+                        checked={selectedCrew.includes(tripulante.id)}
+                        onChange={() => handleCheckboxChange(tripulante.id)}
                       />
                       {tripulante.nome}
-                  </label>
+                    </label>
                   </div>
-              ))}
-              {/* <Button onClick={handleSave}>Salvar Seleção</Button> */}
+                ))}
               </div>
+              {/* <Button onClick={handleSave}>Salvar Seleção</Button> */}
+            </div>
 
-          <Button size="full">
+          <Button size="full"  onClick={closeCreateActivityModal}>
             Salvar lançamento
           </Button>
         </form>
