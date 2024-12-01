@@ -34,7 +34,8 @@ services:
       SPRING_DATASOURCE_USERNAME: space
       SPRING_DATASOURCE_PASSWORD: space
     depends_on:
-      - postgres, rabbitmq
+      - postgres
+      - rabbitmq
 
   frontend:
     build:
