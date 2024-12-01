@@ -115,5 +115,16 @@ public class Launch {
         alerts.remove(alert);
         alert.setLaunch(null);
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+            " id:'" + getId() + "'" +
+            ", missionName:'" + getMissionName() + "'" +
+            ", lauchDate:'" + getLauchDate() + "'" +
+            ", rocketId:'" + getRocketId() + "'" +
+            ", address:'" + getAddress() + "'" +
+            "}";
+    }
     
 }
