@@ -27,7 +27,7 @@ export function CreateActivityModal({
   closeCreateActivityModal
 }: CreateActivityModalProps) {
   const { tripId } = useParams()
-  const [rocket, setRocket] = useState('');
+  const [rocketId, setRocketId] = useState('');
   const [selectedCrew, setSelectedCrew] = useState<number[]>([]);
   const [showCrew, setShowCrew] = useState(false);
   const [crew, setCrew] = useState(individuals);
@@ -43,19 +43,21 @@ export function CreateActivityModal({
     const launchDate = data.get('date')?.toString()
     const launchLocation = data.get('location')?.toString()
 
-    if (!missionName || !launchDate || !launchLocation || !rocket) {
+    if (!missionName || !launchDate || !launchLocation || !rocketId) {
       alert("Preencha todos os campos obrigatórios!");
       return;
     }
-  
+    const launch = {   
+      "missionName": missionName,
+      "lauchDate": launchDate,
+      "rocketId": rocketId,
+      "address": launchLocation,
+      "astronauts":selectedCrew
+    }
     try {
-      await api.post(`/launches`, {
-        missionName,
-        launchDate,
-        launchLocation,
-        rocket,
-        selectedCrew,
-      });
+      const result = await api.post(`/launches`, launch);
+      console.log(result)
+      closeCreateActivityModal();
       window.document.location.reload();
     } catch (error) {
       console.error("Erro ao criar lançamento:", error);
@@ -130,8 +132,8 @@ export function CreateActivityModal({
 
           <div className="h-14 flex-1 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2">
               <select
-              value={rocket}
-              onChange={(e) => setRocket(e.target.value)}
+              value={rocketId}
+              onChange={(e) => setRocketId(e.target.value)}
               className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
               >
               <option value="" className="bg-transparent text-lg-zinc-400 outline-none flex-1">Selecionar foguete</option>
@@ -167,7 +169,7 @@ export function CreateActivityModal({
               {/* <Button onClick={handleSave}>Salvar Seleção</Button> */}
             </div>
 
-          <Button size="full"  onClick={closeCreateActivityModal}>
+          <Button size="full" type="submit">
             Salvar lançamento
           </Button>
         </form>

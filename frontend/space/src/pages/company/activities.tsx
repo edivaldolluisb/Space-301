@@ -18,10 +18,31 @@ export function Activities() {
   const { tripId } = useParams()
   const [activities, setActivities] = useState<Activity[]>([])
 
+  const transformData = (missions: any[]): Activity[] => {
+    // Agrupar missões por data
+    const grouped = missions.reduce((acc: Record<string, { id: string; title: string; occurs_at: string }[]>, mission) => {
+      const date = mission.lauchDate.split("T")[0]; // Extrai apenas a data
+      if (!acc[date]) acc[date] = [];
+      acc[date].push({
+        id: mission.id.toString(),
+        title: mission.missionName,
+        occurs_at: mission.lauchDate,
+      });
+      return acc;
+    }, {});
+  
+    // Converter para o formato desejado
+    return Object.entries(grouped).map(([date, activities]) => ({
+      date,
+      activities,
+    }));
+  };
+
   const fetchLancamentos = async () => {
     try {
       const response = await api.get('/launches');
-      return response.data
+      const data =await response.data
+      return data
       
     } catch (error) {
       console.log("Erro ao buscar lançamentos:", error)
@@ -33,8 +54,8 @@ export function Activities() {
   useEffect(() => {
     const fetchData = async () => {
       const result = await fetchLancamentos();
-      if (result && result.activities) {
-        setActivities(result.activities);
+      if (result) {
+        setActivities(transformData(result));
       } else {
         // Fallback com dados estáticos
         setActivities([
