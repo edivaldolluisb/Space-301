@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "rocket-generator"
+version = "0.1.0"
+description = ""
+authors = ["Shelton Lázio Agostinho <sheltonagostinho@ua.pt>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+numpy = "^2.1.3"
+pika = "^1.3.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+executar-receptor-sender = "rocket_generator.receiver:main"

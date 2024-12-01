@@ -1,8 +1,9 @@
-import { CheckCircle2, CircleDashed, X, UserCog } from "lucide-react";
+import { CheckCircle2, X, UserCog } from "lucide-react";
 import { Button } from "../../components/button";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { api } from "../../lib/axios";
+// import { api } from "../../lib/axios";
+import { Link } from "react-router-dom";
 
 interface Participant {
   id: string;
@@ -65,10 +66,14 @@ export function Guests() {
         ))}
       </div>
 
-      <Button variant="secondary" size="full">
-        <UserCog className="size-5" />
-        Ver histórico completo
-      </Button>
+      <div>
+        <Link to={"/history"} className="">
+          <Button variant="secondary" size="full">
+            <UserCog className="size-5" />
+            Ver histórico completo
+          </Button>
+        </Link>
+      </div>
     </div>
   )
 }
