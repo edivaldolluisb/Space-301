@@ -41,8 +41,11 @@ export function Activities() {
   const fetchLancamentos = async () => {
     try {
       const response = await api.get('/history/launches');
-      const data =await response.data
-      return data
+      const data = await response.data
+      const launches = data
+                        .filter((item: { launch: null; }) => item.launch !== null)
+                        .map((item: { launch: any; }) => item.launch);
+      return launches
       
     } catch (error) {
       console.log("Erro ao buscar lançamentos:", error)
