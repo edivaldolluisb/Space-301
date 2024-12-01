@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 // import LaunchItem from '../components/LauchItem'
 
 import { Plus } from "lucide-react";
-import { ListLaunchHistory } from "./activities";
+import { Activities } from "./activities";
 import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
 import { apiService } from "../../lib/axios";
 
@@ -21,7 +21,7 @@ export function History() {
             <h2 className="text-3xl font-semibold">Histórico de Lançamentos</h2>
           </div>
 
-          <ListLaunchHistory />
+          <Activities />
         </div>
 
       </main>

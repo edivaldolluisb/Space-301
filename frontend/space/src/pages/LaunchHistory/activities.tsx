@@ -1,93 +1,118 @@
 import { CircleCheck } from "lucide-react";
+import { api } from "../../lib/axios";
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 
-interface Launch {
-  id: number;
-  name: string;
+interface Activity {
   date: string;
-  status: string;
+  activities: {
+    id: string;
+    title: string;
+    occurs_at: string;
+  }[]
 }
 
-interface MonthLaunches {
-  monthYear: string;
-  launches: Launch[];
-}
+export function Activities() {
+  const { tripId } = useParams()
+  const [activities, setActivities] = useState<Activity[]>([])
 
-export function ListLaunchHistory() {
-  const [groupedByMonth, setGroupedByMonth] = useState<Record<string, Launch[]>>({});
-
-  const launchHistory: Launch[] = [
-    { id: 1, name: 'Antares', date: '2024-12-15T10:00:00.000+00:00', status: 'success' },
-    { id: 2, name: 'Atlas V', date: '2024-10-15T10:00:00.000+00:00', status: 'success' },
-    { id: 3, name: 'LauncherOne', date: '2024-11-15T10:00:00.000+00:00', status: 'success' },
-    { id: 4, name: 'LauncherOne', date: '2024-12-15T10:00:00.000+00:00', status: 'failure' }
-  ];
-
-  const organizeLaunchesByMonth = (launches: Launch[]): MonthLaunches[] => {
-    const launchesByMonth: Record<string, Launch[]> = launches.reduce((acc, launch) => {
-      const launchDate = new Date(launch.date);
-      const monthYear = `${launchDate.getFullYear()}-${String(launchDate.getMonth() + 1).padStart(2, '0')}`;
-
-      if (!acc[monthYear]) {
-        acc[monthYear] = [];
-      }
-      acc[monthYear].push(launch);
+  const transformData = (missions: any[]): Activity[] => {
+    // Agrupar missões por data
+    const grouped = missions.reduce((acc: Record<string, { id: string; title: string; occurs_at: string }[]>, mission) => {
+      const date = mission.lauchDate.split("T")[0]; // Extrai apenas a data
+      if (!acc[date]) acc[date] = [];
+      acc[date].push({
+        id: mission.id.toString(),
+        title: mission.missionName,
+        occurs_at: mission.lauchDate,
+      });
       return acc;
-    }, {} as Record<string, Launch[]>);
-
-    return Object.entries(launchesByMonth).map(([monthYear, launches]) => ({
-      monthYear,
-      launches,
+    }, {});
+  
+    // Converter para o formato desejado
+    return Object.entries(grouped).map(([date, activities]) => ({
+      date,
+      activities,
     }));
   };
 
+  const fetchLancamentos = async () => {
+    try {
+      const response = await api.get('/history/launches');
+      const data =await response.data
+      return data
+      
+    } catch (error) {
+      console.log("Erro ao buscar lançamentos:", error)
+      return null
+    }
+    
+  }
+
   useEffect(() => {
-    const organizedLaunches = organizeLaunchesByMonth(launchHistory);
-    const groupedByMonthObj = organizedLaunches.reduce((acc, { monthYear, launches }) => {
-      acc[monthYear] = launches;
-      return acc;
-    }, {} as Record<string, Launch[]>);
+    const fetchData = async () => {
+      const result = await fetchLancamentos();
+      if (result) {
+        setActivities(transformData(result));
+      } else {
+        // Fallback com dados estáticos
+        setActivities([
+          {
+            date: '2022-12-10',
+            activities: [
+              { id: '1', title: 'Antares', occurs_at: '2022-12-10T08:00:00' },
+              { id: '2', title: 'Atlas V', occurs_at: '2022-12-10T12:00:00' },
+              { id: '3', title: 'LauncherOne', occurs_at: '2022-12-10T19:00:00' },
+            ],
+          },
+          {
+            date: '2022-12-11',
+            activities: [
+              { id: '4', title: 'LauncherOne', occurs_at: '2022-12-11T08:00:00' },
+              { id: '5', title: 'LauncherOne', occurs_at: '2022-12-11T12:00:00' },
+              { id: '6', title: 'Atlas V', occurs_at: '2022-12-11T19:00:00' },
+            ],
+          },
+        ]);
+      }
+    };
 
-    setGroupedByMonth(groupedByMonthObj);
-  }, [launchHistory]);
-
-  const renderLaunchItem = (launch: Launch) => (
-    <div key={launch.id} className="space-y-2.5 mb-2 mt-0">
-      <div className="px-4 py-2.5 bg-zinc-900 rounded-xl shadow-shape flex items-center gap-3">
-        <CircleCheck className="size-5 text-lime-300" />
-        <span className="text-zinc-100">{launch.name}</span>
-        <div className="flex items-center gap-3 ml-auto">
-          <span className="text-s text-zinc-500">
-			{format(new Date(launch.date),  "d' de 'LLLL", { locale: pt })}
-          </span>
-          <span className="text-zinc-400 text-sm">
-            {format(new Date(launch.date), 'HH:mm')}h
-          </span>
-          <span className="text-zinc-400 text-sm">
-            Ver dados
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-
+    fetchData();
+  }, [tripId]);
+  
   return (
     <div className="space-y-8">
-      {Object.entries(groupedByMonth).map(([monthYear, launches]) => (
-        <div key={monthYear} className="space-y-2.5">
-          <div className="flex gap-2 items-baseline">
-            <span className="text-xl text-zinc-300 font-semibold">
-              {format(new Date(monthYear), 'MMMM', { locale: pt })}
-            </span>
-            <span className="text-zinc-500 text-sm">
-              {format(new Date(monthYear), 'yyyy', { locale: pt })}
-            </span>
+      {activities.map(category => {
+        return (
+          <div key={category.date} className="space-y-2.5">
+            <div className="flex gap-2 items-baseline">
+              <span className="text-xl text-zinc-300 font-semibold">{format(category.date, 'LLLL')}</span>
+              <span className="text-xs text-zinc-500">{format(category.date, 'y', { locale: pt })}</span>
+            </div>
+            {category.activities.length > 0 ? (
+              <div>
+                {category.activities.map(activity => {
+                  return (
+                    <div key={activity.id} className="space-y-2.5 mb-2">
+                      <div className="px-4 py-2.5 bg-zinc-900 rounded-xl shadow-shape flex items-center gap-3">
+                        <CircleCheck className="size-5 text-lime-300" />
+                        <span className="text-zinc-100">{activity.title}</span>
+                        <span className="text-zinc-400 text-sm ml-auto">
+                        {format(activity.occurs_at, "d' de 'LLLL  'às' HH'h'mm", { locale: pt })}
+                        </span>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            ) : (
+              <p className="text-zinc-500 text-sm">Nenhum lançamento cadastrado para essa data.</p>
+            )}
           </div>
-          {launches.map(renderLaunchItem)}
-        </div>
-      ))}
+        )
+      })}
     </div>
-  );
+  )
 }
