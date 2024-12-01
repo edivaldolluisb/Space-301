@@ -100,7 +100,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-websocket</artifactId>
-
+		</dependency>
 
 		<!--rabbitMQ-->
 		<dependency>
@@ -111,7 +111,6 @@
 			<groupId>org.springframework.amqp</groupId>
 			<artifactId>spring-rabbit-test</artifactId>
 			<scope>test</scope>
-
 		</dependency>
 	</dependencies>
 
