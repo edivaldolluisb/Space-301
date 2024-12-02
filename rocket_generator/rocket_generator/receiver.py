@@ -1,8 +1,8 @@
 import json
 import pika
 import asyncio
-from rocket_generator.rocket import Rocket
-from rocket_generator.config import RABBITMQ_HOST, RECEIVER_QUEUE_NAME
+from rocket import Rocket
+from config import RABBITMQ_HOST, RECEIVER_QUEUE_NAME
 
 
 class ReceberLancamentos:
