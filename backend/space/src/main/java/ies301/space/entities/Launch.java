@@ -28,6 +28,8 @@ public class Launch {
     @NotBlank(message="Address is mandotory")
     private String address;
 
+    private Status status = Status.PENDING;
+
     @OneToMany(mappedBy = "launch")
     private List<Astronaut> astronauts;
 
@@ -36,11 +38,12 @@ public class Launch {
 
     public Launch() {}
     
-    public Launch(String missionName, Date lauchDate, int rocketId, String address) {
+    public Launch(String missionName, Date lauchDate, int rocketId, String address, Status status) {
         this.missionName = missionName;
         this.lauchDate = lauchDate;
         this.rocketId = rocketId;
         this.address = address;
+        this.status = status;
     }
 
     public double getId() {
@@ -116,6 +119,14 @@ public class Launch {
         alert.setLaunch(null);
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -124,6 +135,7 @@ public class Launch {
             ", lauchDate:'" + getLauchDate() + "'" +
             ", rocketId:'" + getRocketId() + "'" +
             ", address:'" + getAddress() + "'" +
+            ", status:'" + getStatus() + "'" +
             "}";
     }
     

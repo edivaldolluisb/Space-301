@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class QueueConsumer {
 
-    @RabbitListener(queues = {"launch_data"})
+    @RabbitListener(queues = {"dataGeneratorQueue"})
     public void receive(@Payload String fileBody) {
         System.out.println("Message " + fileBody);
     }

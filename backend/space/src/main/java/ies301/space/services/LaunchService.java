@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import ies301.space.entities.Launch;
+import ies301.space.entities.Status;
 import ies301.space.repositories.LaunchRepository;
 
 @Service
@@ -26,5 +27,10 @@ public class LaunchService {
 
     public Optional<Launch> getLaunchById(Long id) {
         return launchRepository.findById(id);
+    }
+
+    // get all lunch by pending status
+    public List<Launch> getPendingLaunches() {
+        return launchRepository.findByStatus(Status.PENDING);
     }
 }

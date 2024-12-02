@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SenderConfig {
 
-    @Value("launch_generate")
+    @Value("launchQueue")
     private String message;
 
     @Bean
