@@ -67,7 +67,7 @@ export function CreateTripPage() {
       };
 
       await auth.register(newUser);
-      navigate("/alerts");
+      navigate("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro ao registrar usuário");
     } finally {
@@ -93,7 +93,7 @@ export function CreateTripPage() {
       };
 
       await auth.login(credentials);
-      navigate("/alerts");
+      navigate("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro ao fazer login");
     } finally {
