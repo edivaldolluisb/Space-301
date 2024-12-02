@@ -34,7 +34,8 @@ services:
       SPRING_DATASOURCE_USERNAME: space
       SPRING_DATASOURCE_PASSWORD: space
     depends_on:
-      - postgres, rabbitmq
+      - postgres
+      - rabbitmq
 
   frontend:
     build:
@@ -46,6 +47,14 @@ services:
     tty: true
     depends_on:
       - backend
+
+  gerador:
+    build:
+      context: ./rocket_generator
+    container_name: gerador
+    depends_on:
+      - rabbitmq
+    command: ["poetry", "run", "python", "rocket_generator/receiver.py"]
 
 volumes:
   postgres_data:
