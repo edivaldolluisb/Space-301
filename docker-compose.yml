@@ -1,6 +1,16 @@
 version: '3.8'
 
 services:
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq-container
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
   postgres:
     image: postgres:14
     container_name: meu_postgres
@@ -25,6 +35,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: space
     depends_on:
       - postgres
+      - rabbitmq
 
   frontend:
     build:
@@ -36,6 +47,15 @@ services:
     tty: true
     depends_on:
       - backend
+
+  gerador:
+    build:
+      context: ./rocket_generator
+    container_name: gerador
+    depends_on:
+      - rabbitmq
+    command: ["poetry", "run", "python", "rocket_generator/receiver.py"]
+    restart: always
 
 volumes:
   postgres_data:
