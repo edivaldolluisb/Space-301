@@ -4,55 +4,125 @@ import Profile from '../components/Profile';
 import '../styles/sinaisvitais.css';
 import {api} from '../lib/axios';
 import {DestinationAndDateHeader} from '../components/destination-and-date-header';
+import { Client } from '@stomp/stompjs';
+
+type Alerta = {
+    parametro: string;
+    nome_alerta: string;
+  };
+  
+  type Tripulante = {
+    id: number;
+    pa_sistolica: number;
+    pa_diastolica: number;
+    oxigenio_sangue: number;
+    bpm: number;
+    respiracao: number;
+    alertas: Alerta[];
+  };
+  
+  type Nave = {
+    altitude: number;
+    velocidade: number;
+    velocidade_x: number;
+    aceleracao: number;
+    forca_g: number;
+    pressao_atual: number;
+    temperatura_atual: number;
+    temperatura_motor_atual: number;
+    temperatura_externa_atual: number;
+    combustivel: number;
+    qualidade_atual: number;
+    oxigenio_atual: number;
+    energia_atual: number;
+    alerta: any[];
+  };
+  
+  type Message = {
+    id_lancamento: string;
+    tripulantes: Tripulante[];
+    nave: Nave;
+  };
 
 export default function SinaisVitais() {
     const [currentAstronautId, setCurrentAstronautId] = useState(individuals[0].id);
     const [currentAstronaut, setCurrentAstronaut] = useState(individuals[currentAstronautId]);
     const [astronauts, setAstronauts] = useState(individuals);
-    const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchAstronauts = async () => {
-        try {
-            const response = await api.get('/launches');
-            const astronautsList: Astronaut[] = response.data[0].astronauts.map((astronaut: Astronaut) => ({
-                ...astronaut,
-                parametros: [
-                    {
-                        name: 'Batimento Cardíaco',
-                        valor: astronaut.heartRate.toFixed(2),
-                        unidade: 'bpm',
-                        status: 'Normal',
-                    },
-                    {
-                        name: 'Pressão Sanguinea',
-                        valor: astronaut.bloodPressure.toFixed(2),
-                        unidade: '/ 80 mmhg',
-                        status: 'Normal',
-                    },
-                    {
-                        name: 'Temperatura corporal',
-                        valor: astronaut.bodyTemperature.toFixed(2),
-                        unidade: 'ºc',
-                        status: 'Normal',
-                    },
-                    {
-                        name: 'Ritmo respiratório',
-                        valor: astronaut.respiratoryRate.toFixed(2),
-                        unidade: 'rpm',
-                        status: 'Normal',
-                    },
-                ],
-            }));
-            setAstronauts(astronautsList);
-            console.log(astronautsList);
-        } catch (err) {
-            setError('Erro ao buscar os dados dos astronautas');
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
-    };
+    useEffect(() => {
+        const client = new Client({
+          brokerURL: 'ws://localhost:8080/space-websocket', // URL do WebSocket
+          reconnectDelay: 5000, // Tenta reconectar após falhas
+          onConnect: () => {
+            console.log('Conectado ao WebSocket');
+            client.subscribe('/topic/launch-data', (msg) => {
+              console.log('Mensagem recebida do WebSocket:', msg); // Inspecionar a mensagem
+              const data = JSON.parse(msg.body); // Parse do payload
+              console.log('Dados processados:', data);
+              setAstronauts((prevAstronauts) =>
+                prevAstronauts.map((astronaut) => {
+                    const updated = data.find((t) => t.id === astronaut.id);
+                    if (updated) {
+                        return {
+                            ...astronaut,
+                            parametros: [
+                                {
+                                    name: 'Batimento Cardíaco',
+                                    valor: updated.bpm,
+                                    unidade: 'bpm',
+                                    status: updated.bpm > 100 ? 'Alto' : 'Normal',
+                                },
+                                {
+                                    name: 'Pressão Sanguinea',
+                                    pa_diastolica: updated.pa_diastolica,
+                                    pa_sistolica: updated.pa_sistolica,
+                                    unidade: '/ mmHg',
+                                    status:
+                                        updated.pa_sistolica > 140 || updated.pa_diastolica > 90
+                                            ? 'Alta'
+                                            : 'Normal',
+                                },
+                                {
+                                    name: 'Oxigênio no Sangue',
+                                    valor: updated.oxigenio_sangue,
+                                    unidade: 'mol/m³',
+                                    status: updated.oxigenio_sangue < 7.5 ? 'Baixo' : 'Normal',
+                                },
+                                {
+                                    name: 'Ritmo Respiratório',
+                                    valor: updated.respiracao,
+                                    unidade: 'rpm',
+                                    status: updated.respiracao > 20 ? 'Alto' : 'Normal',
+                                },
+                                {
+                                    name: 'Temperatura corporal',
+                                    valor: updated.temperature,
+                                    unidade: 'ºc',
+                                    status: 'Normal'
+                                },
+                            ],
+                        };
+                    }
+                    return astronaut;
+                    })
+                );
+            });
+          },
+          onDisconnect: () => {
+            setError("Desconectado do WebSocket");
+            console.log('Desconectado do WebSocket');
+          },
+        });
+      
+        client.activate();
+      
+        return () => {
+          client.deactivate();
+        };
+      }, []);
+      
+
 
     if (error) {
         setAstronauts(individuals);
@@ -60,22 +130,9 @@ export default function SinaisVitais() {
     }
 
     useEffect(() => {
-        const intervalId = setInterval(() => {
-            fetchAstronauts();
-        }, 1000);
-
-        return () => clearInterval(intervalId);
-    }, []);
-
-    useEffect(() => {
         setCurrentAstronaut(astronauts.filter((astronaut) => astronaut.id == currentAstronautId)[0]);
     });
-
-    if (loading) {
-        return <h1>Loading...</h1>;
-    }
     
-
     return (
         <>
         <div className="max-w-6xl px-6 py-10 mx-auto space-y-8">
@@ -109,6 +166,8 @@ export default function SinaisVitais() {
                                                         key={index}
                                                         nome={parametro.name}
                                                         valor={parametro.valor}
+                                                        pa_diastolica={parametro.pa_diastolica}
+                                                        pa_sistolica={parametro.pa_sistolica}
                                                         unidade={parametro.unidade}
                                                         status={parametro.status} />)
                                                     : 'None'}
@@ -133,7 +192,9 @@ export default function SinaisVitais() {
 
 interface VitalParameter {
     name: string;
-    valor: number;
+    valor: number|null;
+    pa_diastolica: number| null;
+    pa_sistolica: number|null;
     unidade: string;
     status: string;
 }
@@ -147,7 +208,8 @@ interface Astronaut {
     height: number;
     weight: number;
     heartRate: number;
-    bloodPressure: number;
+    pa_diastolica: number;
+    pa_sistolica: number;
     bodyTemperature: number;
     respiratoryRate: number;
     parametros?: VitalParameter[];
@@ -166,25 +228,26 @@ const individuals = [
         parametros: [
             {
                 name: 'Batimento Cardíaco',
-                valor: 92,
+                valor: null,
                 unidade: 'bpm',
                 status: 'Normal'
             },
             {
                 name: 'Pressão Sanguinea',
-                valor: 110,
-                unidade: '/ 70 mmhg',
+                pa_diastolica:  null,
+                pa_sistolica: null,
+                unidade: ' mmhg',
                 status: 'Normal'
             },
             {
                 name: 'Temperatura corporal',
-                valor: 36.8,
+                valor: null,
                 unidade: 'ºc',
                 status: 'Normal'
             },
             {
                 name: 'Ritmo respiratório',
-                valor: 18,
+                valor: null,
                 unidade: 'rpm',
                 status: 'Normal'
             },
@@ -201,25 +264,26 @@ const individuals = [
         parametros: [
             {
                 name: 'Batimento Cardíaco',
-                valor: 85,
+                valor: null,
                 unidade: 'bpm',
                 status: 'Normal'
             },
             {
                 name: 'Pressão Sanguinea',
-                valor: 120,
-                unidade: '/ 80 mmhg',
+                pa_diastolica: null,
+                pa_sistolica: null,
+                unidade: ' mmhg',
                 status: 'Normal'
             },
             {
                 name: 'Temperatura corporal',
-                valor: 36.9,
+                valor: null,
                 unidade: 'ºc',
                 status: 'Normal'
             },
             {
                 name: 'Ritmo respiratório',
-                valor: 16,
+                valor: null,
                 unidade: 'rpm',
                 status: 'Normal'
             },
@@ -236,25 +300,26 @@ const individuals = [
         parametros: [
             {
                 name: 'Batimento Cardíaco',
-                valor: 78,
+                valor: null,
                 unidade: 'bpm',
                 status: 'Normal'
             },
             {
                 name: 'Pressão Sanguinea',
-                valor: 118,
-                unidade: '/ 75 mmhg',
+                pa_diastolica: null,
+                pa_sistolica: null,
+                unidade: ' mmhg',
                 status: 'Normal'
             },
             {
                 name: 'Temperatura corporal',
-                valor: 36.5,
+                valor: null,
                 unidade: 'ºc',
                 status: 'Normal'
             },
             {
                 name: 'Ritmo respiratório',
-                valor: 17,
+                valor: null,
                 unidade: 'rpm',
                 status: 'Normal'
             },
@@ -271,25 +336,26 @@ const individuals = [
         parametros: [
             {
                 name: 'Batimento Cardíaco',
-                valor: 90,
+                valor: null,
                 unidade: 'bpm',
                 status: 'Normal'
             },
             {
                 name: 'Pressão Sanguinea',
-                valor: 115,
-                unidade: '/ 75 mmhg',
+                pa_diastolica: null,
+                pa_sistolica: null,
+                unidade: ' mmhg',
                 status: 'Normal'
             },
             {
                 name: 'Temperatura corporal',
-                valor: 37.1,
+                valor: null,
                 unidade: 'ºc',
                 status: 'Normal'
             },
             {
                 name: 'Ritmo respiratório',
-                valor: 19,
+                valor: null,
                 unidade: 'rpm',
                 status: 'Normal'
             },
