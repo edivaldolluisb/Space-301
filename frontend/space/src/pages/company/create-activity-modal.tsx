@@ -40,7 +40,7 @@ export function CreateActivityModal({
     const data = new FormData(event.currentTarget)
 
     const missionName = data.get('mission')?.toString()
-    const launchDate = data.get('date')?.toString()
+    const launchDate = new Date(data.get('date')?.toString() || "").toISOString();
     const launchLocation = data.get('location')?.toString()
 
     if (!missionName || !launchDate || !launchLocation || !rocketId) {
@@ -49,22 +49,20 @@ export function CreateActivityModal({
     }
     const launch = {   
       "missionName": missionName,
-      "lauchDate": launchDate,
-      "rocketId": rocketId,
+      "launchDate": launchDate,
+      "rocketId": Number(rocketId),
       "address": launchLocation,
       "astronauts":selectedCrew
     }
     try {
+      console.log(launch)
       const result = await api.post(`/launches`, launch);
       console.log(result)
       closeCreateActivityModal();
-      window.document.location.reload();
     } catch (error) {
       console.error("Erro ao criar lançamento:", error);
       alert("Não foi possível criar o lançamento. Tente novamente.");
     }
-
-    window.document.location.reload()
   }
 
   // const handleConfirmClick = (): void => {
