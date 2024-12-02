@@ -1,7 +1,7 @@
 import asyncio
 import numpy as np
 import random
-from rocket_generator.sender import SendData
+from sender import SendData
 
 class Rocket:
     def __init__(self, id_lancamento, astronaut1, astronaut2, astronaut3, astronaut4) -> None:
@@ -51,12 +51,14 @@ class Rocket:
             oxigenio_sangue = self.NIVEL_OXIGENIO_BASE - random.uniform(0.2, 0.5)
             bpm = self.BPM_BASE + random.uniform(10, 20)
             respiracao = self.RESPIRACAO_BASE + random.uniform(2, 5)
+            temperature = 36 + random.uniform(-1, 3)
         else:
             pa_sistolica = self.PRESSAO_ARTERIAL_BASE[0] + random.uniform(-5, 5)
             pa_diastolica = self.PRESSAO_ARTERIAL_BASE[1] + random.uniform(-3, 3)
             oxigenio_sangue = self.NIVEL_OXIGENIO_BASE + random.uniform(-0.2, 0.2)
             bpm = self.BPM_BASE + random.uniform(-5, 5)
             respiracao = self.RESPIRACAO_BASE + random.uniform(-1, 1)
+            temperature = 36 + random.uniform(-0.5, 1)
         
         alertas_tripulante = []
         if pa_sistolica > 140:
@@ -75,6 +77,7 @@ class Rocket:
             "oxigenio_sangue": oxigenio_sangue,
             "bpm": bpm,
             "respiracao": respiracao,
+            "temperature": temperature,
             "alertas": alertas_tripulante,
         }
 
