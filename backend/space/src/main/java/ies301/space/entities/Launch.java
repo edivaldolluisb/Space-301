@@ -1,6 +1,7 @@
 package ies301.space.entities;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -31,7 +32,7 @@ public class Launch {
     private Status status = Status.PENDING;
 
     @OneToMany(mappedBy = "launch")
-    private Set<Long> astronauts;
+    private Set<Astronaut> astronauts = new HashSet<>();
 
     @OneToMany(mappedBy = "launch")
     private List<Alert> alerts;
@@ -39,7 +40,7 @@ public class Launch {
     public Launch() {}
     
 
-    public Launch(String missionName, Date lauchDate, int rocketId, String address, Status status, Set<Long> astronauts) {
+    public Launch(String missionName, Date lauchDate, int rocketId, String address, Status status, Set<Astronaut> astronauts) {
 
         this.missionName = missionName;
         this.lauchDate = lauchDate;
@@ -55,19 +56,19 @@ public class Launch {
         return id;
     }
 
-    public Set<Long> getAstronauts() {
+    public Set<Astronaut> getAstronauts() {
         return astronauts;
     }
 
-    public void setAstronauts(Set<Long> astronauts) {
+    public void setAstronauts(Set<Astronaut> astronauts) {
         this.astronauts = astronauts;
     }
 
-    public void addAstronaut(Long astronaut) {
+    public void addAstronaut(Astronaut astronaut) {
         astronauts.add(astronaut);
     }
 
-    public void removeAstronaut(Long astronaut) {
+    public void removeAstronaut(Astronaut astronaut) {
         astronauts.remove(astronaut);
     }   
 

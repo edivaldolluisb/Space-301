@@ -29,7 +29,8 @@ public class AlertService {
 
         // logger.info("Saving alert: {}", alert);
         Alert savedAlert = alertRepository.save(alert);
-        messagingTemplate.convertAndSend("/topic/alerts", savedAlert);
+        List<Alert> allAlerts = alertRepository.findAll();
+        messagingTemplate.convertAndSend("/topic/alerts", allAlerts);
         return savedAlert;
         // return alertRepository.save(alert);
     }
@@ -54,7 +55,8 @@ public class AlertService {
             Alert alert = optionalAlert.get();
             alert.setStatus(newStatus);
             Alert updatedAlert = alertRepository.save(alert);
-            messagingTemplate.convertAndSend("/topic/alerts", updatedAlert);
+            List<Alert> allAlerts = alertRepository.findAll();
+            messagingTemplate.convertAndSend("/topic/alerts", allAlerts);
             return updatedAlert;
             // return alertRepository.save(alert);
         }
