@@ -30,7 +30,7 @@ public class Astronaut {
 
     @ManyToOne
     @JoinColumn(name = "launch_id")
-    @JsonIgnore
+    // @JsonIgnore
     private Launch launch;
 
     public Astronaut() {

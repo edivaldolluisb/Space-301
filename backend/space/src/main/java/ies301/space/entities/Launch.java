@@ -35,19 +35,16 @@ public class Launch {
 
     private Status status = Status.PENDING;
 
-    @ElementCollection
-    @CollectionTable(name = "launch_astronauts", joinColumns = @JoinColumn(name = "launch_id"))
-    @Column(name = "astronaut_id")
-    private Set<Long> astronauts;
+    @OneToMany(mappedBy = "launch")
+    private Set<Astronaut> astronauts = new HashSet<>();
 
     @OneToMany(mappedBy = "launch")
     private List<Alert> alerts;
 
     public Launch() {this.astronauts = new HashSet<>();}
     
+    public Launch(String missionName, Date lauchDate, int rocketId, String address, Status status, Set<Astronaut> astronauts) {
 
-    public Launch(String missionName, Date lauchDate, int rocketId, String address, Status status, Set<Long> astronauts) {
-        this.astronauts = new HashSet<>();
 
         this.missionName = missionName;
         this.lauchDate = lauchDate;
@@ -63,19 +60,19 @@ public class Launch {
         return id;
     }
 
-    public Set<Long> getAstronauts() {
+    public Set<Astronaut> getAstronauts() {
         return astronauts;
     }
 
-    public void setAstronauts(Set<Long> astronauts) {
+    public void setAstronauts(Set<Astronaut> astronauts) {
         this.astronauts = astronauts;
     }
 
-    public void addAstronaut(Long astronaut) {
+    public void addAstronaut(Astronaut astronaut) {
         astronauts.add(astronaut);
     }
 
-    public void removeAstronaut(Long astronaut) {
+    public void removeAstronaut(Astronaut astronaut) {
         astronauts.remove(astronaut);
     }   
 

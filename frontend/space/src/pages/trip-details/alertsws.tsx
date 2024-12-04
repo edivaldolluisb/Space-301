@@ -14,6 +14,7 @@ const AlertsWs = () => {
                         const QuotesList = JSON.parse(message.body);
                         console.log("websocket fetch: ", QuotesList);
                         setQuotes(QuotesList);
+
                         console.log("websocket updated: ", quotes);
                     }
                 });
