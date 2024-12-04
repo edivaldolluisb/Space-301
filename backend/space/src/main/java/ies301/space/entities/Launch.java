@@ -1,13 +1,18 @@
 package ies301.space.entities;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -28,41 +33,50 @@ public class Launch {
     @NotBlank(message="Address is mandotory")
     private String address;
 
-    @OneToMany(mappedBy = "launch")
-    private List<Astronaut> astronauts;
+    private Status status = Status.PENDING;
+
+    @ElementCollection
+    @CollectionTable(name = "launch_astronauts", joinColumns = @JoinColumn(name = "launch_id"))
+    @Column(name = "astronaut_id")
+    private Set<Long> astronauts;
 
     @OneToMany(mappedBy = "launch")
     private List<Alert> alerts;
 
-    public Launch() {}
+    public Launch() {this.astronauts = new HashSet<>();}
     
-    public Launch(String missionName, Date lauchDate, int rocketId, String address) {
+
+    public Launch(String missionName, Date lauchDate, int rocketId, String address, Status status, Set<Long> astronauts) {
+        this.astronauts = new HashSet<>();
+
         this.missionName = missionName;
         this.lauchDate = lauchDate;
         this.rocketId = rocketId;
         this.address = address;
+
+        this.status = status;
+
+        this.astronauts = astronauts;
     }
 
     public double getId() {
         return id;
     }
 
-    public List<Astronaut> getAstronauts() {
+    public Set<Long> getAstronauts() {
         return astronauts;
     }
 
-    public void setAstronauts(List<Astronaut> astronauts) {
+    public void setAstronauts(Set<Long> astronauts) {
         this.astronauts = astronauts;
     }
 
-    public void addAstronaut(Astronaut astronaut) {
+    public void addAstronaut(Long astronaut) {
         astronauts.add(astronaut);
-        astronaut.setLaunch(this);
     }
 
-    public void removeAstronaut(Astronaut astronaut) {
+    public void removeAstronaut(Long astronaut) {
         astronauts.remove(astronaut);
-        astronaut.setLaunch(null);
     }   
 
     public String getMissionName() {
@@ -114,6 +128,26 @@ public class Launch {
     public void removeAlert(Alert alert) {
         alerts.remove(alert);
         alert.setLaunch(null);
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+            " id:'" + getId() + "'" +
+            ", missionName:'" + getMissionName() + "'" +
+            ", lauchDate:'" + getLauchDate() + "'" +
+            ", rocketId:'" + getRocketId() + "'" +
+            ", address:'" + getAddress() + "'" +
+            ", status:'" + getStatus() + "'" +
+            "}";
     }
     
 }

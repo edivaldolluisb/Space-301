@@ -4,6 +4,8 @@ import { Activities } from "./activities";
 import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
 import { apiService } from "../../lib/axios";
 
+import AlertsWs from "./alertsws"
+
 export function AlertsPage() {
   const [isCreateActivityModalOpen, setIsCreateActivityModalOpen] = useState(false)
 
@@ -47,6 +49,7 @@ export function AlertsPage() {
         </div>
 
       </main>
+      <AlertsWs />
 
       {/* {isCreateActivityModalOpen && (
         <CreateActivityModal 
