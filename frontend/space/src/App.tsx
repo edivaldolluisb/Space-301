@@ -7,6 +7,7 @@ import { DashboardPage } from "./pages/company"
 import { RocketDetailsPage } from "./pages/company/rocket-dashboard"
 import SinaisVitais from "./pages/SinaisVitais"
 import SpaceSettings from "./pages/SpaceSettings"
+import Dashboard from "./pages/company/dashboard"
 
 
 const router = createBrowserRouter([
@@ -23,8 +24,12 @@ const router = createBrowserRouter([
     element: <SinaisVitais />
   },
   {
-    path: "/dashboard",
+    path: "/lancamentos",
     element: <DashboardPage />
+  },
+  {
+    path: "/dashboard",
+    element: <Dashboard />
   },
   {
     path: "/rocket/:rocketId",
