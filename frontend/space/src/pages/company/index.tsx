@@ -1,21 +1,67 @@
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { CreateActivityModal } from "./create-activity-modal";
 import { ImportantLinks } from "./important-links";
 import { Guests } from "./guests";
 import { Activities } from "./activities";
 import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
 
+
+
+interface Astronaut {
+	id: number;
+}
+
 export function DashboardPage() {
   const [isCreateActivityModalOpen, setIsCreateActivityModalOpen] = useState(false)
+  
+	const [missionName, setMissionName] = useState('');
+	const [launchDate, setLaunchDate] = useState('');
+	const [rocketId, setRocketId] = useState<number | string | null>(null);
+	const [address, setAddress] = useState('');
+	const [status, setStatus] = useState('PENDING');
+	const [astronauts, setAstronauts] = useState<Astronaut[]>([]);
+  
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   function openCreateActivityModal() {
     setIsCreateActivityModalOpen(true)
   }
 
-  function closeCreateActivityModal() {
+  function closeCreateLaunchModal() {
     setIsCreateActivityModalOpen(false)
   }
+
+  // create a new launch
+  async function createLaunch(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    
+    setError(null);
+    setIsLoading(true);
+  
+    const launchData = {
+      missionName,
+      launchDate,
+      rocketId,
+      address,
+      status,
+      astronauts,
+    };
+  
+    try {
+      // const response = await api.post('/launches', launchData);
+
+      // console.log('Lançamento registrado com sucesso:', response.data);
+      console.log('Lançamento registrado com sucesso:', launchData);
+      closeCreateLaunchModal();
+      // Aqui você pode atualizar a lista de lançamentos no estado, se necessário.
+    } catch (error) {
+      console.error('Erro ao registrar lançamento:', error);
+      alert('Falha ao registrar o lançamento. Verifique os dados e tente novamente.');
+    }
+  }
+  
 
   return (
     <div className="max-w-6xl px-6 py-10 mx-auto space-y-8">
@@ -46,7 +92,14 @@ export function DashboardPage() {
 
       {isCreateActivityModalOpen && (
         <CreateActivityModal 
-          closeCreateActivityModal={closeCreateActivityModal}
+          closeCreateLaunchModal={closeCreateLaunchModal}
+          setMissionName={setMissionName}
+          setLaunchDate={setLaunchDate}
+          setRocketId={setRocketId}
+          setAddress={setAddress}
+          setAstronauts={setAstronauts}
+          createLaunch={createLaunch}
+
         />
       )}
     </div>
