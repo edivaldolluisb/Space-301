@@ -1,16 +1,21 @@
 package ies301.space.entities;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
@@ -30,16 +35,19 @@ public class Launch {
 
     private Status status = Status.PENDING;
 
-    @OneToMany(mappedBy = "launch")
+    @ElementCollection
+    @CollectionTable(name = "launch_astronauts", joinColumns = @JoinColumn(name = "launch_id"))
+    @Column(name = "astronaut_id")
     private Set<Long> astronauts;
 
     @OneToMany(mappedBy = "launch")
     private List<Alert> alerts;
 
-    public Launch() {}
+    public Launch() {this.astronauts = new HashSet<>();}
     
 
     public Launch(String missionName, Date lauchDate, int rocketId, String address, Status status, Set<Long> astronauts) {
+        this.astronauts = new HashSet<>();
 
         this.missionName = missionName;
         this.lauchDate = lauchDate;

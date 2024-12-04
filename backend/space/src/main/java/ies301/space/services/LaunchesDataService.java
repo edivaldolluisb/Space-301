@@ -17,14 +17,15 @@ public class LaunchesDataService {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @RabbitListener(queues = "tripulanteQueue")
+    @RabbitListener(queues = "generatorQueue")
     public void consumeMessage(String messageJson) {
         try {
             // Log da mensagem recebida
             System.out.println("Mensagem recebida: " + messageJson);
             Message message = objectMapper.readValue(messageJson, Message.class);
             System.out.println("Objeto desserializado: " + message);
-            messagingTemplate.convertAndSend("/topic/launch-data", message.getTripulantes());
+            messagingTemplate.convertAndSend("/topic/astronaut-data", message.getTripulantes());
+            messagingTemplate.convertAndSend("/topic/launch-data", message.getNave());
         } catch (Exception e) {
             System.err.println("Erro ao processar mensagem: " + e.getMessage());
         }
