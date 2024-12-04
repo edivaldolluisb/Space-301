@@ -41,7 +41,7 @@ export function Activities() {
 
   const fetchLancamentos = async () => {
     try {
-      const response = await api.get('/launches');
+      const response = await api.get("http://localhost:8080/api/v1/launches");
       const data =await response.data
       return data
       
@@ -77,26 +77,6 @@ export function Activities() {
       const result = await fetchLancamentos();
       if (result) {
         setActivities(transformData(result));
-      } else {
-        // Fallback com dados estáticos
-        setActivities([
-          {
-            date: '2022-12-10',
-            activities: [
-              { id: '1', title: 'Antares', occurs_at: '2022-12-10T08:00:00' },
-              { id: '2', title: 'Atlas V', occurs_at: '2022-12-10T12:00:00' },
-              { id: '3', title: 'LauncherOne', occurs_at: '2022-12-10T19:00:00' },
-            ],
-          },
-          {
-            date: '2022-12-11',
-            activities: [
-              { id: '4', title: 'LauncherOne', occurs_at: '2022-12-11T08:00:00' },
-              { id: '5', title: 'LauncherOne', occurs_at: '2022-12-11T12:00:00' },
-              { id: '6', title: 'Atlas V', occurs_at: '2022-12-11T19:00:00' },
-            ],
-          },
-        ]);
       }
     };
 

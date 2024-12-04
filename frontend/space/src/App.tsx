@@ -23,7 +23,7 @@ const router = createBrowserRouter([
     element: <SinaisVitais />
   },
   {
-    path: "/lancamentos",
+    path: "/launches",
     element: <DashboardPage />
   },
   {
