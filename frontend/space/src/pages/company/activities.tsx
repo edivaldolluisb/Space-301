@@ -1,18 +1,9 @@
 import { CircleCheck } from "lucide-react";
 import { api } from "../../lib/axios";
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { format, set } from "date-fns";
+import { useParams } from "react-router-dom";
+import { format } from "date-fns";
 import { pt } from "date-fns/locale";
-
-interface Activity {
-  date: string;
-  activities: {
-    id: string;
-    title: string;
-    occurs_at: string;
-  }[]
-}
 
 interface Astronaut {
   id: number;
@@ -72,35 +63,43 @@ export function Activities() {
 
   return (
     <>
-      {Object.keys(organizedLaunches).map(year => (
-        <div key={year} className="space-y-8">
-          {Object.keys(organizedLaunches[year]).map(month => (
-            <div key={month} className="space-y-2.5">
-              <div className="flex gap-2 items-baseline">
-                <span className="text-xl text-zinc-300 font-semibold">{month}</span>
-                <span className="text-xs text-zinc-500">{year}</span>
-              </div>
-              {organizedLaunches[year][month].length > 0 ? (
-                <div>
-                  {organizedLaunches[year][month].map(launch => (
-                    <div key={launch.id} className="space-y-2.5 mb-2">
-                      <div className="px-4 py-2.5 bg-zinc-900 rounded-xl shadow-shape flex items-center gap-3">
-                        <CircleCheck className="size-5 text-lime-300" />
-                        <span className="text-zinc-100">{launch.missionName}</span>
-                        <span className="text-zinc-400 text-sm ml-auto">
-                          {format(launch.launchDate, "d' de 'LLLL  'às' HH'h'mm", { locale: pt })}
-                        </span>
-                      </div>
+      {Object.keys(organizedLaunches).length > 0 ? (
+        <>
+          {
+            Object.keys(organizedLaunches).map(year => (
+              <div key={year} className="space-y-8">
+                {Object.keys(organizedLaunches[year]).map(month => (
+                  <div key={month} className="space-y-2.5">
+                    <div className="flex gap-2 items-baseline">
+                      <span className="text-xl text-zinc-300 font-semibold">{month}</span>
+                      <span className="text-xs text-zinc-500">{year}</span>
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-zinc-500 text-sm">Nenhum lançamento cadastrado para essa data.</p>
-              )}
-            </div>
-          ))}
-        </div>
-      ))}
+                    {organizedLaunches[year][month].length > 0 ? (
+                      <div>
+                        {organizedLaunches[year][month].map(launch => (
+                          <div key={launch.id} className="space-y-2.5 mb-2">
+                            <div className="px-4 py-2.5 bg-zinc-900 rounded-xl shadow-shape flex items-center gap-3">
+                              <CircleCheck className="size-5 text-lime-300" />
+                              <span className="text-zinc-100">{launch.missionName}</span>
+                              <span className="text-zinc-400 text-sm ml-auto">
+                                {format(launch.launchDate, "d' de 'LLLL  'às' HH'h'mm", { locale: pt })}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-zinc-500 text-sm">Nenhum lançamento cadastrado para essa data.</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ))
+          }
+        </>
+      ) : (
+        <p className="text-zinc-500 text-sm">Nenhum lançamento cadastrado.</p>
+      )}
     </>
 
   )

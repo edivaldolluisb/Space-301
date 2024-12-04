@@ -50,15 +50,6 @@ export function DashboardPage() {
 
     setError(null);
     setIsLoading(true);
-  
-    // const launchData = {
-    //   missionName,
-    //   launchDate,
-    //   rocketId,
-    //   address,
-    //   status,
-    //   astronauts,
-    // };
 
     // check if date is valid
     const date = new Date(launchDate);
@@ -77,11 +68,13 @@ export function DashboardPage() {
       return;
     }
 
-    if (!missionName || !launchDate || !rocketId || !address || !astronauts) {
+    if (!missionName || !launchDate || !rocketId || !address) {
       setError('Todos os campos são obrigatórios');
       setIsLoading(false);
+      console.error('Todos os campos são obrigatórios:', missionName, launchDate, rocketId, address);
       return;
     }
+    console.log('Criando lançamento...');
   
     try {
       const Austronauts: Astronaut[] = astronauts.map((astronaut) => {
