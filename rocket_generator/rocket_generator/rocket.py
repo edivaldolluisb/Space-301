@@ -102,6 +102,7 @@ class Rocket:
                 velocidade_x = self.VELOCIDADE_X_MAXIMA  # Velocidade horizontal constante
                 combustivel = max(self.COMBUSTIVEL_INICIAL - 300 * self.QUEIMA_COMBUSTIVEL, 0)
                 energia_atual = self.ENERGIA_MAXIMA  # Energia se mantém próxima do máximo
+                altitude += random.uniform(-500, 500)
             else:  # Descida: 5 minutos
                 estagio = "descida"
                 altitude = 100000 - ((int(t) - 900) / 300) ** 2 * 100000  # Altitude em metros
@@ -135,7 +136,7 @@ class Rocket:
                 temperatura_externa_atual = max(200, self.TEMPERATURA_NIVEL_DO_MAR - altitude * 0.0065)
 
             # Adicionar desvios aleatórios
-            altitude += random.uniform(-500, 500)
+            # altitude += random.uniform(-500, 500)
             velocidade += random.uniform(-1, 1)
             velocidade_x += random.uniform(-1, 1)
             aceleracao += random.uniform(-0.1, 0.1)
