@@ -6,10 +6,21 @@ import { Guests } from "./guests";
 import { Activities } from "./activities";
 import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
 
+import { api } from "../../lib/axios";
+
 
 
 interface Astronaut {
 	id: number;
+}
+
+interface Launch {
+  missionName: string;
+  launchDate: string;
+  rocketId: number | string | null;
+  address: string;
+  status: string;
+  astronauts: Astronaut[];
 }
 
 export function DashboardPage() {
@@ -36,24 +47,62 @@ export function DashboardPage() {
   // create a new launch
   async function createLaunch(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    
+
     setError(null);
     setIsLoading(true);
   
-    const launchData = {
-      missionName,
-      launchDate,
-      rocketId,
-      address,
-      status,
-      astronauts,
-    };
+    // const launchData = {
+    //   missionName,
+    //   launchDate,
+    //   rocketId,
+    //   address,
+    //   status,
+    //   astronauts,
+    // };
+
+    // check if date is valid
+    const date = new Date(launchDate);
+    const currentDate = new Date();
+    if (date < currentDate) {
+      console.error('A data introduzida é menor do que a data atual:', date, currentDate);
+      setError('A data introduzida é menor do que a data atual');
+      setIsLoading(false);
+      return;
+    }
+
+    // check if at least one astronaut is selected
+    if (!astronauts.length) {
+      setError('Selecione pelo menos um astronauta');
+      setIsLoading(false);
+      return;
+    }
+
+    if (!missionName || !launchDate || !rocketId || !address || !astronauts) {
+      setError('Todos os campos são obrigatórios');
+      setIsLoading(false);
+      return;
+    }
   
     try {
-      // const response = await api.post('/launches', launchData);
+      const Austronauts: Astronaut[] = astronauts.map((astronaut) => {
+        return {
+          id: astronaut.id,
+        };
+      });
 
-      // console.log('Lançamento registrado com sucesso:', response.data);
-      console.log('Lançamento registrado com sucesso:', launchData);
+      const NewlaunchData: Launch = {
+        missionName,
+        launchDate: new Date(launchDate).toISOString(),
+        rocketId,
+        address,
+        status,
+        astronauts: Austronauts,
+      };
+
+      console.log('Dados do lançamento:', NewlaunchData);
+      const response = await api.post('/launches', NewlaunchData);
+
+      console.log('Lançamento registrado com sucesso:', response.data);
       closeCreateLaunchModal();
       // Aqui você pode atualizar a lista de lançamentos no estado, se necessário.
     } catch (error) {

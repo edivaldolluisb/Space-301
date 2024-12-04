@@ -241,7 +241,7 @@ export function CreateActivityModal({
 
 // {
 //   "missionName": "Your Mission Name",
-//   "lauchDate": "2023-11-22T10:00:00Z", // ISO 8601 format
+//   "launchDate": "2023-11-22T10:00:00Z", // ISO 8601 format
 //   "rocketId": 123,
 //   "address": "Launch Site Address",
 //   "status": "PENDING", // or other valid status
