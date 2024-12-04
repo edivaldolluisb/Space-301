@@ -1,8 +1,6 @@
-import { Calendar, Tag, X, Loader2, Rocket, MapPin } from "lucide-react";
+import { Calendar, X, Loader2, Rocket, MapPin } from "lucide-react";
 import { Button } from "../../components/button";
 import { FormEvent, useState } from "react";
-import { api } from "../../lib/axios";
-import { useParams } from "react-router-dom";
 
 import {
 	Select,
