@@ -1,6 +1,21 @@
-import React from 'react';
-import { Flame, Thermometer, Wind, Leaf, LucideIcon, MapPin } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import {
+  ExternalLink,
+  Flame,
+  Thermometer,
+  Wind,
+  Leaf,
+  MapPin,
+  Gauge,
+  Fuel,
+  Signal,
+  BatteryCharging,
+  LucideIcon,
+} from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from 'recharts';
+import { DestinationAndDateHeader } from './destination-and-date-header';
+import { Client } from '@stomp/stompjs';
+import { useNavigate } from 'react-router-dom';
 
 
 interface CardProps {
@@ -18,6 +33,71 @@ interface StatusCardProps {
   status?: string;
   className?: string;
 }
+
+type Nave = {
+  altitude: number;
+  velocidade: number;
+  velocidade_x: number;
+  aceleracao: number;
+  forca_g: number;
+  pressao_atual: number;
+  temperatura_atual: number;
+  temperatura_motor_atual: number;
+  temperatura_externa_atual: number;
+  combustivel: number;
+  qualidade_atual: number;
+  oxigenio_atual: number;
+  energia_atual: number;
+  alerta: any[];
+};
+
+const unitMappings: { [key: string]: string } = {
+  altitude: 'm',
+  velocidade: 'm/s',
+  velocidade_x: 'm/s',
+  aceleracao: 'm/s²',
+  forca_g: 'g',
+  pressao_atual: 'Pa',
+  temperatura_atual: 'K',
+  temperatura_motor_atual: 'K',
+  temperatura_externa_atual: 'K',
+  combustivel: 'kg',
+  qualidade_atual: '%',
+  oxigenio_atual: '%',
+  energia_atual: 'J',
+};
+
+const statusMappings: { [key: string]: string } = {
+  altitude: 'Normal',
+  velocidade: 'Normal',
+  velocidade_x: 'Normal',
+  aceleracao: 'Normal',
+  forca_g: 'Normal',
+  pressao_atual: 'Normal',
+  temperatura_atual: 'Normal',
+  temperatura_motor_atual: 'Normal',
+  temperatura_externa_atual: 'Normal',
+  combustivel: 'Normal',
+  qualidade_atual: 'Normal',
+  oxigenio_atual: 'Normal',
+  energia_atual: 'Normal',
+};
+
+const iconMappings: { [key: string]: LucideIcon } = {
+  altitude: MapPin,
+  velocidade: Gauge,
+  velocidade_x: Gauge,
+  aceleracao: Flame,
+  forca_g: Leaf,
+  pressao_atual: Thermometer,
+  temperatura_atual: Thermometer,
+  temperatura_motor_atual: Thermometer,
+  temperatura_externa_atual: Wind,
+  combustivel: Fuel,
+  qualidade_atual: Signal,
+  oxigenio_atual: Leaf,
+  energia_atual: BatteryCharging,
+};
 
 // Componente Card base
 const Card: React.FC<CardProps> = ({ children, className = '' }) => (
@@ -75,7 +155,7 @@ const StatusCard: React.FC<StatusCardProps> = ({
       <span className="text-gray-400">{title}</span>
     </div>
     <div className="flex items-baseline gap-2">
-      <span className="text-4xl font-bold text-white">{value}</span>
+      <span className="text-4xl font-bold text-white">{Number(value).toFixed(2)}</span>
       <span className="text-gray-400">{unit}</span>
     </div>
     {status && (
@@ -88,49 +168,74 @@ const StatusCard: React.FC<StatusCardProps> = ({
 
 
 
-const Dashboard: React.FC = () => (
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <RocketInfo />
-    <StatusCard
-      icon={Flame}
-      title="Taxa de combustão"
-      value="5"
-      unit="l/s"
-      status="Normal"
-      iconTextColor="text-red-500"
-      iconBgColor="bg-red-500/20"
-      // className="max-h-44"
-      // className="bg-red-500/10 border border-red-500 max-h-44"
-    />
-    <StatusCard
-      icon={Thermometer}
-      title="Temperatura dos motores"
-      value="30"
-      unit="°C"
-      status="Normal"
-      iconTextColor="text-blue-500"
-      iconBgColor="bg-blue-500/20"
-      // className='row-span-2'
-    />
-    <StatusCard
-      icon={Leaf}
-      title="Oxigênio da Tripulação"
-      value="86"
-      unit="%"
-      // status="Normal"
-      iconTextColor="text-green-500"
-      iconBgColor="bg-green-500/20"
-    />
-    <StatusCard
-      icon={Leaf}
-      title="Oxigênio da Combustão"
-      value="56"
-      unit="%"
-      // status="Normal"
-      iconTextColor="text-yellow-500"
-      iconBgColor="bg-yellow-500/20"
-    />
-  </div>
-);
+const Dashboard: React.FC = () => {
+  const [rocketData, setRocketData] = useState({});
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const client = new Client({
+      brokerURL: 'ws://localhost:8080/space-websocket', // URL do WebSocket
+      reconnectDelay: 5000, // Tenta reconectar após falhas
+      onConnect: () => {
+        console.log('Conectado ao WebSocket');
+        client.subscribe('/topic/launch-data', (msg) => {
+          console.log('Mensagem recebida do WebSocket:', msg); // Inspecionar a mensagem
+          const data = JSON.parse(msg.body); // Parse do payload
+          console.log('Dados processados:', data);
+          if (data)
+          setRocketData(data);
+        });
+      },
+      onDisconnect: () => {
+        setError("Desconectado do WebSocket");
+        console.log('Desconectado do WebSocket');
+      },
+    });
+  
+    client.activate();
+  
+    return () => {
+      client.deactivate();
+    };
+  }, []);
+
+  if (!rocketData) return <h1 className="text-3xl font-semibold">Sem Dados do Lançamento selecionado.</h1>;
+  
+  return (
+    <div className="max-w-6xl px-6 py-10 mx-auto space-y-8">
+      <DestinationAndDateHeader />
+      <button className="rounded-lg px-5 font-medium flex items-center justify-center gap-2 bg-lime-300 text-lime-950 hover:bg-lime-400 py-2"
+              onClick={() => {navigate('/sinais-vitais')}}>
+        Astronauts <ExternalLink />
+      </button>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <RocketInfo />
+            {Object.entries(rocketData).map(([key, value]) => {
+              if (key === 'alerta') return null; // Ignorar o campo alerta
+
+              const unit = unitMappings[key] || '';
+              const status = statusMappings[key] || 'Normal';
+              const Icon = iconMappings[key] || Flame;
+              const iconTextColor = 'text-blue-500';
+              const iconBgColor = 'bg-blue-500/20';
+
+              return (
+                <StatusCard
+                  key={key}
+                  icon={Icon}
+                  title={key.charAt(0).toUpperCase() + key.slice(1)}
+                  value={value}
+                  unit={unit}
+                  status={status}
+                  iconTextColor={iconTextColor}
+                  iconBgColor={iconBgColor}
+                />
+              );
+            })}
+      </div>
+    </div>
+  )
+};
 
 export default Dashboard;

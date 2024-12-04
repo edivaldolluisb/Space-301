@@ -16,6 +16,11 @@ public class SenderConfig {
         return new Queue(message, true);
     }
 
+    @Bean
+    public Queue generatorQueue() {
+        return new Queue("generatorQueue", true); // Fila para mensagens do gerador
+    }
+
     // @Bean
     // public Queue launchDataQueue() {
     //     return new Queue("launch_data", true);
