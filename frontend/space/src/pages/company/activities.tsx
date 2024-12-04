@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 
+import { Link } from "react-router-dom";
 interface Astronaut {
   id: number;
 }
@@ -53,9 +54,9 @@ export function Activities() {
         const organizedLaunches: { [year: string]: { [month: string]: Launch[] } } = {};
         launches.forEach(launch => {
           const date = new Date(launch.launchDate); const year = date.getFullYear().toString();
-          const month = date.toLocaleString('default', { month: 'short' }); 
-          if (!organizedLaunches[year]) { organizedLaunches[year] = {}; } 
-          if (!organizedLaunches[year][month]) { organizedLaunches[year][month] = []; } 
+          const month = date.toLocaleString('default', { month: 'short' });
+          if (!organizedLaunches[year]) { organizedLaunches[year] = {}; }
+          if (!organizedLaunches[year][month]) { organizedLaunches[year][month] = []; }
           organizedLaunches[year][month].push(launch);
         }); console.log(organizedLaunches);
         setOrganizedLaunches(organizedLaunches);
@@ -84,13 +85,16 @@ export function Activities() {
                       <div>
                         {organizedLaunches[year][month].map(launch => (
                           <div key={launch.id} className="space-y-2.5 mb-2">
-                            <div className="px-4 py-2.5 bg-zinc-900 rounded-xl shadow-shape flex items-center gap-3">
-                              <CircleCheck className="size-5 text-lime-300" />
-                              <span className="text-zinc-100">{launch.missionName}</span>
-                              <span className="text-zinc-400 text-sm ml-auto">
-                                {format(launch.launchDate, "d' de 'LLLL  'às' HH'h'mm", { locale: pt })}
-                              </span>
-                            </div>
+
+                            <Link to={`/rocket/${tripId}`} className="">
+                              <div className="px-4 py-2.5 bg-zinc-900 rounded-xl shadow-shape flex items-center gap-3">
+                                <CircleCheck className="size-5 text-lime-300" />
+                                <span className="text-zinc-100">{launch.missionName}</span>
+                                <span className="text-zinc-400 text-sm ml-auto">
+                                  {format(launch.launchDate, "d' de 'LLLL  'às' HH'h'mm", { locale: pt })}
+                                </span>
+                              </div>
+                            </Link>
                           </div>
                         ))}
                       </div>

@@ -29,7 +29,6 @@ interface Launch {
   astronauts: Astronaut[];
   alerts: Alert[];
 }
-// status : PENDING | FAILED | SUCCESS
 
 export function Guests() {
   const [launches, setLaunches] = useState<Launch[]>([])

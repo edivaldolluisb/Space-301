@@ -204,11 +204,6 @@ const Dashboard: React.FC = () => {
   
   return (
     <div className="max-w-6xl px-6 py-10 mx-auto space-y-8">
-      <DestinationAndDateHeader />
-      <button className="rounded-lg px-5 font-medium flex items-center justify-center gap-2 bg-lime-300 text-lime-950 hover:bg-lime-400 py-2"
-              onClick={() => {navigate('/sinais-vitais')}}>
-        Astronauts <ExternalLink />
-      </button>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <RocketInfo />
             {Object.entries(rocketData).map(([key, value]) => {
@@ -225,7 +220,7 @@ const Dashboard: React.FC = () => {
                   key={key}
                   icon={Icon}
                   title={key.charAt(0).toUpperCase() + key.slice(1)}
-                  value={value}
+                  // value={value}
                   unit={unit}
                   status={status}
                   iconTextColor={iconTextColor}
