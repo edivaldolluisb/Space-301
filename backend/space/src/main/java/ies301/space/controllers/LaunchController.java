@@ -15,7 +15,7 @@ import ies301.space.services.AstronautService;
 import ies301.space.services.LaunchService;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/v1")
 public class LaunchController {
     private final AstronautService astronautService;
@@ -74,7 +74,7 @@ public class LaunchController {
     public ResponseEntity<Launch> createLaunch(@RequestBody Launch launch) {
         Launch savedLaunch = launchService.saveLaunch(launch);
         // TODO: Send launch data to the queue
-        queueSender.send(launch.toString());
+        // queueSender.send(launch.toString());
         return new ResponseEntity<>(savedLaunch, HttpStatus.CREATED);
     }
 
