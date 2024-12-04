@@ -1,4 +1,5 @@
 import { DestinationAndDateHeader } from "@/components/destination-and-date-header";
+import { api } from "@/lib/axios";
 import { User, AtSign, KeyRound, MapPin, ClipboardCopy, Eye, RefreshCcw } from "lucide-react";
 import { useState } from "react";
 
@@ -29,16 +30,26 @@ export default function SpaceSettings() {
 
     const [accessKey, setAccessKey] = useState(fakeData.accessKey);
 
-    const generateNewKey = () => {
+    const generateNewKey = async () => {
         const newKey = Math.random().toString(36).substr(2, 16); // Gera uma chave aleatória
         setAccessKey(newKey);
-
-        // Atualiza também o array `fakeData`
-        setFakeData((prev) => {
-            return {
-            ...prev,
-            accessKey: newKey,};
-        });
+        const companyDetails = {
+            companyName: formData.companyName,
+            email: formData.email,
+            address: formData.address,
+            accessKey: newKey,
+        }
+        // Atualiza a chave de acesso na API
+        try {
+            const response = await api.put("/company/1", companyDetails);
+            if (!response) {
+                throw new Error("Erro ao atualizar chave de acesso");
+            }
+            alert("Chave de acesso atualizada com sucesso!");
+        } catch (error) {
+            console.error("Erro ao gerar nova chave:", error);
+            alert("Erro ao gerar nova chave.");
+        }
     };
 
     const copyToClipboard = () => {
