@@ -51,7 +51,13 @@ export function Activities() {
         const launches: Launch[] = result;
 
         const organizedLaunches: { [year: string]: { [month: string]: Launch[] } } = {};
-        launches.forEach(launch => { const date = new Date(launch.launchDate); const year = date.getFullYear().toString(); const month = date.toLocaleString('default', { month: 'short' }); if (!organizedLaunches[year]) { organizedLaunches[year] = {}; } if (!organizedLaunches[year][month]) { organizedLaunches[year][month] = []; } organizedLaunches[year][month].push(launch); }); console.log(organizedLaunches);
+        launches.forEach(launch => {
+          const date = new Date(launch.launchDate); const year = date.getFullYear().toString();
+          const month = date.toLocaleString('default', { month: 'short' }); 
+          if (!organizedLaunches[year]) { organizedLaunches[year] = {}; } 
+          if (!organizedLaunches[year][month]) { organizedLaunches[year][month] = []; } 
+          organizedLaunches[year][month].push(launch);
+        }); console.log(organizedLaunches);
         setOrganizedLaunches(organizedLaunches);
 
       }
