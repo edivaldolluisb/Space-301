@@ -36,55 +36,55 @@ interface Astronaut {
 const items = [
 	{
 		id: 1,
-		label: "Mario",
+		name: "Ivan Vagner",
 	},
 	{
 		id: 2,
-		label: "Venancio",
+		name: "Sergei Kud-Sverchkov",
 	},
 	{
 		id: 3,
-		label: "Joana",
+		name: "Victor Glover",
 	},
 	{
 		id: 4,
-		label: "Sousuke Aizen",
+		name: "Pyotr Dubrov",
 	},
 	{
 		id: 5,
-		label: "Natzu Dragneel",
+		name: "Hayley Arceneaux",
 	},
 	{
 		id: 6,
-		label: "Maria do carmo",
+		name: "Jared Isaacman",
 	},
 	{
 		id: 7,
-		label: "Joaquim",
+		name: "Sian Proctor",
 	},
 	{
 		id: 8,
-		label: "Maria",
+		name: "Christopher Sembroski",
 	},
 	{
 		id: 9,
-		label: "Joaquin gomes",
+		name: "Yulia Peresild",
 	},
 	{
 		id: 10,
-		label: "Edogawa Rampo",
+		name: "Klim Shipenko",
 	},
 	{
 		id: 11,
-		label: "Naruto Uzumaki",
+		name: "Naruto Uzumaki",
 	},
 	{
 		id: 12,
-		label: "Erza Scarlet",
+		name: "Ye Guangfu",
 	},
 	{
 		id: 13,
-		label: "Lucy Heartfilia",
+		name: "Leonid Popov",
 	}
 	
 ] as const;
@@ -180,14 +180,14 @@ export function CreateActivityModal({
 						/>
 					</div>
 
-					<Select onValueChange={setRocketId}>
+					<Select onValueChange={setRocketId} defaultValue="1">
 						<SelectTrigger className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2 focus-within:ring-2 focus-within:ring-violet-500/20 transition-all">
 							<SelectValue placeholder="Selecionar o foguete  " />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectItem value="12">Falcon 9</SelectItem>
-							<SelectItem value="13">Starship</SelectItem>
-							<SelectItem value="14">Ariane 5</SelectItem>
+							<SelectItem value="1">Falcon 9</SelectItem>
+							<SelectItem value="2">Starship</SelectItem>
+							<SelectItem value="3">Ariane 5</SelectItem>
 						</SelectContent>
 					</Select>
 
@@ -206,7 +206,7 @@ export function CreateActivityModal({
 											htmlFor={`checkbox-${astronaut.id}`}
 											className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
 										>
-											{astronaut.label}
+											{astronaut.name}
 										</label>
 									</div>
 								</>
