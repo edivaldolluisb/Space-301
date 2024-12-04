@@ -1,3 +1,3 @@
 RABBITMQ_HOST = "rabbitmq" 
-QUEUE_NAME = 'tripulanteQueue'
-RECEIVER_QUEUE_NAME = 'launch_data'
+QUEUE_NAME = 'generatorQueue'
+RECEIVER_QUEUE_NAME = 'launchQueue'

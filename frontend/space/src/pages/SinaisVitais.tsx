@@ -56,7 +56,7 @@ export default function SinaisVitais() {
           reconnectDelay: 5000, // Tenta reconectar após falhas
           onConnect: () => {
             console.log('Conectado ao WebSocket');
-            client.subscribe('/topic/launch-data', (msg) => {
+            client.subscribe('/topic/astronaut-data', (msg) => {
               console.log('Mensagem recebida do WebSocket:', msg); // Inspecionar a mensagem
               const data = JSON.parse(msg.body); // Parse do payload
               console.log('Dados processados:', data);
