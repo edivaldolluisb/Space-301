@@ -20,7 +20,7 @@ interface Launch {
   rocketId: number | string | null;
   address: string;
   status: string;
-  astronauts: Astronaut[];
+  astronauts: number[];
 }
 
 export function DashboardPage() {
@@ -77,11 +77,8 @@ export function DashboardPage() {
     console.log('Criando lançamento...');
   
     try {
-      const Austronauts: Astronaut[] = astronauts.map((astronaut) => {
-        return {
-          id: astronaut.id,
-        };
-      });
+      // return an array of ids
+      const astronautsIds = astronauts.map((astronaut) => astronaut.id);
 
       const NewlaunchData: Launch = {
         missionName,
@@ -89,7 +86,8 @@ export function DashboardPage() {
         rocketId,
         address,
         status,
-        astronauts: Austronauts,
+        // array of ids
+        astronauts: astronautsIds
       };
 
       console.log('Dados do lançamento:', NewlaunchData);
