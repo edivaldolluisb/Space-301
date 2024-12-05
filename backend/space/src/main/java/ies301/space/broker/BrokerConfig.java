@@ -23,5 +23,4 @@ public class BrokerConfig {
     public Queue generatorQueue() {
         return new Queue(generator, true);
     }
-
 }
