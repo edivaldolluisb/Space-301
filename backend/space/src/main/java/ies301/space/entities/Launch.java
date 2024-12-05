@@ -9,6 +9,7 @@ import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,7 +36,7 @@ public class Launch {
 
     private Status status = Status.PENDING;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "astronauts", joinColumns = @JoinColumn(name = "launch_id"))
     @Column(name = "astronaut_id")
     private Set<Long> astronauts = new HashSet<>();
@@ -146,6 +147,7 @@ public class Launch {
             ", rocketId:'" + getRocketId() + "'" +
             ", address:'" + getAddress() + "'" +
             ", status:'" + getStatus() + "'" +
+            ", astronauts:" + getAstronauts() + "" +
             "}";
     }
     
