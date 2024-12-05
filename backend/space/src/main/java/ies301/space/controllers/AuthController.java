@@ -15,7 +15,7 @@ import ies301.space.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@CrossOrigin(origins = "*")
+// @CrossOrigin(origins = "*")
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {

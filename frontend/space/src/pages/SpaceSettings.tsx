@@ -1,7 +1,7 @@
 import { DestinationAndDateHeader } from "@/components/destination-and-date-header";
 import { api } from "@/lib/axios";
 import { User, AtSign, KeyRound, MapPin, ClipboardCopy, Eye, RefreshCcw } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function SpaceSettings() {
     const [read, setRead] = useState(true);
@@ -28,20 +28,34 @@ export default function SpaceSettings() {
         address: fakeData.address,
     });
 
+    const fetchCompany = async () => {
+        try {
+            const response = await api.get("/user/1");
+            if (!response) {
+                throw new Error("Erro ao buscar dados");
+            }
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao buscar dados:", error);
+            alert("Erro ao buscar dados.");
+            return null;
+        }
+    }    
+
     const [accessKey, setAccessKey] = useState(fakeData.accessKey);
 
     const generateNewKey = async () => {
         const newKey = Math.random().toString(36).substr(2, 16); // Gera uma chave aleatória
         setAccessKey(newKey);
         const companyDetails = {
-            companyName: formData.companyName,
+            name: formData.companyName,
             email: formData.email,
             address: formData.address,
-            accessKey: newKey,
+            password: newKey,
         }
         // Atualiza a chave de acesso na API
         try {
-            const response = await api.put("/company/1", companyDetails);
+            const response = await api.put("/user/1", companyDetails);
             if (!response) {
                 throw new Error("Erro ao atualizar chave de acesso");
             }
@@ -63,6 +77,19 @@ export default function SpaceSettings() {
                 alert("Erro ao copiar a chave.");
             });
     };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const result = await fetchCompany();
+            if (result) {
+                setFormData(result);
+            }
+        }
+
+        fetchData();
+        
+    }, []);
+    
     return (
         <>
             <div className="max-w-6xl px-6 py-10 mx-auto space-y-8">
