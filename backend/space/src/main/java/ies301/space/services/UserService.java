@@ -9,6 +9,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -35,24 +36,24 @@ public class UserService {
     public User createUser(User user) {
         return userRepository.save(user);
     }
-
-    // Atualiza os dados de uma User
+    //
     @Transactional
-    public User updateUser(User userDetails) {
-        Optional<User> userOptional = userRepository.findById(userDetails.getId());
+    public User updateUser(String id, Map<String, Object> userDetails) {
+        Optional<User> userOptional = userRepository.findById(id);
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
-            if (userDetails.getName() != null) {
-                user.setName(userDetails.getName());
+            if (userDetails.containsKey("name")) {
+                user.setName((String) userDetails.get("name"));
             }
-            if (userDetails.getEmail() != null) {
-                user.setEmail(userDetails.getEmail());
+            if (userDetails.containsKey("email")) {
+                user.setEmail((String) userDetails.get("email"));
             }
-            if (userDetails.getAddress() != null) {
-                user.setAddress(userDetails.getAddress());
+            if (userDetails.containsKey("address")) {
+                user.setAddress((String) userDetails.get("address"));
             }
+
             User savedUser = userRepository.save(user);
             userRepository.flush();
             return savedUser;

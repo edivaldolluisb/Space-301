@@ -1,6 +1,7 @@
 package ies301.space.controllers;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
@@ -41,16 +42,15 @@ public class UserController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<User> updateUser(
-            @PathVariable("id") String id,
-            @RequestBody User userDetails) {
+        @PathVariable("id") String id,
+        @RequestBody Map<String, Object> userDetails) {
 
-        userDetails.setId(id);
-        User updatedUser = userService.updateUser(userDetails);
+            User existingUser = userService.updateUser(id, userDetails);
 
-        if (updatedUser != null) {
-            return ResponseEntity.ok(updatedUser);
-        } else {
-            return ResponseEntity.notFound().build(); // Se a empresa não foi encontrada
+            if (existingUser != null) {
+                return ResponseEntity.ok(existingUser);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
         }
-    }
 }
