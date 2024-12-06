@@ -86,7 +86,7 @@ export function Activities() {
                         {organizedLaunches[year][month].map(launch => (
                           <div key={launch.id} className="space-y-2.5 mb-2">
 
-                            <Link to={`/rocket/${tripId}`} className="">
+                            <Link to={`/rocket/${launch.id}`} className="">
                               <div className="px-4 py-2.5 bg-zinc-900 rounded-xl shadow-shape flex items-center gap-3">
                                 <CircleCheck className="size-5 text-lime-300" />
                                 <span className="text-zinc-100">{launch.missionName}</span>
