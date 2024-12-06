@@ -2,7 +2,10 @@ package ies301.space.scheduler;
 
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -13,8 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ies301.space.entities.Launch;
 import ies301.space.services.LaunchService;
+import ies301.space.entities.Status;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import ies301.space.broker.QueueSender;
 
@@ -36,6 +42,9 @@ public class Scheduler {
     public Scheduler(LaunchService launchService) {
         this.launchService = launchService;
     }
+    
+    @Autowired
+    private ObjectMapper objectMapper;
     
     @Autowired
     private QueueSender queueSender;
@@ -63,32 +72,44 @@ public class Scheduler {
                 // get austronauts
                 logger.info("- Astronauts: " + launch.getAstronauts());
 
-                queueSender.send(launch.toString());
+                launch.setStatus(Status.LAUNCHED);
+
+                /*
+                 * serialize to 
+                 * id_lancamento: 2
+                 * astronauts[
+                 * astronaut_id: 1
+                 * ]
+                 */
+                HashMap<String, Long> astronauts;
+                List<HashMap<String, Long>> astronautsSet = new ArrayList<HashMap<String,Long>>();
+                for (Long astronaut : launch.getAstronauts()) {
+                    logger.info("Astronaut: " + astronaut);
+                    astronauts = new HashMap<String, Long>();
+                    astronauts.put("astronaut_id", astronaut);
+                    astronautsSet.add(astronauts);
+
+                }
+                // print astronauts
+                logger.info("Astronauts Set: " + astronautsSet);
+
+                Map<String, Object> message = Map.of(
+                    "id_lancamento", launch.getId(),
+                    "astronauts", astronautsSet
+                );
+
+                try {
+                    String jsonMessage = objectMapper.writeValueAsString(message);
+                    queueSender.send(jsonMessage);
+                    
+                    launch.setStatus(Status.LAUNCHED);
+                    
+                } catch (JsonProcessingException e) {
+                    logger.error("Failed to serialize launch to JSON: " + e.getMessage());
+                }
 
             }
         }
     }
 }
 
-// @Component
-// public class Scheduler {
-
-//     // Method
-//     // To trigger the scheduler to run every two seconds
-//     @Scheduled(fixedRate = 2000) public void scheduleTask()
-//     {
-//         // private final LaunchService launchService;
-
-//         SimpleDateFormat dateFormat = new SimpleDateFormat(
-//             "dd-MM-yyyy HH:mm:ss.SSS");
-
-//         String strDate = dateFormat.format(new Date());
-
-//         System.out.println(
-//             "Fixed rate Scheduler: Task running at - "
-//             + strDate);
-
-//         // get all pending launches
-        
-//     }
-// }
