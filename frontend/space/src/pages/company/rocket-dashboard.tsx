@@ -10,8 +10,8 @@ import { useNavigate, useParams } from "react-router-dom";
 
 export function RocketDetailsPage() {
   const navigate = useNavigate();
-  const { rocketId } = useParams()
-  console.log("getting param: ", rocketId)
+  const { launchId } = useParams()
+  console.log("getting param: ", launchId)
 
 
   return (
@@ -25,7 +25,7 @@ export function RocketDetailsPage() {
           </div>
 
           {/* <Activities /> */}
-          <Dashboard rocketId={rocketId} />
+          <Dashboard launchId={launchId} />
           <SpeedGraph />
           <TemperatureGraph />
         </div>
@@ -37,7 +37,7 @@ export function RocketDetailsPage() {
             <Plus className="size-5" />
             Dados gerais
           </Button>
-          <Button variant="secondary" size="full" onClick={() => navigate(`/sinais-vitais/${rocketId}`)}>
+          <Button variant="secondary" size="full" onClick={() => navigate(`/sinais-vitais/${launchId}`)}>
             <Plus className="size-5" />
             Ver tripulantes
           </Button>

@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 interface DashboardProps {
-  rocketId: String | undefined;
+  launchId: String | undefined;
 }
 
 interface CardProps {
@@ -172,7 +172,7 @@ const StatusCard: React.FC<StatusCardProps> = ({
 
 
 
-const Dashboard: React.FC<DashboardProps> = ({rocketId}) => {
+const Dashboard: React.FC<DashboardProps> = ({launchId}) => {
   const [rocketData, setRocketData] = useState({});
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -182,8 +182,8 @@ const Dashboard: React.FC<DashboardProps> = ({rocketId}) => {
       brokerURL: 'ws://localhost:8080/space-websocket', // URL do WebSocket
       reconnectDelay: 5000, // Tenta reconectar após falhas
       onConnect: () => {
-        console.log(`Conectado ao WebSocket: /topic/${rocketId}/launch-data`);
-        client.subscribe(`/topic/${rocketId}/launch-data`, (msg) => {
+        console.log(`Conectado ao WebSocket: /topic/${launchId}/launch-data`);
+        client.subscribe(`/topic/${launchId}/launch-data`, (msg) => {
           console.log('Mensagem recebida do WebSocket:', msg); // Inspecionar a mensagem
           const data = JSON.parse(msg.body); // Parse do payload
           console.log('Dados processados:', data);
