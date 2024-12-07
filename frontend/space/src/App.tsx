@@ -27,6 +27,10 @@ const router = createBrowserRouter([
     element: <DashboardPage />
   },
   {
+    path: "/rocket",
+    element: <Dashboard />
+  },
+  {
     path: "/rocket/:rocketId",
     element: <RocketDetailsPage />
   },
