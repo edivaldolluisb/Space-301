@@ -128,7 +128,7 @@ export function Activities() {
 				</div>
 				{groupedActivities.false.length > 0 ? (
 					<div>
-						{groupedActivities.false.map(activity => {
+						{groupedActivities.false.slice(0, 100).map(activity => {
 							return (
 								<div key={activity.id} className="space-y-2.5 mb-2">
 									<div className="px-4 py-2.5 bg-zinc-900 rounded-xl shadow-shape flex items-center gap-3">
@@ -161,7 +161,7 @@ export function Activities() {
 				</div>
 				{groupedActivities.true.length > 0 ? (
 					<div>
-						{groupedActivities.true.map(activity => {
+						{groupedActivities.true.slice(0, 100).map(activity => {
 							return (
 								<div key={activity.id} className="space-y-2.5 mb-2">
 									<div className="px-4 py-2.5 bg-zinc-900 rounded-xl shadow-shape flex items-center gap-3">
