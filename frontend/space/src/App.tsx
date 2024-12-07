@@ -19,7 +19,7 @@ const router = createBrowserRouter([
     element: <AlertsPage />
   },
   {
-    path: "/sinais-vitais",
+    path: "/sinais-vitais/:launchId",
     element: <SinaisVitais />
   },
   {
@@ -27,7 +27,7 @@ const router = createBrowserRouter([
     element: <DashboardPage />
   },
   {
-    path: "/rocket/:rocketId",
+    path: "/rocket/:launchId",
     element: <RocketDetailsPage />
   },
   {

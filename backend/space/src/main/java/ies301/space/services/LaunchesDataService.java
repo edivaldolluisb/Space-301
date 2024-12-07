@@ -54,8 +54,8 @@ public class LaunchesDataService {
                 return;
             }
 
-            messagingTemplate.convertAndSend("/topic/astronaut-data", message.getTripulantes());
-            messagingTemplate.convertAndSend("/topic/launch-data", message.getNave());
+            messagingTemplate.convertAndSend("/topic/"+message.getIdLancamento()+"/astronaut-data", message.getTripulantes());
+            messagingTemplate.convertAndSend("/topic/"+message.getIdLancamento()+"/launch-data", message.getNave());
 
             // find launch by id
             Long id = Long.parseLong(message.getIdLancamento());

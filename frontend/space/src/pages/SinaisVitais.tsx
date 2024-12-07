@@ -5,6 +5,7 @@ import '../styles/sinaisvitais.css';
 import {api} from '../lib/axios';
 import {DestinationAndDateHeader} from '../components/destination-and-date-header';
 import { Client } from '@stomp/stompjs';
+import { useParams } from 'react-router-dom';
 
 type Alerta = {
     parametro: string;
@@ -49,14 +50,15 @@ export default function SinaisVitais() {
     const [currentAstronaut, setCurrentAstronaut] = useState(individuals[currentAstronautId]);
     const [astronauts, setAstronauts] = useState(individuals);
     const [error, setError] = useState<string | null>(null);
+    const { launchId } = useParams();
 
     useEffect(() => {
         const client = new Client({
           brokerURL: 'ws://localhost:8080/space-websocket', // URL do WebSocket
           reconnectDelay: 5000, // Tenta reconectar após falhas
           onConnect: () => {
-            console.log('Conectado ao WebSocket');
-            client.subscribe('/topic/astronaut-data', (msg) => {
+            console.log(`Conectado ao WebSocket: /topic/${launchId}/astronaut-data`);
+            client.subscribe(`/topic/${launchId}/astronaut-data`, (msg) => {
               console.log('Mensagem recebida do WebSocket:', msg); // Inspecionar a mensagem
               const data = JSON.parse(msg.body); // Parse do payload
               console.log('Dados processados:', data);
@@ -130,7 +132,17 @@ export default function SinaisVitais() {
     }
 
     useEffect(() => {
-        setCurrentAstronaut(astronauts.filter((astronaut) => astronaut.id == currentAstronautId)[0]);
+        const fetchAstronauts = async () => {
+            try {
+                const response = await api.get(`/launches/${launchId}/astronauts`);
+                console.log('resp: ', response.data);                
+                setCurrentAstronaut(astronauts.filter((astronaut) => astronaut.id == currentAstronautId)[0]);
+            } catch (error) {
+                console.error('Erro ao buscar astronautas:', error);
+            }
+        };
+    
+        fetchAstronauts();
     });
     
     return (
