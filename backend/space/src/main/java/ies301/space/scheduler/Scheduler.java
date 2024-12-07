@@ -64,12 +64,18 @@ public class Scheduler {
             logger.info("Found " + pendingLaunches.size() + " pending launches:");
             for (Launch launch : pendingLaunches) {
 
+                // ignore if status != PENDING
+                if (launch.getStatus() != Status.PENDING) {
+                    logger.info("Launch " + launch.getId() + " is not pending. Status: " + launch.getStatus());
+                    continue;
+                }
+
                 // queueSender.send(launch.toString());
                 logger.info("- Sent launch to queue: " + launch.toString());
                 // get austronauts
-                logger.info("- Astronauts: " + launch.getAstronauts());
+                logger.info("- Astronauts: ", launch.getAstronauts(), "status: " + launch.getStatus());
 
-                launch.setStatus(Status.LAUNCHED);
+                // launch.setStatus(Status.LAUNCHED);
 
                 /*
                  * serialize to 
@@ -99,7 +105,8 @@ public class Scheduler {
                     String jsonMessage = objectMapper.writeValueAsString(message);
                     queueSender.send(jsonMessage);
                     
-                    launch.setStatus(Status.LAUNCHED);
+                    // launch.setStatus(Status.LAUNCHED);
+                    launchService.updateLaunchStatus(launch.getId(), Status.LAUNCHED);
                     
                 } catch (JsonProcessingException e) {
                     logger.error("Failed to serialize launch to JSON: " + e.getMessage());
