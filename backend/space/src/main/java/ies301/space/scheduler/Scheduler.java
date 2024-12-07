@@ -73,7 +73,7 @@ public class Scheduler {
                 // queueSender.send(launch.toString());
                 logger.info("- Sent launch to queue: " + launch.toString());
                 // get austronauts
-                logger.info("- Astronauts: ", launch.getAstronauts(), "status: " + launch.getStatus());
+                // logger.info("- Astronauts: ", launch.getAstronauts(), "status: " + launch.getStatus());
 
                 // launch.setStatus(Status.LAUNCHED);
 
@@ -87,14 +87,14 @@ public class Scheduler {
                 HashMap<String, Long> astronauts;
                 List<HashMap<String, Long>> astronautsSet = new ArrayList<HashMap<String,Long>>();
                 for (Long astronaut : launch.getAstronauts()) {
-                    logger.info("Astronaut: " + astronaut);
+                    // logger.info("Astronaut: " + astronaut);
                     astronauts = new HashMap<String, Long>();
                     astronauts.put("astronaut_id", astronaut);
                     astronautsSet.add(astronauts);
 
                 }
                 // print astronauts
-                logger.info("Astronauts Set: " + astronautsSet);
+                // logger.info("Astronauts Set: " + astronautsSet);
 
                 Map<String, Object> message = Map.of(
                     "id_lancamento", launch.getId(),
