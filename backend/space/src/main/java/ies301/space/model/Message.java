@@ -155,6 +155,14 @@ public class Message {
             this.velocidade = velocidade;
         }
 
+        public List<Alerta> getAlertas() {
+            return alerta;
+        }
+
+        public void setAlertas(List<Alerta> alerta) {
+            this.alerta = alerta;
+        }
+
         @JsonProperty("velocidade_x")
         public double getVelocidadeX() {
             return velocidadeX;

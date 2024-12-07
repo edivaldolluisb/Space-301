@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -41,7 +43,8 @@ public class Launch {
     @Column(name = "astronaut_id")
     private Set<Long> astronauts = new HashSet<>();
 
-    @OneToMany(mappedBy = "launch")
+    @JsonIgnore
+    @OneToMany(mappedBy = "launch",  fetch = FetchType.EAGER)
     private List<Alert> alerts;
 
     public Launch() {}
@@ -59,7 +62,7 @@ public class Launch {
         this.astronauts = astronauts;
     }
 
-    public double getId() {
+    public Long getId() {
         return id;
     }
 
