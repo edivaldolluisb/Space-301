@@ -15,7 +15,6 @@ import ies301.space.services.AstronautService;
 import ies301.space.services.LaunchService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/v1")
 public class LaunchController {
     private final AstronautService astronautService;

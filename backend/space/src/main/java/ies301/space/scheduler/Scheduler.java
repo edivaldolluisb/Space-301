@@ -20,11 +20,8 @@ import ies301.space.entities.Status;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import ies301.space.broker.QueueSender;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
