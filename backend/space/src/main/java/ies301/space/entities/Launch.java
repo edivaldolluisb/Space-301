@@ -9,6 +9,7 @@ import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,7 +28,7 @@ public class Launch {
     @NotBlank(message="Mission's name is mandotory")
     private String missionName;
     @NotNull(message="Date is mandotory")
-    private Date lauchDate;
+    private Date launchDate;
     @NotNull(message="Rocket is mandotory")
     private int rocketId;
     @NotBlank(message="Address is mandotory")
@@ -35,7 +36,7 @@ public class Launch {
 
     private Status status = Status.PENDING;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "astronauts", joinColumns = @JoinColumn(name = "launch_id"))
     @Column(name = "astronaut_id")
     private Set<Long> astronauts = new HashSet<>();
@@ -43,13 +44,13 @@ public class Launch {
     @OneToMany(mappedBy = "launch")
     private List<Alert> alerts;
 
-    public Launch() {this.astronauts = new HashSet<>();}
+    public Launch() {}
     
     public Launch(String missionName, Date lauchDate, int rocketId, String address, Status status, Set<Long> astronauts) {
 
 
         this.missionName = missionName;
-        this.lauchDate = lauchDate;
+        this.launchDate = launchDate;
         this.rocketId = rocketId;
         this.address = address;
 
@@ -86,12 +87,12 @@ public class Launch {
         this.missionName = missionName;
     }
 
-    public Date getLauchDate() {
-        return lauchDate;
+    public Date getLaunchDate() {
+        return launchDate;
     }
 
-    public void setLauchDate(Date lauchDate) {
-        this.lauchDate = lauchDate;
+    public void setLaunchDate(Date launchDate) {
+        this.launchDate = launchDate;
     }
 
     public int getRocketId() {
@@ -142,10 +143,11 @@ public class Launch {
         return "{" +
             " id:'" + getId() + "'" +
             ", missionName:'" + getMissionName() + "'" +
-            ", lauchDate:'" + getLauchDate() + "'" +
+            ", launchDate:'" + getLaunchDate() + "'" +
             ", rocketId:'" + getRocketId() + "'" +
             ", address:'" + getAddress() + "'" +
             ", status:'" + getStatus() + "'" +
+            ", astronauts:" + getAstronauts() + "" +
             "}";
     }
     

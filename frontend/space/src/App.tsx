@@ -23,12 +23,8 @@ const router = createBrowserRouter([
     element: <SinaisVitais />
   },
   {
-    path: "/lancamentos",
-    element: <DashboardPage />
-  },
-  {
     path: "/dashboard",
-    element: <Dashboard />
+    element: <DashboardPage />
   },
   {
     path: "/rocket/:rocketId",

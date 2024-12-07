@@ -1,13 +1,18 @@
 import { Plus } from "lucide-react";
 import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
 import { Button } from "../../components/button";
-import  Dashboard  from "./dashboard";
+import Dashboard from "./dashboard";
 import { SpeedGraph, TemperatureGraph } from "./graph";
 import { ListTelemetricData } from "./list-rocket-data";
 
+import { useParams } from "react-router-dom";
+
+
 export function RocketDetailsPage() {
 
-  
+  const { rocketId } = useParams()
+  console.log("getting param: ", rocketId)
+
 
   return (
     <div className="max-w-6xl px-6 py-10 mx-auto space-y-8">
@@ -21,21 +26,21 @@ export function RocketDetailsPage() {
 
           {/* <Activities /> */}
           <Dashboard />
-          <SpeedGraph/>
-          <TemperatureGraph/>
+          <SpeedGraph />
+          <TemperatureGraph />
         </div>
 
         <div className="w-80 space-y-6">
           {/* <ImportantLinks /> */}
-          
-        <Button variant="secondary" size="full">
+
+          <Button variant="secondary" size="full">
             <Plus className="size-5" />
             Dados gerais
-        </Button>
-        <Button variant="secondary" size="full">
+          </Button>
+          <Button variant="secondary" size="full">
             <Plus className="size-5" />
             Ver tripulantes
-        </Button>
+          </Button>
 
           <div className="w-full h-px bg-zinc-800" />
 
