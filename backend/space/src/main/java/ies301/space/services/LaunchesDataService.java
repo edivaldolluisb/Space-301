@@ -24,8 +24,8 @@ public class LaunchesDataService {
             System.out.println("Mensagem recebida: " + messageJson);
             Message message = objectMapper.readValue(messageJson, Message.class);
             System.out.println("Objeto desserializado: " + message);
-            messagingTemplate.convertAndSend("/topic/astronaut-data", message.getTripulantes());
-            messagingTemplate.convertAndSend("/topic/launch-data", message.getNave());
+            messagingTemplate.convertAndSend("/topic/"+message.getIdLancamento()+"/astronaut-data", message.getTripulantes());
+            messagingTemplate.convertAndSend("/topic/"+message.getIdLancamento()+"/launch-data", message.getNave());
         } catch (Exception e) {
             System.err.println("Erro ao processar mensagem: " + e.getMessage());
         }
