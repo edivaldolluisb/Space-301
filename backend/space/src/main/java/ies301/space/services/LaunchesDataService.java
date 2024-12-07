@@ -37,6 +37,10 @@ public class LaunchesDataService {
     @Autowired
     private AlertService alertService;
 
+
+    @Autowired
+    private AlertProcessor alertProcessor;
+
     @RabbitListener(queues = "generatorQueue")
     public void consumeMessage(String messageJson) {
         try {
@@ -63,11 +67,8 @@ public class LaunchesDataService {
             }
 
             // Processa os alertas
-            List<Alert> savedAlerts = processAlerts(message, launch);
-
-            // Notifica os alertas para o front-end
+            List<Alert> savedAlerts = alertProcessor.processAlerts(message, launch);
             if (!savedAlerts.isEmpty()) {
-                // messagingTemplate.convertAndSend("/topic/alerts", savedAlerts);
                 logger.info("Alertas salvos e notificados: {}", savedAlerts.size());
             }
 
@@ -77,48 +78,5 @@ public class LaunchesDataService {
         }
     }
 
-    /**
-     * Processa os alertas dos tripulantes e da nave e os salva no banco de dados.
-     */
-    private List<Alert> processAlerts(Message message, Launch launch) {
-        List<Alert> savedAlerts = new ArrayList<>();
-
-        try {
-            List<Alerta> alertas = new ArrayList<>();
-
-            // Adiciona alertas dos tripulantes
-            for (Tripulante tripulante : message.getTripulantes()) {
-                if (tripulante.getAlertas() != null) {
-                    alertas.addAll(tripulante.getAlertas());
-                }
-            }
-
-            // Adiciona alertas da nave
-            if (message.getNave().getAlertas() != null) {
-                alertas.addAll(message.getNave().getAlertas());
-            }
-
-            // Cria e salva os alertas
-            for (Alerta alerta : alertas) {
-                String alertMessage = alerta.getAlertaDescricao();
-                if (alertMessage == null || alertMessage.isEmpty()) {
-                    continue;
-                }
-
-                logger.info("Total de alertas a processar: {}", alertas.size());
-
-                Alert alert = new Alert(alertMessage, launch);
-                alert.setDate(new Date());
-                Alert savedAlert = alertService.saveAlert(alert);
-                savedAlerts.add(savedAlert);
-                logger.info("Alerta salvo: {}", savedAlert);
-            }
-
-        } catch (Exception e) {
-            logger.error("Erro ao processar alertas: {}", e.getMessage(), e);
-        }
-
-        return savedAlerts;
-    }
 
 }
