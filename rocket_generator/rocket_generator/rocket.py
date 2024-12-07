@@ -187,18 +187,65 @@ class Rocket:
             # Gerar alertas
             alertas = set()
             if temperatura_motor_atual > self.TEMPERATURA_MOTOR_MAXIMA:
-                alertas.add({"alerta_nome": "Motor", "alerta_descricao": "Sobreaquecimento do motor!"})
-            if qualidade_atual < 95:
-                alertas.add({"alerta_nome": "Sinal", "alerta_descricao": "Qualidade do sinal baixa!"})
+                alerta = {"alerta_nome": "Motor", "alerta_descricao": "Sobreaquecimento do motor!", 'status': True}
+                if alerta not in self.alertas_recentes:
+                    alertas.add(alerta)
+            else:
+                alerta = {"alerta_nome": "Motor", "alerta_descricao": "Sobreaquecimento do motor!", 'status': True}
+                if alerta in self.alertas_recentes:
+                    self.alertas_recentes.remove(alerta)
+                    alerta['status'] = False
+                    alertas.add(alerta)
+            if qualidade_atual < 80:
+                alerta = {"alerta_nome": "Sinal", "alerta_descricao": "Qualidade do sinal baixa!", 'status': True}
+                if alerta not in self.alertas_recentes:
+                    alertas.add(alerta)
+            else:
+                alerta = {"alerta_nome": "Sinal", "alerta_descricao": "Qualidade do sinal baixa!", 'status': True}
+                if alerta in self.alertas_recentes:
+                    self.alertas_recentes.remove(alerta)
+                    alerta['status'] = False
+                    alertas.add(alerta)
             if pressao_atual < 500:
-                alerta += ["Pressão muito baixa!"]
-                alertas.add({"alerta_nome": "Combustivel", "alerta_descricao": "Combustível esgotado prematuramente!"})
+                alerta = {"alerta_nome": "Combustivel", "alerta_descricao": "Pressão muito baixa!", 'status': True}
+                if alerta not in self.alertas_recentes:
+                    alertas.add(alerta)
+            else:
+                alerta = {"alerta_nome": "Combustivel", "alerta_descricao": "Pressão muito baixa!", 'status': True}
+                if alerta in self.alertas_recentes:
+                    self.alertas_recentes.remove(alerta)
+                    alerta['status'] = False
+                    alertas.add(alerta)
             if combustivel <= 0 and int(t) <= 900:
-                alertas.add({"alerta_nome": "Combustivel", "alerta_descricao": "Combustível esgotado prematuramente!"})
+                alerta = {"alerta_nome": "Combustivel", "alerta_descricao": "Combustível esgotado prematuramente!", 'status': True}
+                if alerta not in self.alertas_recentes:
+                    alertas.add(alerta)
+            else:
+                alerta = {"alerta_nome": "Combustivel", "alerta_descricao": "Combustível esgotado prematuramente!", 'status': True}
+                if alerta in self.alertas_recentes:
+                    self.alertas_recentes.remove(alerta)
+                    alerta['status'] = False
+                    alertas.add(alerta)
             if oxigenio_atual < 18.0:
-                alertas.add({"alerta_nome": "Oxigenio", "alerta_descricao": "Nível de oxigênio baixo!"})
+                alerta = {"alerta_nome": "Oxigenio", "alerta_descricao": "Nível de oxigênio baixo!", 'status': True}
+                if alerta not in self.alertas_recentes:
+                    alertas.add(alerta)
+            else:
+                alerta = {"alerta_nome": "Oxigenio", "alerta_descricao": "Nível de oxigênio baixo!", 'status': True}
+                if alerta in self.alertas_recentes:
+                    self.alertas_recentes.remove(alerta)
+                    alerta['status'] = False
+                    alertas.add(alerta)
             if combustivel <= 0 and estagio != "descida":
-                alertas.add({"alerta_nome": "Combustivel", "alerta_descricao": "Combustível insuficiente para continuar"})
+                alerta = {"alerta_nome": "Combustivel", "alerta_descricao": "Combustível insuficiente para continuar", 'status': True}
+                if alerta not in self.alertas_recentes:
+                    alertas.add(alerta)
+            else:
+                alerta = {"alerta_nome": "Combustivel", "alerta_descricao": "Combustível insuficiente para continuar", 'status': True}
+                if alerta in self.alertas_recentes:
+                    self.alertas_recentes.remove(alerta)
+                    alerta['status'] = False
+                    alertas.add(alerta)
 
             # Armazenar valores
             parametros = {
