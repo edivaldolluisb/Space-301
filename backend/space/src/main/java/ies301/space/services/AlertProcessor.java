@@ -43,20 +43,27 @@ public class AlertProcessor {
                 alertas.addAll(message.getNave().getAlertas());
             }
 
-            // Cria e salva os alertas
+            // Cria e salva os alertas apenas se o status for true
             for (Alerta alerta : alertas) {
-                String alertMessage = alerta.getAlertaDescricao();
-                if (alertMessage == null || alertMessage.isEmpty()) {
-                    continue;
+                if (alerta.getStatus() != null && alerta.getStatus()) { 
+                    String alertMessage = alerta.getAlertaDescricao();
+                    if (alertMessage == null || alertMessage.isEmpty()) {
+                        continue;
+                    }
+                    logger.info("status: {}", alerta.getStatus());
+    
+                    // logger.info("Processando alerta: {}", alertMessage);
+    
+                    Alert alert = new Alert(alertMessage, launch);
+                    alert.setDate(new Date());
+                    Alert savedAlert = alertService.saveAlert(alert);
+                    savedAlerts.add(savedAlert);
+    
+                    // logger.info("Alerta salvo: {}", savedAlert);
+                } else {
+                    logger.info("Alerta ignorado devido ao status: {}", alerta.getStatus());
                 }
-
-                logger.info("Total de alertas a processar: {}", alertas.size());
-
-                Alert alert = new Alert(alertMessage, launch);
-                alert.setDate(new Date());
-                Alert savedAlert = alertService.saveAlert(alert);
-                savedAlerts.add(savedAlert);
-                logger.info("Alerta salvo: {}", savedAlert);
+            
             }
 
         } catch (Exception e) {
