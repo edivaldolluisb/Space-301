@@ -81,7 +81,7 @@ export function Activities({ launches }: { launches: Launch[] }) {
       {isLoading ? (
         <p className="text-zinc-500 text-sm">Carregando lançamentos...</p>
       ) : error ? (
-        <p className="text-red-500 text-sm">{error}</p>
+        <p className="text-zinc-500 text-sm">{error}</p>
       ) : Object.keys(organizedLaunches).length > 0 ? (
         <>
           {
