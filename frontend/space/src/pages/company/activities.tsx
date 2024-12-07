@@ -1,36 +1,28 @@
 import { CircleCheck } from "lucide-react";
 import { api } from "../../lib/axios";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 
 import { Link } from "react-router-dom";
-interface Astronaut {
-  id: number;
-}
-interface Alert {
-  id: number;
-  message: string;
-  date: string;
-  status: string;
-  launch: Launch | null;
-}
 
 interface Launch {
-  id: number;
   missionName: string;
   launchDate: string;
   rocketId: number | string | null;
   address: string;
   status: string;
-  astronauts: Astronaut[];
-  alerts: Alert[];
+  astronauts: number[];
 }
 
-export function Activities() {
-  const { tripId } = useParams()
+export function Activities({ launches }: { launches: Launch[] }) {
+
   const [organizedLaunches, setOrganizedLaunches] = useState<{ [year: string]: { [month: string]: Launch[] } }>({})
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+
 
   const fetchLancamentos = async () => {
     try {
@@ -39,38 +31,57 @@ export function Activities() {
 
     } catch (error) {
       console.log("Erro ao buscar lançamentos:", error)
+      setError("Não foi possível carregar os lançamentos. Tente novamente mais tarde.");
       return null
     }
 
   }
 
+  function organizeLaunches(launches: Launch[]) {
+    const organizedLaunches: { [year: string]: { [month: string]: Launch[] } } = {};
+    launches.forEach(launch => {
+      const date = new Date(launch.launchDate);
+      const year = date.getFullYear().toString();
+      const month = date.toLocaleString('default', { month: 'short' });
+
+      if (!organizedLaunches[year]) {
+        organizedLaunches[year] = {};
+      }
+      if (!organizedLaunches[year][month]) {
+        organizedLaunches[year][month] = [];
+      }
+
+      organizedLaunches[year][month].push(launch);
+    });
+
+    return organizedLaunches;
+  }
+
+
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       const result = await fetchLancamentos();
+      setIsLoading(false);
+
       console.log("resultados de fetch da api", result)
       if (result && result.length > 0) {
-        const launches: Launch[] = result;
-
-        const organizedLaunches: { [year: string]: { [month: string]: Launch[] } } = {};
-        launches.forEach(launch => {
-          const date = new Date(launch.launchDate); const year = date.getFullYear().toString();
-          const month = date.toLocaleString('default', { month: 'short' });
-          if (!organizedLaunches[year]) { organizedLaunches[year] = {}; }
-          if (!organizedLaunches[year][month]) { organizedLaunches[year][month] = []; }
-          organizedLaunches[year][month].push(launch);
-        }); console.log(organizedLaunches);
-        setOrganizedLaunches(organizedLaunches);
-
+        setOrganizedLaunches(organizeLaunches(result));
       }
+
     };
 
     fetchData();
-  }, [tripId]);
+  }, [launches]);
 
 
   return (
     <>
-      {Object.keys(organizedLaunches).length > 0 ? (
+      {isLoading ? (
+        <p className="text-zinc-500 text-sm">Carregando lançamentos...</p>
+      ) : error ? (
+        <p className="text-red-500 text-sm">{error}</p>
+      ) : Object.keys(organizedLaunches).length > 0 ? (
         <>
           {
             Object.keys(organizedLaunches).map(year => (
@@ -78,7 +89,7 @@ export function Activities() {
                 {Object.keys(organizedLaunches[year]).map(month => (
                   <div key={month} className="space-y-2.5">
                     <div className="flex gap-2 items-baseline">
-                      <span className="text-xl text-zinc-300 font-semibold">{month}</span>
+                      <span className="text-xl text-zinc-300 font-semibold">{month} </span>
                       <span className="text-xs text-zinc-500">{year}</span>
                     </div>
                     {organizedLaunches[year][month].length > 0 ? (

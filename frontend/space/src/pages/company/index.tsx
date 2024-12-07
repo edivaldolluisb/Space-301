@@ -1,5 +1,5 @@
 import { Plus } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, } from "react";
 import { CreateActivityModal } from "./create-activity-modal";
 import { ImportantLinks } from "./important-links";
 import { Guests } from "./guests";
@@ -33,6 +33,7 @@ export function DashboardPage() {
 	const [status, setStatus] = useState('PENDING');
 	const [astronauts, setAstronauts] = useState<Astronaut[]>([]);
   
+  const [launches, setLaunches] = useState<Launch[]>([])
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -93,8 +94,12 @@ export function DashboardPage() {
       console.log('Dados do lançamento:', NewlaunchData);
       const response = await api.post('/launches', NewlaunchData);
 
-      console.log('Lançamento registrado com sucesso:', response.data);
+      const newLaunch = response.data;
+      console.log('Lançamento registrado com sucesso:', newLaunch);
+
+      setIsLoading(false);
       closeCreateLaunchModal();
+      setLaunches([...launches, newLaunch]);
       // Aqui você pode atualizar a lista de lançamentos no estado, se necessário.
     } catch (error) {
       console.error('Erro ao registrar lançamento:', error);
@@ -118,7 +123,7 @@ export function DashboardPage() {
             </button>
           </div>
 
-          <Activities />
+          <Activities  launches={launches} />
         </div>
 
         <div className="w-80 space-y-6">
