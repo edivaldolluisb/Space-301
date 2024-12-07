@@ -5,7 +5,7 @@ from sender import SendData
 
 class Rocket:
     def __init__(self, id_lancamento, astronaut1, astronaut2, astronaut3, astronaut4) -> None:
-        self.id_lancamento = id_lancamento
+        self.id_lancamento = int(id_lancamento)
         self.TRIPULANTES = [
             {'id': astronaut1},
             {'id': astronaut2},
