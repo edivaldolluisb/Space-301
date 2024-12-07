@@ -5,11 +5,11 @@ import Dashboard from "./dashboard";
 import { SpeedGraph, TemperatureGraph } from "./graph";
 import { ListTelemetricData } from "./list-rocket-data";
 
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 
 export function RocketDetailsPage() {
-
+  const navigate = useNavigate();
   const { rocketId } = useParams()
   console.log("getting param: ", rocketId)
 
@@ -25,7 +25,7 @@ export function RocketDetailsPage() {
           </div>
 
           {/* <Activities /> */}
-          <Dashboard />
+          <Dashboard rocketId={rocketId} />
           <SpeedGraph />
           <TemperatureGraph />
         </div>
@@ -37,7 +37,7 @@ export function RocketDetailsPage() {
             <Plus className="size-5" />
             Dados gerais
           </Button>
-          <Button variant="secondary" size="full">
+          <Button variant="secondary" size="full" onClick={() => navigate(`/sinais-vitais/${rocketId}`)}>
             <Plus className="size-5" />
             Ver tripulantes
           </Button>

@@ -5,6 +5,7 @@ import '../styles/sinaisvitais.css';
 import {api} from '../lib/axios';
 import {DestinationAndDateHeader} from '../components/destination-and-date-header';
 import { Client } from '@stomp/stompjs';
+import { useParams } from 'react-router-dom';
 
 type Alerta = {
     parametro: string;
@@ -49,14 +50,15 @@ export default function SinaisVitais() {
     const [currentAstronaut, setCurrentAstronaut] = useState(individuals[currentAstronautId]);
     const [astronauts, setAstronauts] = useState(individuals);
     const [error, setError] = useState<string | null>(null);
+    const { rocketId } = useParams();
 
     useEffect(() => {
         const client = new Client({
           brokerURL: 'ws://localhost:8080/space-websocket', // URL do WebSocket
           reconnectDelay: 5000, // Tenta reconectar após falhas
           onConnect: () => {
-            console.log('Conectado ao WebSocket');
-            client.subscribe('/topic/astronaut-data', (msg) => {
+            console.log(`Conectado ao WebSocket: /topic/${rocketId}/astronaut-data`);
+            client.subscribe(`/topic/${rocketId}/astronaut-data`, (msg) => {
               console.log('Mensagem recebida do WebSocket:', msg); // Inspecionar a mensagem
               const data = JSON.parse(msg.body); // Parse do payload
               console.log('Dados processados:', data);
