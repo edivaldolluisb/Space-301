@@ -19,16 +19,12 @@ const router = createBrowserRouter([
     element: <AlertsPage />
   },
   {
-    path: "/sinais-vitais",
+    path: "/sinais-vitais/:rocketId",
     element: <SinaisVitais />
   },
   {
     path: "/dashboard",
     element: <DashboardPage />
-  },
-  {
-    path: "/rocket",
-    element: <Dashboard />
   },
   {
     path: "/rocket/:rocketId",
