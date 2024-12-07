@@ -15,6 +15,7 @@ interface Astronaut {
 }
 
 interface Launch {
+  id?: number;
   missionName: string;
   launchDate: string;
   rocketId: number | string | null;
@@ -63,8 +64,8 @@ export function DashboardPage() {
     }
 
     // check if at least one astronaut is selected
-    if (!astronauts.length) {
-      setError('Selecione pelo menos um astronauta');
+    if (astronauts.length < 4) {
+      setError('Selecione 4 astronautas');
       setIsLoading(false);
       return;
     }
@@ -144,6 +145,8 @@ export function DashboardPage() {
           setAddress={setAddress}
           setAstronauts={setAstronauts}
           createLaunch={createLaunch}
+          error={error}
+          isLoading={isLoading}
 
         />
       )}

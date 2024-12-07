@@ -8,6 +8,7 @@ import { pt } from "date-fns/locale";
 import { Link } from "react-router-dom";
 
 interface Launch {
+  id?: number;
   missionName: string;
   launchDate: string;
   rocketId: number | string | null;
