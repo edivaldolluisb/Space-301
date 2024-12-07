@@ -132,8 +132,17 @@ export default function SinaisVitais() {
     }
 
     useEffect(() => {
-        const ast = api.get(`/launches/${lauc}/astronauts`)
-        setCurrentAstronaut(astronauts.filter((astronaut) => astronaut.id == currentAstronautId)[0]);
+        const fetchAstronauts = async () => {
+            try {
+                const response = await api.get(`/launches/${launchId}/astronauts`);
+                console.log('resp: ', response.data);                
+                setCurrentAstronaut(astronauts.filter((astronaut) => astronaut.id == currentAstronautId)[0]);
+            } catch (error) {
+                console.error('Erro ao buscar astronautas:', error);
+            }
+        };
+    
+        fetchAstronauts();
     });
     
     return (
