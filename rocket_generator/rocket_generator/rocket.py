@@ -64,29 +64,45 @@ class Rocket:
         
         alertas_tripulante = set()
         if pa_sistolica > 140:
-            alerta = {"parametro": "pa_sistolica", "nome_alerta": "Hipertensão"}
+            alerta = {"parametro": "pa_sistolica", "nome_alerta": "Hipertensão", 'status': True}
             if alerta not in self.alertas_recentes:
                 alertas_tripulante.add(alerta)
         else:
-            self.alertas_recentes.remove({"parametro": "pa_sistolica", "nome_alerta": "Hipertensão"})
+            alerta = {"parametro": "pa_sistolica", "nome_alerta": "Hipertensão", 'status': True}
+            if alerta in self.alertas_recentes:
+                self.alertas_recentes.remove(alerta)
+                alerta['status'] = False
+                alertas_tripulante.add(alerta)
         if oxigenio_sangue < 7.5:
-            alerta = {"parametro": "oxigenio_sangue", "nome_alerta": "Baixo O2"}
+            alerta = {"parametro": "oxigenio_sangue", "nome_alerta": "Baixo O2", 'status': True}
             if alerta not in self.alertas_recentes:
                 alertas_tripulante.add(alerta)
         else:
-            self.alertas_recentes.remove({"parametro": "oxigenio_sangue", "nome_alerta": "Baixo O2"})
+            alerta = {"parametro": "oxigenio_sangue", "nome_alerta": "Baixo O2", 'status': True}
+            if alerta in self.alertas_recentes:
+                self.alertas_recentes.remove(alerta)
+                alerta['status'] = False
+                alertas_tripulante.add(alerta)
         if bpm > 100:
-            alerta = {"parametro": "bpm", "nome_alerta": "Taquicardia"}
+            alerta = {"parametro": "bpm", "nome_alerta": "Taquicardia", 'status': True}
             if alerta not in self.alertas_recentes:
                 alertas_tripulante.add(alerta)
         else:
-            self.alertas_recentes.remove({"parametro": "bpm", "nome_alerta": "Taquicardia"})
+            alerta = {"parametro": "bpm", "nome_alerta": "Taquicardia", 'status': True}
+            if alerta in self.alertas_recentes:
+                self.alertas_recentes.remove(alerta)
+                alerta['status'] = False
+                alertas_tripulante.add(alerta)
         if respiracao > 20:
-            alerta = {"parametro": "respiracao", "nome_alerta": "Respiração Acelerada"}
+            alerta = {"parametro": "respiracao", "nome_alerta": "Respiração Acelerada", 'status': True}
             if alerta not in self.alertas_recentes:
                 alertas_tripulante.add(alerta)
         else:
-            self.alertas_recentes.remove({"parametro": "respiracao", "nome_alerta": "Respiração Acelerada"})
+            alerta = {"parametro": "respiracao", "nome_alerta": "Respiração Acelerada", 'status': True}
+            if alerta in self.alertas_recentes:
+                self.alertas_recentes.remove(alerta)
+                alerta['status'] = False
+                alertas_tripulante.add(alerta)
 
         self.alertas_recentes.extend(list(alertas_tripulante))
         return {
