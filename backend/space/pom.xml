@@ -111,7 +111,12 @@
 			<groupId>org.springframework.amqp</groupId>
 			<artifactId>spring-rabbit-test</artifactId>
 			<scope>test</scope>
+		</dependency>
 
+		<!--serializers-->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId> 
+			<artifactId>jackson-core</artifactId>
 		</dependency>
 	</dependencies>
 

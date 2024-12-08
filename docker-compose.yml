@@ -48,5 +48,14 @@ services:
     depends_on:
       - backend
 
+  gerador:
+    build:
+      context: ./rocket_generator
+    container_name: gerador
+    depends_on:
+      - rabbitmq
+    command: ["poetry", "run", "python", "rocket_generator/receiver.py"]
+    restart: always
+
 volumes:
   postgres_data:

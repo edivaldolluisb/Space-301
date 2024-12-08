@@ -2,22 +2,27 @@ package ies301.space.controllers;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import ies301.space.broker.QueueSender;
 import ies301.space.entities.Astronaut;
 import ies301.space.entities.Launch;
 import ies301.space.services.AstronautService;
 import ies301.space.services.LaunchService;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/api/v1")
 public class LaunchController {
     private final AstronautService astronautService;
     private final LaunchService launchService;
+
+    @Autowired
+    private QueueSender queueSender;
 
     public LaunchController(AstronautService astronautService, LaunchService launchService) {
         this.astronautService = astronautService;
@@ -25,8 +30,19 @@ public class LaunchController {
     }
 
     @GetMapping("/launches/{id}/astronauts")
-    public List<Astronaut> getAstronautsByLaunchId(@PathVariable Long id) {
-        return astronautService.getAstronautsByLaunchId(id);
+    public ResponseEntity<List<Astronaut>> getAstronautsByLaunchId(@PathVariable Long id) {
+        Optional<Launch> launchOpt = launchService.getLaunchById(id);
+
+        if (launchOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        Launch launch = launchOpt.get();
+        Set<Long> astronautIds = launch.getAstronauts();
+
+        List<Astronaut> astronauts = astronautService.getAstronautsByIds(astronautIds);
+
+        return ResponseEntity.ok(astronauts);
     }
 
     @GetMapping("/launches/{launchId}/astronaut/{astronautId}")

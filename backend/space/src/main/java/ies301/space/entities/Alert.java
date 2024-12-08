@@ -29,7 +29,7 @@ public class Alert {
     private boolean status = false;
     
     @ManyToOne 
-    @JoinColumn(name = "launch_id") // Foreign key column in Alert table
+    @JoinColumn(name = "launch_id")
     private Launch launch;
 
     public Alert() {
@@ -52,6 +52,10 @@ public class Alert {
         return date;
     }
 
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     public boolean getStatus() {
         return status;
     }
@@ -66,6 +70,12 @@ public class Alert {
 
     public void setLaunch(Launch launch) {
         this.launch = launch;
+    }
+
+    @Override
+    public String toString() {
+        return "Alert [date=" + date + ", id=" + id + ", launch=" + launch + ", message=" + message + ", status="
+                + status + "]";
     }
 
     

@@ -8,6 +8,7 @@ import { AlertsPage } from "./pages/trip-details"
 import { DashboardPage } from "./pages/company"
 import { RocketDetailsPage } from "./pages/company/rocket-dashboard"
 import SinaisVitais from "./pages/SinaisVitais"
+import Dashboard from "./pages/company/dashboard"
 
 
 const router = createBrowserRouter([
@@ -20,7 +21,7 @@ const router = createBrowserRouter([
     element: <AlertsPage />
   },
   {
-    path: "/sinais-vitais",
+    path: "/sinais-vitais/:launchId",
     element: <SinaisVitais />
   },
   {
@@ -28,7 +29,7 @@ const router = createBrowserRouter([
     element: <DashboardPage />
   },
   {
-    path: "/rocket/:rocketId",
+    path: "/rocket/:launchId",
     element: <RocketDetailsPage />
   },
   {

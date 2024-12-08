@@ -1,11 +1,11 @@
 import asyncio
 import numpy as np
 import random
-from rocket_generator.sender import SendData
+from sender import SendData
 
 class Rocket:
     def __init__(self, id_lancamento, astronaut1, astronaut2, astronaut3, astronaut4) -> None:
-        self.id_lancamento = id_lancamento
+        self.id_lancamento = int(id_lancamento)
         self.TRIPULANTES = [
             {'id': astronaut1},
             {'id': astronaut2},
@@ -43,6 +43,8 @@ class Rocket:
         self.time_intervals = np.arange(1, self.total_time + 1, 1)
 
         self.sender = SendData()
+        self.alert_id = 1
+        self.alertas_recentes = []
 
     def gerar_dados_tripulante(self, estagio, tripulante):
         if estagio == "subida" or estagio == "descida":
@@ -51,23 +53,58 @@ class Rocket:
             oxigenio_sangue = self.NIVEL_OXIGENIO_BASE - random.uniform(0.2, 0.5)
             bpm = self.BPM_BASE + random.uniform(10, 20)
             respiracao = self.RESPIRACAO_BASE + random.uniform(2, 5)
+            temperature = 36 + random.uniform(-1, 3)
         else:
             pa_sistolica = self.PRESSAO_ARTERIAL_BASE[0] + random.uniform(-5, 5)
             pa_diastolica = self.PRESSAO_ARTERIAL_BASE[1] + random.uniform(-3, 3)
             oxigenio_sangue = self.NIVEL_OXIGENIO_BASE + random.uniform(-0.2, 0.2)
             bpm = self.BPM_BASE + random.uniform(-5, 5)
             respiracao = self.RESPIRACAO_BASE + random.uniform(-1, 1)
+            temperature = 36 + random.uniform(-0.5, 1)
         
         alertas_tripulante = []
         if pa_sistolica > 140:
-            alertas_tripulante.append({"parametro": "pa_sistolica", "nome_alerta": "Hipertensão"})
+            alerta = {"parametro": "pa_sistolica", "nome_alerta": "Hipertensão", 'status': True}
+            if alerta not in self.alertas_recentes:
+                alertas_tripulante.append(alerta)
+        else:
+            alerta = {"parametro": "pa_sistolica", "nome_alerta": "Hipertensão", 'status': True}
+            if alerta in self.alertas_recentes:
+                self.alertas_recentes.remove(alerta)
+                alerta['status'] = False
+                alertas_tripulante.append(alerta)
         if oxigenio_sangue < 7.5:
-            alertas_tripulante.append({"parametro": "oxigenio_sangue", "nome_alerta": "Baixo O2"})
+            alerta = {"parametro": "oxigenio_sangue", "nome_alerta": "Baixo O2", 'status': True}
+            if alerta not in self.alertas_recentes:
+                alertas_tripulante.append(alerta)
+        else:
+            alerta = {"parametro": "oxigenio_sangue", "nome_alerta": "Baixo O2", 'status': True}
+            if alerta in self.alertas_recentes:
+                self.alertas_recentes.remove(alerta)
+                alerta['status'] = False
+                alertas_tripulante.append(alerta)
         if bpm > 100:
-            alertas_tripulante.append({"parametro": "bpm", "nome_alerta": "Taquicardia"})
+            alerta = {"parametro": "bpm", "nome_alerta": "Taquicardia", 'status': True}
+            if alerta not in self.alertas_recentes:
+                alertas_tripulante.append(alerta)
+        else:
+            alerta = {"parametro": "bpm", "nome_alerta": "Taquicardia", 'status': True}
+            if alerta in self.alertas_recentes:
+                self.alertas_recentes.remove(alerta)
+                alerta['status'] = False
+                alertas_tripulante.append(alerta)
         if respiracao > 20:
-            alertas_tripulante.append({"parametro": "respiracao", "nome_alerta": "Respiração Acelerada"})
+            alerta = {"parametro": "respiracao", "nome_alerta": "Respiração Acelerada", 'status': True}
+            if alerta not in self.alertas_recentes:
+                alertas_tripulante.append(alerta)
+        else:
+            alerta = {"parametro": "respiracao", "nome_alerta": "Respiração Acelerada", 'status': True}
+            if alerta in self.alertas_recentes:
+                self.alertas_recentes.remove(alerta)
+                alerta['status'] = False
+                alertas_tripulante.append(alerta)
 
+        self.alertas_recentes.extend(list(alertas_tripulante))
         return {
             "id": tripulante["id"],
             "pa_sistolica": pa_sistolica,
@@ -75,13 +112,14 @@ class Rocket:
             "oxigenio_sangue": oxigenio_sangue,
             "bpm": bpm,
             "respiracao": respiracao,
-            "alertas": alertas_tripulante,
+            "temperature": temperature,
+            "alertas": list(alertas_tripulante),
         }
+        
 
     async def gerar_dados(self):
         # Simulação
-        for t in self.time_intervals:
-            alertas = [] 
+        for t in self.time_intervals: 
 
             if int(t) <= 300:  # Subida: 5 minutos
                 estagio = "subida"
@@ -99,6 +137,7 @@ class Rocket:
                 velocidade_x = self.VELOCIDADE_X_MAXIMA  # Velocidade horizontal constante
                 combustivel = max(self.COMBUSTIVEL_INICIAL - 300 * self.QUEIMA_COMBUSTIVEL, 0)
                 energia_atual = self.ENERGIA_MAXIMA  # Energia se mantém próxima do máximo
+                altitude += random.uniform(-500, 500)
             else:  # Descida: 5 minutos
                 estagio = "descida"
                 altitude = 100000 - ((int(t) - 900) / 300) ** 2 * 100000  # Altitude em metros
@@ -132,7 +171,7 @@ class Rocket:
                 temperatura_externa_atual = max(200, self.TEMPERATURA_NIVEL_DO_MAR - altitude * 0.0065)
 
             # Adicionar desvios aleatórios
-            altitude += random.uniform(-500, 500)
+            # altitude += random.uniform(-500, 500)
             velocidade += random.uniform(-1, 1)
             velocidade_x += random.uniform(-1, 1)
             aceleracao += random.uniform(-0.1, 0.1)
@@ -146,19 +185,67 @@ class Rocket:
             energia_atual += random.uniform(-50, 50)  # Adicionar desvios aleatórios à energia
 
             # Gerar alertas
+            alertas = []
             if temperatura_motor_atual > self.TEMPERATURA_MOTOR_MAXIMA:
-                alertas.append({"alerta_nome": "Motor", "alerta_descricao": "Sobreaquecimento do motor!"})
-            if qualidade_atual < 95:
-                alertas.append({"alerta_nome": "Sinal", "alerta_descricao": "Qualidade do sinal baixa!"})
+                alerta = {"alerta_nome": "Motor", "alerta_descricao": "Sobreaquecimento do motor!", 'status': True}
+                if alerta not in self.alertas_recentes:
+                    alertas.append(alerta)
+            else:
+                alerta = {"alerta_nome": "Motor", "alerta_descricao": "Sobreaquecimento do motor!", 'status': True}
+                if alerta in self.alertas_recentes:
+                    self.alertas_recentes.remove(alerta)
+                    alerta['status'] = False
+                    alertas.append(alerta)
+            if qualidade_atual < 80:
+                alerta = {"alerta_nome": "Sinal", "alerta_descricao": "Qualidade do sinal baixa!", 'status': True}
+                if alerta not in self.alertas_recentes:
+                    alertas.append(alerta)
+            else:
+                alerta = {"alerta_nome": "Sinal", "alerta_descricao": "Qualidade do sinal baixa!", 'status': True}
+                if alerta in self.alertas_recentes:
+                    self.alertas_recentes.remove(alerta)
+                    alerta['status'] = False
+                    alertas.append(alerta)
             if pressao_atual < 500:
-                alerta += ["Pressão muito baixa!"]
-                alertas.append({"alerta_nome": "Combustivel", "alerta_descricao": "Combustível esgotado prematuramente!"})
+                alerta = {"alerta_nome": "Combustivel", "alerta_descricao": "Pressão muito baixa!", 'status': True}
+                if alerta not in self.alertas_recentes:
+                    alertas.append(alerta)
+            else:
+                alerta = {"alerta_nome": "Combustivel", "alerta_descricao": "Pressão muito baixa!", 'status': True}
+                if alerta in self.alertas_recentes:
+                    self.alertas_recentes.remove(alerta)
+                    alerta['status'] = False
+                    alertas.append(alerta)
             if combustivel <= 0 and int(t) <= 900:
-                alertas.append({"alerta_nome": "Combustivel", "alerta_descricao": "Combustível esgotado prematuramente!"})
+                alerta = {"alerta_nome": "Combustivel", "alerta_descricao": "Combustível esgotado prematuramente!", 'status': True}
+                if alerta not in self.alertas_recentes:
+                    alertas.append(alerta)
+            else:
+                alerta = {"alerta_nome": "Combustivel", "alerta_descricao": "Combustível esgotado prematuramente!", 'status': True}
+                if alerta in self.alertas_recentes:
+                    self.alertas_recentes.remove(alerta)
+                    alerta['status'] = False
+                    alertas.append(alerta)
             if oxigenio_atual < 18.0:
-                alertas.append({"alerta_nome": "Oxigenio", "alerta_descricao": "Nível de oxigênio baixo!"})
+                alerta = {"alerta_nome": "Oxigenio", "alerta_descricao": "Nível de oxigênio baixo!", 'status': True}
+                if alerta not in self.alertas_recentes:
+                    alertas.append(alerta)
+            else:
+                alerta = {"alerta_nome": "Oxigenio", "alerta_descricao": "Nível de oxigênio baixo!", 'status': True}
+                if alerta in self.alertas_recentes:
+                    self.alertas_recentes.remove(alerta)
+                    alerta['status'] = False
+                    alertas.append(alerta)
             if combustivel <= 0 and estagio != "descida":
-                alertas.append({"alerta_nome": "Combustivel", "alerta_descricao": "Combustível insuficiente para continuar"})
+                alerta = {"alerta_nome": "Combustivel", "alerta_descricao": "Combustível insuficiente para continuar", 'status': True}
+                if alerta not in self.alertas_recentes:
+                    alertas.append(alerta)
+            else:
+                alerta = {"alerta_nome": "Combustivel", "alerta_descricao": "Combustível insuficiente para continuar", 'status': True}
+                if alerta in self.alertas_recentes:
+                    self.alertas_recentes.remove(alerta)
+                    alerta['status'] = False
+                    alertas.append(alerta)
 
             # Armazenar valores
             parametros = {
@@ -175,7 +262,7 @@ class Rocket:
                 "qualidade_atual": qualidade_atual,
                 "oxigenio_atual": oxigenio_atual,
                 "energia_atual": energia_atual,
-                "alerta": alertas
+                "alerta": list(alertas)
                 }
             
             self.sender.send({"id_lancamento": self.id_lancamento, "tripulantes": dados_tripulantes, "nave": parametros})

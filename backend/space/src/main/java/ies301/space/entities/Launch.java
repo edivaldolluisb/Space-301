@@ -1,13 +1,21 @@
 package ies301.space.entities;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import jakarta.validation.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -22,47 +30,56 @@ public class Launch {
     @NotBlank(message="Mission's name is mandotory")
     private String missionName;
     @NotNull(message="Date is mandotory")
-    private Date lauchDate;
+    private Date launchDate;
     @NotNull(message="Rocket is mandotory")
     private int rocketId;
     @NotBlank(message="Address is mandotory")
     private String address;
 
-    @OneToMany(mappedBy = "launch")
-    private List<Astronaut> astronauts;
+    private Status status = Status.PENDING;
 
-    @OneToMany(mappedBy = "launch")
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "astronauts", joinColumns = @JoinColumn(name = "launch_id"))
+    @Column(name = "astronaut_id")
+    private Set<Long> astronauts = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "launch",  fetch = FetchType.EAGER)
     private List<Alert> alerts;
 
     public Launch() {}
     
-    public Launch(String missionName, Date lauchDate, int rocketId, String address) {
+    public Launch(String missionName, Date launchDate, int rocketId, String address, Status status, Set<Long> astronauts) {
+
+
         this.missionName = missionName;
-        this.lauchDate = lauchDate;
+        this.launchDate = launchDate;
         this.rocketId = rocketId;
         this.address = address;
-    }
 
-    public double getId() {
-        return id;
-    }
+        this.status = status;
 
-    public List<Astronaut> getAstronauts() {
-        return astronauts;
-    }
-
-    public void setAstronauts(List<Astronaut> astronauts) {
         this.astronauts = astronauts;
     }
 
-    public void addAstronaut(Astronaut astronaut) {
-        astronauts.add(astronaut);
-        astronaut.setLaunch(this);
+    public Long getId() {
+        return id;
     }
 
-    public void removeAstronaut(Astronaut astronaut) {
+    public Set<Long> getAstronauts() {
+        return astronauts;
+    }
+
+    public void setAstronauts(Set<Long> astronauts) {
+        this.astronauts = astronauts;
+    }
+
+    public void addAstronaut(Long astronaut) {
+        astronauts.add(astronaut);
+    }
+
+    public void removeAstronaut(Long astronaut) {
         astronauts.remove(astronaut);
-        astronaut.setLaunch(null);
     }   
 
     public String getMissionName() {
@@ -73,12 +90,12 @@ public class Launch {
         this.missionName = missionName;
     }
 
-    public Date getLauchDate() {
-        return lauchDate;
+    public Date getLaunchDate() {
+        return launchDate;
     }
 
-    public void setLauchDate(Date lauchDate) {
-        this.lauchDate = lauchDate;
+    public void setLaunchDate(Date launchDate) {
+        this.launchDate = launchDate;
     }
 
     public int getRocketId() {
@@ -114,6 +131,27 @@ public class Launch {
     public void removeAlert(Alert alert) {
         alerts.remove(alert);
         alert.setLaunch(null);
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+            " id:'" + getId() + "'" +
+            ", missionName:'" + getMissionName() + "'" +
+            ", launchDate:'" + getLaunchDate() + "'" +
+            ", rocketId:'" + getRocketId() + "'" +
+            ", address:'" + getAddress() + "'" +
+            ", status:'" + getStatus() + "'" +
+            ", astronauts:" + getAstronauts() + "" +
+            "}";
     }
     
 }

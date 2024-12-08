@@ -2,7 +2,7 @@ import json
 import logging
 import pika
 
-from rocket_generator.config import RABBITMQ_HOST, QUEUE_NAME
+from config import RABBITMQ_HOST, QUEUE_NAME
 
 class SendData:
     def __init__(self):
