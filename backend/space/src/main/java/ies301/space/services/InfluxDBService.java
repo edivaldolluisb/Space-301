@@ -130,6 +130,8 @@ public class InfluxDBService {
                 from(bucket: "%s")
                   |> range(start: -1d)
                   |> filter(fn: (r) => r._measurement == "nave" and r.lancamentoId == "%s" and r._field == "%s")
+                    |> aggregateWindow(every: 1m, fn: mean, createEmpty: false)
+                    |> yield(name: "mean")
             """, "home", lancamentoId, field);
     
         return executeInfluxQuery(query);
@@ -153,11 +155,49 @@ public class InfluxDBService {
         List<Map<String, Object>> results = new ArrayList<>();
         for (FluxTable table : tables) {
             for (FluxRecord record : table.getRecords()) {
-                results.add(record.getValues());
+                results.add(Map.of(
+                    "_field", record.getValueByKey("_field"),
+                    "_value", record.getValueByKey("_value"),
+                    "_time", record.getValueByKey("_time")
+                ));
             }
         }
         return results;
     }
+
+    // public List<Map<String, Object>> getAveragedData(Long launchId, String entity, Long entityId, String field, String interval) {
+    //     // Criar a consulta para calcular a média por intervalo
+    //     String query = String.format("""
+    //         from(bucket: "home")
+    //           |> range(start: -1h) // Última hora (ajuste conforme necessário)
+    //           |> filter(fn: (r) => r._measurement == "%s" and r.lancamentoId == "%s" and r._field == "%s")
+    //           %s
+    //           |> aggregateWindow(every: %s, fn: mean, createEmpty: false)
+    //           |> yield(name: "mean")
+    //         """,
+    //         entity, launchId, field,
+    //         (entityId != null ? "and r.id == \"" + entityId + "\"" : ""), // Filtro opcional para ID do tripulante
+    //         interval);
+    
+    //     QueryApi queryApi = influxDBClient.getQueryApi();
+    //     List<FluxTable> tables = queryApi.query(query);
+    
+    //     // Processar os resultados
+    //     List<Map<String, Object>> results = new ArrayList<>();
+    //     for (FluxTable table : tables) {
+    //         for (FluxRecord record : table.getRecords()) {
+    //             results.add(Map.of(
+    //                 "_field", field,
+    //                 "_value", record.getValueByKey("_value"),
+    //                 "_time", record.getValueByKey("_time")
+    //             ));
+    //         }
+    //     }
+    //     return results;
+    // }
+    
+    
+    
     
     
 }
