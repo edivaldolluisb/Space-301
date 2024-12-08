@@ -52,4 +52,11 @@ public class LaunchService {
         return launches;
 
     }
+
+    public List<Launch> getCompletedLauches() {
+        List<Launch> successLaunches = launchRepository.findByStatus(Status.SUCCESS);
+        successLaunches.addAll(launchRepository.findByStatus(Status.FAILED));
+
+        return successLaunches;
+    }
 }

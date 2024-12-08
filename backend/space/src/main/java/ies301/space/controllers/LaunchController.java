@@ -93,6 +93,12 @@ public class LaunchController {
         return ResponseEntity.ok(launches);
     }
 
+    @GetMapping("/launches/completed")
+    public ResponseEntity<List<Launch>> getAllCompletedLaunches() {
+        List<Launch> launches = launchService.getCompletedLauches();
+        return ResponseEntity.ok(launches);
+    }
+
     @GetMapping("/launches/{id}")
     public ResponseEntity<Launch> getLaunchById(@PathVariable Long id) {
         Optional<Launch> launch = launchService.getLaunchById(id);
