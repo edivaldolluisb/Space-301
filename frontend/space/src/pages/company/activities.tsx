@@ -1,159 +1,128 @@
 import { CircleCheck } from "lucide-react";
 import { api } from "../../lib/axios";
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 
-interface Activity {
-  date: string;
-  activities: {
-    id: string;
-    title: string;
-    occurs_at: string;
-  }[]
+import { Link } from "react-router-dom";
+
+interface Launch {
+  id?: number;
+  missionName: string;
+  launchDate: string;
+  rocketId: number | string | null;
+  address: string;
+  status: string;
+  astronauts: number[];
 }
 
-export function Activities() {
-  const { tripId } = useParams()
-  const [activities, setActivities] = useState<Activity[]>([])
-  const navigate = useNavigate();
+export function Activities({ launches }: { launches: Launch[] }) {
+
+  const [organizedLaunches, setOrganizedLaunches] = useState<{ [year: string]: { [month: string]: Launch[] } }>({})
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+
 
   const fetchLancamentos = async () => {
     try {
       const response = await api.get('/launches');
       return response.data
-      
+
     } catch (error) {
       console.log("Erro ao buscar lançamentos:", error)
+      setError("Não foi possível carregar os lançamentos. Tente novamente mais tarde.");
       return null
     }
-    
+
   }
 
-  // Para estar
-  const publishMessage = async () => {
-    const mensagem = {
-      id_lancamento: "1",
-      astronauts: [
-        { astronaut_id: 1 },
-        { astronaut_id: 2 },
-        { astronaut_id: 3 },
-        { astronaut_id: 4 },
-      ],
-    };
-  
-    try {
-      const response = await api.post("http://localhost:8080/api/v1/messages/publish", mensagem);
-      console.log("Mensagem publicada:", response.data);
-    } catch (error) {
-      console.error("Erro ao publicar a mensagem:", error);
-    }
-  };
+  function organizeLaunches(launches: Launch[]) {
+    const organizedLaunches: { [year: string]: { [month: string]: Launch[] } } = {};
+    launches.forEach(launch => {
+      const date = new Date(launch.launchDate);
+      const year = date.getFullYear().toString();
+      const month = date.toLocaleString('default', { month: 'short' });
+
+      if (!organizedLaunches[year]) {
+        organizedLaunches[year] = {};
+      }
+      if (!organizedLaunches[year][month]) {
+        organizedLaunches[year][month] = [];
+      }
+
+      organizedLaunches[year][month].push(launch);
+    });
+
+    return organizedLaunches;
+  }
+
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       const result = await fetchLancamentos();
-      if (result && result.activities) {
-        setActivities(result.activities);
-      } else {
-        // Fallback com dados estáticos
-        setActivities([
-          {
-            date: '2022-12-10',
-            activities: [
-              { id: '1', title: 'Antares', occurs_at: '2022-12-10T08:00:00' },
-              { id: '2', title: 'Atlas V', occurs_at: '2022-12-10T12:00:00' },
-              { id: '3', title: 'LauncherOne', occurs_at: '2022-12-10T19:00:00' },
-            ],
-          },
-          {
-            date: '2022-12-11',
-            activities: [
-              { id: '4', title: 'LauncherOne', occurs_at: '2022-12-11T08:00:00' },
-              { id: '5', title: 'LauncherOne', occurs_at: '2022-12-11T12:00:00' },
-              { id: '6', title: 'Atlas V', occurs_at: '2022-12-11T19:00:00' },
-            ],
-          },
-        ]);
+      setIsLoading(false);
+
+      console.log("resultados de fetch da api", result)
+      if (result && result.length > 0) {
+        setOrganizedLaunches(organizeLaunches(result));
       }
+
     };
 
     fetchData();
-  }, [tripId]);
+  }, [launches]);
 
-  const falcon = {
-    date: '2024-12-05',
-    activities: [
-      { id: '1', title: 'Falcon Heavy', occurs_at: '2022-12-10T08:00:00' },
-    ],
-  }
 
-  const handleStart = () => {
-    publishMessage();
-    navigate('/dashboard');
-  }
-  
   return (
-    <div className="space-y-8">
-
-      <div key={falcon.date} className="space-y-2.5">
-        <div className="flex gap-2 items-baseline">
-          <span className="text-xl text-zinc-300 font-semibold">{format(falcon.date, 'LLLL')}</span>
-          <span className="text-xs text-zinc-500">{format(falcon.date, 'y', { locale: pt })}</span>
-        </div>
-        {falcon.activities.length > 0 ? (
-          <div>
-            {falcon.activities.map(activity => {
-              return (
-                <div key={activity.id} className="space-y-2.5 mb-2">
-                  <div className="px-4 py-2.5 bg-zinc-900 rounded-xl shadow-shape flex items-center gap-3">
-                    <CircleCheck className="size-5 text-lime-300" />
-                    <span className="text-zinc-100">{activity.title}</span>
-                    <span onClick={() => {handleStart()}} className="text-lime-100">Start now</span>
-                    <span className="text-zinc-400 text-sm ml-auto">
-                    {format(activity.occurs_at, "d' de 'LLLL  'às' HH'h'mm", { locale: pt })}
-                    </span>
-
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        ) : (
-          <p className="text-zinc-500 text-sm">Nenhum lançamento cadastrado para essa data.</p>
-        )}
-      </div>
-
-      {activities.map(category => {
-        return (
-          <div key={category.date} className="space-y-2.5">
-            <div className="flex gap-2 items-baseline">
-              <span className="text-xl text-zinc-300 font-semibold">{format(category.date, 'LLLL')}</span>
-              <span className="text-xs text-zinc-500">{format(category.date, 'y', { locale: pt })}</span>
-            </div>
-            {category.activities.length > 0 ? (
-              <div>
-                {category.activities.map(activity => {
-                  return (
-                    <div key={activity.id} className="space-y-2.5 mb-2">
-                      <div className="px-4 py-2.5 bg-zinc-900 rounded-xl shadow-shape flex items-center gap-3">
-                        <CircleCheck className="size-5 text-lime-300" />
-                        <span className="text-zinc-100">{activity.title}</span>
-                        <span className="text-zinc-400 text-sm ml-auto">
-                        {format(activity.occurs_at, "d' de 'LLLL  'às' HH'h'mm", { locale: pt })}
-                        </span>
-                      </div>
+    <>
+      {isLoading ? (
+        <p className="text-zinc-500 text-sm">Carregando lançamentos...</p>
+      ) : error ? (
+        <p className="text-zinc-500 text-sm">{error}</p>
+      ) : Object.keys(organizedLaunches).length > 0 ? (
+        <>
+          {
+            Object.keys(organizedLaunches).map(year => (
+              <div key={year} className="space-y-8">
+                {Object.keys(organizedLaunches[year]).map(month => (
+                  <div key={month} className="space-y-2.5">
+                    <div className="flex gap-2 items-baseline">
+                      <span className="text-xl text-zinc-300 font-semibold">{month} </span>
+                      <span className="text-xs text-zinc-500">{year}</span>
                     </div>
-                  )
-                })}
+                    {organizedLaunches[year][month].length > 0 ? (
+                      <div>
+                        {organizedLaunches[year][month].map(launch => (
+                          <div key={launch.id} className="space-y-2.5 mb-2">
+
+                            <Link to={`/rocket/${launch.id}`} className="">
+                              <div className="px-4 py-2.5 bg-zinc-900 rounded-xl shadow-shape flex items-center gap-3">
+                                <CircleCheck className="size-5 text-lime-300" />
+                                <span className="text-zinc-100">{launch.missionName}</span>
+                                <span className="text-zinc-400 text-sm ml-auto">
+                                  {format(launch.launchDate, "d' de 'LLLL  'às' HH'h'mm", { locale: pt })}
+                                </span>
+                              </div>
+                            </Link>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-zinc-500 text-sm">Nenhum lançamento cadastrado para essa data.</p>
+                    )}
+                  </div>
+                ))}
               </div>
-            ) : (
-              <p className="text-zinc-500 text-sm">Nenhum lançamento cadastrado para essa data.</p>
-            )}
-          </div>
-        )
-      })}
-    </div>
+            ))
+          }
+        </>
+      ) : (
+        <p className="text-zinc-500 text-sm">Nenhum lançamento cadastrado.</p>
+      )}
+    </>
+
   )
 }

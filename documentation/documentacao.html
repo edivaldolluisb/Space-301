@@ -1,0 +1,614 @@
+<!-- HTML for static distribution bundle build -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Swagger UI</title>
+    <link rel="stylesheet" type="text/css" href="swagger-ui/swagger-ui.css" />
+    <link rel="stylesheet" type="text/css" href="swagger-ui/index.css" />
+    <link rel="icon" type="image/png" href="swagger-ui/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="swagger-ui/favicon-16x16.png" sizes="16x16" />
+  </head>
+
+  <body>
+    <div id="swagger-ui"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js" charset="UTF-8"></script>
+    <script src="swagger-ui/swagger-ui-bundle.js" charset="UTF-8"> </script>
+    <script src="swagger-ui/swagger-ui-standalone-preset.js" charset="UTF-8"> </script>
+    <script>
+      window.onload = function() {
+        const yamlSpec = `# Seu conteúdo YAML aqui
+openapi: 3.0.1
+info:
+  title: Space API
+  description: Documentação da API
+  version: "1.0"
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+paths:
+  /auth/register:
+    post:
+      tags:
+      - auth-controller
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequestDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /auth/login:
+    post:
+      tags:
+      - auth-controller
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequestDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /api/v1/messages/publish:
+    post:
+      tags:
+      - rabbit-mq-controller
+      operationId: publishMessage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: object
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /api/v1/launches:
+    get:
+      tags:
+      - launch-controller
+      operationId: getAllLaunches
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Launch"
+    post:
+      tags:
+      - launch-controller
+      operationId: createLaunch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Launch"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Launch"
+  /api/v1/launches/{launchId}/astronaut/{astronautId}:
+    get:
+      tags:
+      - launch-controller
+      operationId: getAstronautByLaunchAndAstronautId
+      parameters:
+      - name: launchId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: astronautId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+    post:
+      tags:
+      - launch-controller
+      operationId: addAstronautToLaunch
+      parameters:
+      - name: launchId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: astronautId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /api/v1/history/launches:
+    get:
+      tags:
+      - history-controller
+      operationId: getAllHistoryLaunchs
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/HistoryLaunch"
+    post:
+      tags:
+      - history-controller
+      operationId: createHistory
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HistoryLaunch"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HistoryLaunch"
+  /api/v1/astronauts:
+    get:
+      tags:
+      - astronaut-controller
+      operationId: getAllAstronauts
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Astronaut"
+    post:
+      tags:
+      - astronaut-controller
+      operationId: createAstronaut
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Astronaut"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Astronaut"
+  /api/v1/alert:
+    post:
+      tags:
+      - alert-controller
+      operationId: createAlert
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Alert"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Alert"
+  /api/v1/alerts:
+    get:
+      tags:
+      - alert-controller
+      operationId: getAllAlerts
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Alert"
+    patch:
+      tags:
+      - alert-controller
+      operationId: updateAllAlertStatuses
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: integer
+                  format: int32
+  /api/v1/alert/{id}/status:
+    patch:
+      tags:
+      - alert-controller
+      operationId: updateAlertStatus
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateStatusRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Alert"
+  /user:
+    get:
+      tags:
+      - user-controller
+      operationId: getUser
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /api/v1/launches/{id}:
+    get:
+      tags:
+      - launch-controller
+      operationId: getLaunchById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Launch"
+  /api/v1/launches/{id}/astronauts:
+    get:
+      tags:
+      - launch-controller
+      operationId: getAstronautsByLaunchId
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Astronaut"
+  /api/v1/history/launches/{id}:
+    get:
+      tags:
+      - history-controller
+      operationId: getHistoryById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HistoryLaunch"
+  /api/v1/alerts/launch/{id}:
+    get:
+      tags:
+      - alert-controller
+      operationId: getAlertsByLaunchId
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Alert"
+  /api/v1/alert/{id}:
+    get:
+      tags:
+      - alert-controller
+      operationId: getaAlertById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Alert"
+  /api/v1/astronauts/{id}:
+    delete:
+      tags:
+      - astronaut-controller
+      operationId: deleteAstronaut
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+components:
+  schemas:
+    RegisterRequestDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+    LoginRequestDTO:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    Alert:
+      required:
+      - date
+      - message
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        message:
+          type: string
+        date:
+          type: string
+          format: date-time
+        status:
+          type: boolean
+        launch:
+          $ref: "#/components/schemas/Launch"
+    Launch:
+      required:
+      - address
+      - launchDate
+      - missionName
+      - rocketId
+      type: object
+      properties:
+        id:
+          type: number
+          format: double
+        missionName:
+          type: string
+        launchDate:
+          type: string
+          format: date-time
+        rocketId:
+          type: integer
+          format: int32
+        address:
+          type: string
+        status:
+          type: string
+          enum:
+          - PENDING
+          - FAILED
+          - SUCCESS
+          - LAUNCHED
+        astronauts:
+          uniqueItems: true
+          type: array
+          items:
+            type: integer
+            format: int64
+        alerts:
+          type: array
+          items:
+            $ref: "#/components/schemas/Alert"
+    HistoryLaunch:
+      type: object
+      properties:
+        historyId:
+          type: integer
+          format: int64
+        launch:
+          $ref: "#/components/schemas/Launch"
+        velocity:
+          type: array
+          items:
+            type: number
+            format: double
+        aceleration:
+          type: array
+          items:
+            type: number
+            format: double
+        fuel:
+          type: array
+          items:
+            type: number
+            format: double
+        intern_temperature:
+          type: array
+          items:
+            type: number
+            format: double
+        extern_temperature:
+          type: array
+          items:
+            type: number
+            format: double
+        height:
+          type: array
+          items:
+            type: number
+            format: double
+        g_force:
+          type: array
+          items:
+            type: number
+            format: double
+        radiation:
+          type: array
+          items:
+            type: number
+            format: double
+    Astronaut:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        gender:
+          type: string
+        photo:
+          type: string
+        age:
+          type: integer
+          format: int32
+        height:
+          type: number
+          format: float
+        weight:
+          type: number
+          format: double
+        heartRate:
+          type: number
+          format: double
+        bloodPressure:
+          type: number
+          format: double
+        bodyTemperature:
+          type: number
+          format: double
+        respiratoryRate:
+          type: number
+          format: double
+        launch:
+          $ref: "#/components/schemas/Launch"
+        bmi:
+          type: number
+          format: double
+    UpdateStatusRequest:
+      type: object
+      properties:
+        status:
+          type: boolean
+
+`;
+
+        window.ui = SwaggerUIBundle({
+          spec: jsyaml.load(yamlSpec), // Converte o YAML em um objeto JSON
+          dom_id: '#swagger-ui',
+          deepLinking: true,
+          presets: [
+            SwaggerUIBundle.presets.apis,
+            SwaggerUIStandalonePreset
+          ],
+          plugins: [
+            SwaggerUIBundle.plugins.DownloadUrl
+          ],
+          layout: "StandaloneLayout",
+          validatorUrl: null
+        });
+      };
+    </script>
+  </body>
+</html>

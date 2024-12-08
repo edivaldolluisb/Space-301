@@ -11,7 +11,6 @@ import ies301.space.entities.HistoryLaunch;
 import ies301.space.services.HistoryService;
 
 @RestController
-// @CrossOrigin(origins = "*")
 @RequestMapping("/api/v1")
 public class HistoryController {
 

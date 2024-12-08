@@ -18,7 +18,6 @@ import ies301.space.services.UserService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
-// @CrossOrigin(origins = "*")
 @RequestMapping("/user")
 public class UserController {
 

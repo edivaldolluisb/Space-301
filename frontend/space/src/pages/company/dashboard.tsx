@@ -18,6 +18,10 @@ import { Client } from '@stomp/stompjs';
 import { useNavigate } from 'react-router-dom';
 
 
+interface DashboardProps {
+  launchId: String | undefined;
+}
+
 interface CardProps {
   children: React.ReactNode;
   className?: string;
@@ -168,7 +172,7 @@ const StatusCard: React.FC<StatusCardProps> = ({
 
 
 
-const Dashboard: React.FC = () => {
+const Dashboard: React.FC<DashboardProps> = ({launchId}) => {
   const [rocketData, setRocketData] = useState({});
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -178,8 +182,8 @@ const Dashboard: React.FC = () => {
       brokerURL: 'ws://localhost:8080/space-websocket', // URL do WebSocket
       reconnectDelay: 5000, // Tenta reconectar após falhas
       onConnect: () => {
-        console.log('Conectado ao WebSocket');
-        client.subscribe('/topic/launch-data', (msg) => {
+        console.log(`Conectado ao WebSocket: /topic/${launchId}/launch-data`);
+        client.subscribe(`/topic/${launchId}/launch-data`, (msg) => {
           console.log('Mensagem recebida do WebSocket:', msg); // Inspecionar a mensagem
           const data = JSON.parse(msg.body); // Parse do payload
           console.log('Dados processados:', data);
@@ -204,11 +208,6 @@ const Dashboard: React.FC = () => {
   
   return (
     <div className="max-w-6xl px-6 py-10 mx-auto space-y-8">
-      <DestinationAndDateHeader />
-      <button className="rounded-lg px-5 font-medium flex items-center justify-center gap-2 bg-lime-300 text-lime-950 hover:bg-lime-400 py-2"
-              onClick={() => {navigate('/sinais-vitais')}}>
-        Astronauts <ExternalLink />
-      </button>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <RocketInfo />
             {Object.entries(rocketData).map(([key, value]) => {
