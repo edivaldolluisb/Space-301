@@ -1,4 +1,4 @@
-import { CircleCheck } from "lucide-react";
+import { CircleCheck, CircleX } from "lucide-react";
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
@@ -33,7 +33,7 @@ export function ListLaunchHistory() {
 
   const fetchLancamentos = async () => {
     try {
-      const response = await api.get('/launches');
+      const response = await api.get('/launches/completed');
       return response.data
 
     } catch (error) {
@@ -67,7 +67,7 @@ export function ListLaunchHistory() {
     fetchData();
   }, [tripId]);
 
-
+<CircleX />
   return (
     <>
       {Object.keys(organizedLaunches).length > 0 ? (
@@ -86,7 +86,11 @@ export function ListLaunchHistory() {
                         {organizedLaunches[year][month].map(launch => (
                           <div key={launch.id} className="space-y-2.5 mb-2">
                             <div className="px-4 py-2.5 bg-zinc-900 rounded-xl shadow-shape flex items-center gap-3">
-                              <CircleCheck className="size-5 text-lime-300" />
+                              {launch.status === "FAILED" ? (
+                                <CircleX className="size-5 text-red-500" />
+                              ) : (
+                                <CircleCheck className="size-5 text-lime-300" />
+                              )}
                               <span className="text-zinc-100">{launch.missionName}</span>
                               <span className="text-zinc-400 text-sm ml-auto">
                                 {format(launch.launchDate, "d' de 'LLLL  'às' HH'h'mm", { locale: pt })}
