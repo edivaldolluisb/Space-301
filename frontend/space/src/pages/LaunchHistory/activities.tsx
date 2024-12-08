@@ -67,7 +67,6 @@ export function ListLaunchHistory() {
     fetchData();
   }, [tripId]);
 
-<CircleX />
   return (
     <>
       {Object.keys(organizedLaunches).length > 0 ? (
