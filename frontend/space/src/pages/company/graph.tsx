@@ -20,6 +20,7 @@ import {
 
 import { useState, useEffect } from "react";
 import { api } from "../../lib/axios";
+import { time } from "console"
 
 
 
@@ -35,6 +36,13 @@ interface SpeedData {
 	speed: number;
 }
 
+
+// Função para formatar a data
+function formatDate(date: Date): string {
+	const options: Intl.DateTimeFormatOptions = { day: "numeric", month: "long", year: "numeric" };
+	return new Intl.DateTimeFormat("pt-BR", options).format(date);
+}
+
 const chartConfig = {
 	speed: {
 		label: "Speed",
@@ -46,6 +54,9 @@ export function SpeedGraph() {
 	const [speedData, setSpeedData] = useState<SpeedData[]>([]);
 	const [averageSpeed, setAverageSpeed] = useState<number | null>(null);
 	const [maxSpeed, setMaxSpeed] = useState<number | null>(null);
+	const [startDate, setStartDate] = useState<Date>(new Date());
+	const [endDate, setEndDate] = useState<Date>(new Date());
+
 
 	useEffect(() => {
 		const fetchSpeedData = async () => {
@@ -55,6 +66,7 @@ export function SpeedGraph() {
 				const formattedData = response.data.map((item: ApiResponseData) => ({
 					day: new Date(item._time).getDate(),
 					speed: item._value,
+					time: item._time
 				}));
 				setSpeedData(formattedData);
 
@@ -66,6 +78,13 @@ export function SpeedGraph() {
 
 				setAverageSpeed(avgSpeed);
 				setMaxSpeed(maxSpeed);
+
+
+				// Calcular as datas inicial e final
+				const start = new Date(formattedData[0].time);
+				const end = new Date(formattedData[formattedData.length - 1].time);
+				setStartDate(start);
+				setEndDate(end);
 
 			} catch (error) {
 				console.log("Erro ao buscar velocidade:", error)
@@ -93,7 +112,7 @@ export function SpeedGraph() {
 		<Card>
 			<CardHeader>
 				<CardTitle>Velocidade</CardTitle>
-				<CardDescription>10 - 16 Novembro de  2024</CardDescription>
+				<CardDescription>{formatDate(startDate)} - {formatDate(endDate) || formatDate(new Date())}</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<ChartContainer config={chartConfig}>
@@ -131,30 +150,14 @@ export function SpeedGraph() {
 							strokeWidth={2}
 							dot={false}
 						/>
-						
-						{/* {averageSpeed && (
-							<ReferenceLine
-								y={averageSpeed}
-								stroke="blue"
-								strokeDasharray="3 3"
-								label={`Média (${averageSpeed.toFixed(2)})`}
-							/>
-							)}
-							{maxSpeed && (
-							<ReferenceLine
-								y={maxSpeed}
-								stroke="red"
-								strokeDasharray="3 3"
-								label={`Máximo (${maxSpeed.toFixed(2)})`}
-							/>
-							)} */}
+
 					</LineChart>
 				</ChartContainer>
 			</CardContent>
 			<CardFooter className="flex-col items-start gap-2 text-sm">
 				<div className="flex gap-2 font-medium leading-none">
-				Average speed today: {averageSpeed?.toFixed(2)} | Maximum speed:{" "}
-				{maxSpeed?.toFixed(2)} <Gauge className="h-4 w-4" />
+					Average speed today: {averageSpeed?.toFixed(2)} | Maximum speed:{" "}
+					{maxSpeed?.toFixed(2)} <Gauge className="h-4 w-4" />
 				</div>
 				<div className="leading-none text-muted-foreground">
 					Showing total speed for today
