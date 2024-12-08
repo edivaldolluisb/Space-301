@@ -41,13 +41,6 @@ export function AlertsPage() {
 				</div>
 
 			</main>
-			{/* <AlertsWs /> */}
-
-			{/* {isCreateActivityModalOpen && (
-        <CreateActivityModal 
-          closeCreateActivityModal={closeCreateActivityModal}
-        />
-      )} */}
 		</div>
 	)
 }

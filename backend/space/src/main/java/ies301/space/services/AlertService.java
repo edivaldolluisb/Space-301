@@ -14,6 +14,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
 public class AlertService {
 
@@ -25,12 +27,13 @@ public class AlertService {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
+    private static final Logger logger = LoggerFactory.getLogger(AlertService.class);
+
     public Alert saveAlert(Alert alert) {
 
         // logger.info("Saving alert: {}", alert);
         Alert savedAlert = alertRepository.save(alert);
-        List<Alert> allAlerts = alertRepository.findAll();
-        messagingTemplate.convertAndSend("/topic/alerts", allAlerts);
+        broadcastAllAlerts();
         return savedAlert;
         // return alertRepository.save(alert);
     }
@@ -55,8 +58,7 @@ public class AlertService {
             Alert alert = optionalAlert.get();
             alert.setStatus(newStatus);
             Alert updatedAlert = alertRepository.save(alert);
-            List<Alert> allAlerts = alertRepository.findAll();
-            messagingTemplate.convertAndSend("/topic/alerts", allAlerts);
+            broadcastAllAlerts();
             return updatedAlert;
             // return alertRepository.save(alert);
         }
@@ -74,14 +76,14 @@ public class AlertService {
      * Update all alerts statuses to true
      * @return number of alerts updated
      */
+    @Transactional
     public int updateAllStatusesToTrue() {
         List<Alert> alerts = alertRepository.findAlertsByStatus(false);
         alerts.forEach(alert -> {
             alert.setStatus(true);
         });
         alertRepository.saveAll(alerts);
-        List<Alert> allAlerts = alertRepository.findAll();
-        messagingTemplate.convertAndSend("/topic/alerts", allAlerts);
+        broadcastAllAlerts();
         return alerts.size();
     }
 
@@ -94,6 +96,12 @@ public class AlertService {
             return true;
         }
         return false;
+    }
+
+    private void broadcastAllAlerts() {
+        List<Alert> allAlerts = alertRepository.findAll();
+        messagingTemplate.convertAndSend("/topic/alerts", allAlerts);
+        logger.info("Broadcasted all alerts, total: {}", allAlerts.size());
     }
     
 }
