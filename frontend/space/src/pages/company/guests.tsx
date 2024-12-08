@@ -1,4 +1,4 @@
-import { CheckCircle2, X, UserCog, CircleDashed } from "lucide-react";
+import { CheckCircle2, CircleX, UserCog } from "lucide-react";
 import { Button } from "../../components/button";
 import { useState, useEffect } from "react";
 import { api } from "../../lib/axios";
@@ -36,7 +36,7 @@ export function Guests() {
   useEffect(() => {
     async function loadActivities() {
       try {
-        const response = await api.get('/launches');
+        const response = await api.get('/launches/completed');
         setLaunches(response.data)
 
         console.log("resultados de fetch da api", response.data)
@@ -66,9 +66,7 @@ export function Guests() {
 
             {launch.status === "SUCCESS"
               ? <CheckCircle2 className="size-5 text-lime-500  shrink-0" />
-              : launch.status === "FAILED"
-                ? <X className="size-5 text-red-500  shrink-0" />
-                : <CircleDashed className="size-5 text-zinc-400  shrink-0" />
+              : <CircleX className="size-5 text-red-500  shrink-0" />
             }
           </div>
         ))}
