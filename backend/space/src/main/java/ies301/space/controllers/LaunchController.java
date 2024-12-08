@@ -19,14 +19,13 @@ import ies301.space.services.LaunchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 @RestController
 @RequestMapping("/api/v1")
 public class LaunchController {
     private final AstronautService astronautService;
 
     private static final Logger logger = LoggerFactory.getLogger(LaunchController.class);
-    
+
     private final LaunchService launchService;
 
     @Autowired
@@ -105,24 +104,17 @@ public class LaunchController {
             @PathVariable Long launchId,
             @PathVariable String entity,
             @PathVariable(required = false) String entityId, // Para nave, pode ser null
-            @PathVariable String field) {
+            @PathVariable String field,
+            @RequestParam(defaultValue = "1d") String interval) {
 
-                Long parsedEntityId = "null".equals(entityId) ? null : Long.valueOf(entityId); // Converter se necessário
+        Long parsedEntityId = "null".equals(entityId) ? null : Long.valueOf(entityId); // Converter se necessário
 
         try {
             List<Map<String, Object>> data = launchService.getDynamicData(launchId, entity, parsedEntityId, field);
+            // List<Map<String, Object>> data = launchService.getAveragedData(launchId,
+            // entity, parsedEntityId, field, interval);
 
-
-        // Transformar os dados para conter apenas os campos necessários
-        List<Map<String, Object>> processedData = data.stream()
-        .map(record -> Map.of(
-            "_field", record.get("_field"),
-            "_value", record.get("_value"),
-            "_time", record.get("_time")
-        ))
-        .toList();
-
-            return ResponseEntity.ok(processedData);
+            return ResponseEntity.ok(data);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
@@ -130,5 +122,27 @@ public class LaunchController {
                     .body("Error fetching data: " + e.getMessage());
         }
     }
+
+    // @GetMapping("/launches/{launchId}/{entity}/{entityId}/{field}/average")
+    // public ResponseEntity<?> getAveragedData(
+    //         @PathVariable Long launchId,
+    //         @PathVariable String entity,
+    //         @PathVariable(required = false) String entityId, 
+    //         @PathVariable String field,
+    //         @RequestParam(defaultValue = "1m") String interval) { 
+
+    //     Long parsedEntityId = "null".equals(entityId) ? null : Long.valueOf(entityId); 
+
+    //     try {
+    //         List<Map<String, Object>> averagedData = launchService.getAveragedData(launchId, entity, parsedEntityId,
+    //                 field, interval);
+    //         return ResponseEntity.ok(averagedData);
+    //     } catch (IllegalArgumentException e) {
+    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    //     } catch (Exception e) {
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+    //                 .body("Error fetching averaged data: " + e.getMessage());
+    //     }
+    // }
 
 }
