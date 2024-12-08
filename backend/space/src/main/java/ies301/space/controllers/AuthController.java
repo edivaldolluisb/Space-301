@@ -23,30 +23,38 @@ public class AuthController {
     private final TokenService tokenService;
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginRequestDTO body){
-        User user = this.repository.findByEmail(body.email()).orElseThrow(() -> new RuntimeException("User not found"));
-        if(passwordEncoder.matches(body.password(), user.getPassword())) {
+    public ResponseEntity login(@RequestBody LoginRequestDTO body) {
+        // Verifica se o usuário existe
+        Optional<User> userOpt = this.repository.findByEmail(body.getEmail());
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(404).body("User not found");
+        }
+
+        User user = userOpt.get();
+        // Verifica se a senha é válida
+        if (passwordEncoder.matches(body.getPassword(), user.getPassword())) {
             String token = this.tokenService.generateToken(user);
             return ResponseEntity.ok(new ResponseDTO(user.getName(), token));
         }
-        return ResponseEntity.badRequest().build();
+
+        // Retorna erro se a senha estiver incorreta
+        return ResponseEntity.badRequest().body("Invalid password");
     }
 
-
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody RegisterRequestDTO body){
-        Optional<User> user = this.repository.findByEmail(body.email());
+    public ResponseEntity register(@RequestBody RegisterRequestDTO body) {
+        Optional<User> user = this.repository.findByEmail(body.getEmail());
 
-        if(user.isEmpty()) {
+        if (user.isEmpty()) {
             User newUser = new User();
-            newUser.setPassword(passwordEncoder.encode(body.password()));
-            newUser.setEmail(body.email());
-            newUser.setName(body.name());
+            newUser.setPassword(passwordEncoder.encode(body.getPassword()));
+            newUser.setEmail(body.getEmail());
+            newUser.setName(body.getName());
             this.repository.save(newUser);
 
             String token = this.tokenService.generateToken(newUser);
             return ResponseEntity.ok(new ResponseDTO(newUser.getName(), token));
         }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.badRequest().body("User already exists");
     }
 }
