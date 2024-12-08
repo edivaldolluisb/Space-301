@@ -122,35 +122,7 @@ public class InfluxDBService {
             throw new RuntimeException("Erro ao apagar dados do InfluxDB", e);
         }
     }
-
-    // public List<Map<String, Object>> fetchTripulanteData(Long lancamentoId, Long tripulanteId, String fieldName) {
-    //     String query = String.format("""
-    //         from(bucket: "home")
-    //           |> range(start: -1h)
-    //           |> filter(fn: (r) => r._measurement == "tripulantes")
-    //           |> filter(fn: (r) => r.lancamentoId == "%s")
-    //           |> filter(fn: (r) => r.id == "%s")
-    //           |> filter(fn: (r) => r._field == "%s")
-    //     """, lancamentoId, tripulanteId, fieldName);
-    
-    //     QueryApi queryApi = influxDBClient.getQueryApi();
-    //     List<FluxTable> tables = queryApi.query(query);
-    
-    //     List<Map<String, Object>> results = new ArrayList<>();
-    
-    //     for (FluxTable table : tables) {
-    //         for (FluxRecord record : table.getRecords()) {
-    //             Instant time = (Instant) record.getValueByKey("_time");
-    //             Object value = record.getValue();
-    
-    //             results.add(Map.of("time", time, "value", value));
-    //         }
-    //     }
-    
-    //     return results;
-    // }
-    
-
+  
 
     // pegar dados da nave
     public List<Map<String, Object>> fetchNaveData(Long lancamentoId, String field) {
