@@ -46,69 +46,40 @@ type Alerta = {
   };
 
 export default function SinaisVitais() {
-    const [currentAstronautId, setCurrentAstronautId] = useState(individuals[0].id);
-    const [currentAstronaut, setCurrentAstronaut] = useState(individuals[currentAstronautId]);
-    const [astronauts, setAstronauts] = useState(individuals);
+    const [astronauts, setAstronauts] = useState([]);
+    const [currentAstronautId, setCurrentAstronautId] = useState();
+    const [currentAstronaut, setCurrentAstronaut] = useState();
     const [error, setError] = useState<string | null>(null);
     const { launchId } = useParams();
 
     useEffect(() => {
+        const fetchAstronauts = async () => {
+            try {
+                const response = await api.get(`/launches/${launchId}/astronauts`);
+                console.log('resp - astronautas: ', response.data);   
+                const data = response.data;
+                const astros = data.map((astro) => {return {...astro, 'parametros': []}}); 
+                setAstronauts(astros);
+                setCurrentAstronaut(astronauts[0]);
+                setCurrentAstronautId(currentAstronaut.id);
+                console.log('Current - astronautas: ', currentAstronaut);
+            } catch (error) {
+                console.error('Erro ao buscar astronautas:', error);
+            }
+        };
+    
+        fetchAstronauts();
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
         const client = new Client({
-          brokerURL: 'ws://localhost:8080/space-websocket', // URL do WebSocket
-          reconnectDelay: 5000, // Tenta reconectar após falhas
+          brokerURL: 'ws://localhost:8080/space-websocket',
+          reconnectDelay: 5000,
           onConnect: () => {
-            console.log(`Conectado ao WebSocket: /topic/${launchId}/astronaut-data`);
-            client.subscribe(`/topic/${launchId}/astronaut-data`, (msg) => {
-              console.log('Mensagem recebida do WebSocket:', msg); // Inspecionar a mensagem
-              const data = JSON.parse(msg.body); // Parse do payload
+            console.log(`Conectado ao WebSocket: /topic/${launchId}/astronaut-data/${currentAstronautId}`);
+            client.subscribe(`/topic/${launchId}/astronaut-data/${currentAstronautId}`, (msg) => {
+              console.log('Mensagem recebida do WebSocket:', msg);
+              const data = JSON.parse(msg.body);
               console.log('Dados processados:', data);
-              setAstronauts((prevAstronauts) =>
-                prevAstronauts.map((astronaut) => {
-                    const updated = data.find((t) => t.id === astronaut.id);
-                    if (updated) {
-                        return {
-                            ...astronaut,
-                            parametros: [
-                                {
-                                    name: 'Batimento Cardíaco',
-                                    valor: updated.bpm,
-                                    unidade: 'bpm',
-                                    status: updated.bpm > 100 ? 'Alto' : 'Normal',
-                                },
-                                {
-                                    name: 'Pressão Sanguinea',
-                                    pa_diastolica: updated.pa_diastolica,
-                                    pa_sistolica: updated.pa_sistolica,
-                                    unidade: '/ mmHg',
-                                    status:
-                                        updated.pa_sistolica > 140 || updated.pa_diastolica > 90
-                                            ? 'Alta'
-                                            : 'Normal',
-                                },
-                                {
-                                    name: 'Oxigênio no Sangue',
-                                    valor: updated.oxigenio_sangue,
-                                    unidade: 'mol/m³',
-                                    status: updated.oxigenio_sangue < 7.5 ? 'Baixo' : 'Normal',
-                                },
-                                {
-                                    name: 'Ritmo Respiratório',
-                                    valor: updated.respiracao,
-                                    unidade: 'rpm',
-                                    status: updated.respiracao > 20 ? 'Alto' : 'Normal',
-                                },
-                                {
-                                    name: 'Temperatura corporal',
-                                    valor: updated.temperature,
-                                    unidade: 'ºc',
-                                    status: 'Normal'
-                                },
-                            ],
-                        };
-                    }
-                    return astronaut;
-                    })
-                );
+              
             });
           },
           onDisconnect: () => {
@@ -131,19 +102,10 @@ export default function SinaisVitais() {
         console.log(`Ocorreu um erro ao carregar os dados...${error}`);
     }
 
-    useEffect(() => {
-        const fetchAstronauts = async () => {
-            try {
-                const response = await api.get(`/launches/${launchId}/astronauts`);
-                console.log('resp: ', response.data);                
-                setCurrentAstronaut(astronauts.filter((astronaut) => astronaut.id == currentAstronautId)[0]);
-            } catch (error) {
-                console.error('Erro ao buscar astronautas:', error);
-            }
-        };
-    
-        fetchAstronauts();
-    });
+    if (!currentAstronaut) {
+        console.log('logooo - astronautas: ', currentAstronaut);
+        return <h1>A processar</h1>;
+    }
     
     return (
         <>
@@ -226,151 +188,3 @@ interface Astronaut {
     respiratoryRate: number;
     parametros?: VitalParameter[];
 }
-
-// Para testes
-const individuals = [
-    {
-        id: 1,
-        name: 'Amelia Earhart',
-        gender: 'Feminino',
-        height: 165,
-        age: 39,
-        weight: 60,
-        photo: '../../public/Amelia_Earhart.webp',
-        parametros: [
-            {
-                name: 'Batimento Cardíaco',
-                valor: null,
-                unidade: 'bpm',
-                status: 'Normal'
-            },
-            {
-                name: 'Pressão Sanguinea',
-                pa_diastolica:  null,
-                pa_sistolica: null,
-                unidade: ' mmhg',
-                status: 'Normal'
-            },
-            {
-                name: 'Temperatura corporal',
-                valor: null,
-                unidade: 'ºc',
-                status: 'Normal'
-            },
-            {
-                name: 'Ritmo respiratório',
-                valor: null,
-                unidade: 'rpm',
-                status: 'Normal'
-            },
-        ]
-    },
-    {
-        id: 2,
-        name: 'Neil Armstrong',
-        gender: 'Masculino',
-        height: 180,
-        age: 39,
-        weight: 75,
-        photo: '../../public/Neil_Armstrong.webp',
-        parametros: [
-            {
-                name: 'Batimento Cardíaco',
-                valor: null,
-                unidade: 'bpm',
-                status: 'Normal'
-            },
-            {
-                name: 'Pressão Sanguinea',
-                pa_diastolica: null,
-                pa_sistolica: null,
-                unidade: ' mmhg',
-                status: 'Normal'
-            },
-            {
-                name: 'Temperatura corporal',
-                valor: null,
-                unidade: 'ºc',
-                status: 'Normal'
-            },
-            {
-                name: 'Ritmo respiratório',
-                valor: null,
-                unidade: 'rpm',
-                status: 'Normal'
-            },
-        ]
-    },
-    {
-        id: 3,
-        name: 'Katherine Johnson',
-        gender: 'Feminino',
-        height: 160,
-        age: 50,
-        weight: 62,
-        photo: '../../public/Katherine_Johnson.webp',
-        parametros: [
-            {
-                name: 'Batimento Cardíaco',
-                valor: null,
-                unidade: 'bpm',
-                status: 'Normal'
-            },
-            {
-                name: 'Pressão Sanguinea',
-                pa_diastolica: null,
-                pa_sistolica: null,
-                unidade: ' mmhg',
-                status: 'Normal'
-            },
-            {
-                name: 'Temperatura corporal',
-                valor: null,
-                unidade: 'ºc',
-                status: 'Normal'
-            },
-            {
-                name: 'Ritmo respiratório',
-                valor: null,
-                unidade: 'rpm',
-                status: 'Normal'
-            },
-        ]
-    },
-    {
-        id: 4,
-        name: 'Buzz Aldrin',
-        gender: 'Masculino',
-        height: 175,
-        age: 40,
-        weight: 78,
-        photo: '../../public/Buzz_Aldrin.webp',
-        parametros: [
-            {
-                name: 'Batimento Cardíaco',
-                valor: null,
-                unidade: 'bpm',
-                status: 'Normal'
-            },
-            {
-                name: 'Pressão Sanguinea',
-                pa_diastolica: null,
-                pa_sistolica: null,
-                unidade: ' mmhg',
-                status: 'Normal'
-            },
-            {
-                name: 'Temperatura corporal',
-                valor: null,
-                unidade: 'ºc',
-                status: 'Normal'
-            },
-            {
-                name: 'Ritmo respiratório',
-                valor: null,
-                unidade: 'rpm',
-                status: 'Normal'
-            },
-        ]
-    }
-];
