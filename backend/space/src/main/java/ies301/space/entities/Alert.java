@@ -29,7 +29,7 @@ public class Alert {
     private boolean status = false;
     
     @ManyToOne 
-    @JoinColumn(name = "launch_id") // Foreign key column in Alert table
+    @JoinColumn(name = "launch_id")
     private Launch launch;
 
     public Alert() {
