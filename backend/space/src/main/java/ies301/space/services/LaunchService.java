@@ -83,5 +83,10 @@ public class LaunchService {
             throw new IllegalArgumentException("Entity type not supported.");
         }
     }
+
+
+    // public List<Map<String, Object>> getAveragedData(Long launchId, String entity, Long entityId, String field, String interval) {
+    //     return influxDBService.getAveragedData(launchId, entity, entityId, field, interval);
+    // }
     
 }
