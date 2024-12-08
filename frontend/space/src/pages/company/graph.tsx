@@ -1,6 +1,6 @@
 "use client"
 
-import { TrendingUp } from "lucide-react"
+import { TrendingUp, Gauge } from "lucide-react"
 import { Bar, BarChart, CartesianGrid, Line, LineChart, XAxis, YAxis, ReferenceLine } from "recharts"
 
 import {
@@ -131,15 +131,33 @@ export function SpeedGraph() {
 							strokeWidth={2}
 							dot={false}
 						/>
+						
+						{/* {averageSpeed && (
+							<ReferenceLine
+								y={averageSpeed}
+								stroke="blue"
+								strokeDasharray="3 3"
+								label={`Média (${averageSpeed.toFixed(2)})`}
+							/>
+							)}
+							{maxSpeed && (
+							<ReferenceLine
+								y={maxSpeed}
+								stroke="red"
+								strokeDasharray="3 3"
+								label={`Máximo (${maxSpeed.toFixed(2)})`}
+							/>
+							)} */}
 					</LineChart>
 				</ChartContainer>
 			</CardContent>
 			<CardFooter className="flex-col items-start gap-2 text-sm">
 				<div className="flex gap-2 font-medium leading-none">
-					Trending up by 5.2% today <TrendingUp className="h-4 w-4" />
+				Average speed today: {averageSpeed?.toFixed(2)} | Maximum speed:{" "}
+				{maxSpeed?.toFixed(2)} <Gauge className="h-4 w-4" />
 				</div>
 				<div className="leading-none text-muted-foreground">
-					Showing total speed for the this week
+					Showing total speed for today
 				</div>
 			</CardFooter>
 		</Card>
