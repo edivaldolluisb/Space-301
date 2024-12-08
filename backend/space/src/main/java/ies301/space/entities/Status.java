@@ -4,7 +4,8 @@ package ies301.space.entities;
 public enum Status {
     PENDING("pending"),
     FAILED("failed"),
-    SUCCESS("success");
+    SUCCESS("success"),
+    LAUNCHED("launched");
 
     private String status;
 

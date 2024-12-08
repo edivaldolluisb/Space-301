@@ -6,17 +6,9 @@ import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
 
-interface Trip {
-  id: string;
-  destination: string;
-  starts_at: string;
-  ends_at: string;
-  is_confirmed: boolean
-}
 
 export function DestinationAndDateHeader() {
   const { tripId } = useParams()
-  const [trip, setTrip] = useState<Trip | undefined>()
 
   useEffect(() => {
     // api.get(`trips/${tripId}`).then(response => setTrip(response.data.trip))

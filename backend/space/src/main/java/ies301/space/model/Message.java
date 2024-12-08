@@ -155,6 +155,14 @@ public class Message {
             this.velocidade = velocidade;
         }
 
+        public List<Alerta> getAlertas() {
+            return alerta;
+        }
+
+        public void setAlertas(List<Alerta> alerta) {
+            this.alerta = alerta;
+        }
+
         @JsonProperty("velocidade_x")
         public double getVelocidadeX() {
             return velocidadeX;
@@ -275,6 +283,8 @@ public class Message {
         private String parametro;
         private String nomeAlerta;
 
+        private Boolean status;
+
         @JsonProperty("alerta_nome")
         private String alertaNome;
 
@@ -315,5 +325,14 @@ public class Message {
         public void setAlertaDescricao(String alertaDescricao) {
             this.alertaDescricao = alertaDescricao;
         }
+
+        public Boolean getStatus() {
+            return status;
+        }
+
+        public void setStatus(Boolean status) {
+            this.status = status;
+        }
+
     }
 }

@@ -1,13 +1,18 @@
 import { Plus } from "lucide-react";
 import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
 import { Button } from "../../components/button";
-import  Dashboard  from "./dashboard";
+import Dashboard from "./dashboard";
 import { SpeedGraph, TemperatureGraph } from "./graph";
 import { ListTelemetricData } from "./list-rocket-data";
 
-export function RocketDetailsPage() {
+import { useNavigate, useParams } from "react-router-dom";
 
-  
+
+export function RocketDetailsPage() {
+  const navigate = useNavigate();
+  const { launchId } = useParams()
+  console.log("getting param: ", launchId)
+
 
   return (
     <div className="max-w-6xl px-6 py-10 mx-auto space-y-8">
@@ -20,22 +25,22 @@ export function RocketDetailsPage() {
           </div>
 
           {/* <Activities /> */}
-          <Dashboard />
-          <SpeedGraph/>
-          <TemperatureGraph/>
+          <Dashboard launchId={launchId} />
+          <SpeedGraph />
+          <TemperatureGraph />
         </div>
 
         <div className="w-80 space-y-6">
           {/* <ImportantLinks /> */}
-          
-        <Button variant="secondary" size="full">
+
+          <Button variant="secondary" size="full">
             <Plus className="size-5" />
             Dados gerais
-        </Button>
-        <Button variant="secondary" size="full">
+          </Button>
+          <Button variant="secondary" size="full" onClick={() => navigate(`/sinais-vitais/${launchId}`)}>
             <Plus className="size-5" />
             Ver tripulantes
-        </Button>
+          </Button>
 
           <div className="w-full h-px bg-zinc-800" />
 

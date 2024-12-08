@@ -25,7 +25,7 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:5173/")
 @RequestMapping("/api/v1")
 public class AlertController {
 
