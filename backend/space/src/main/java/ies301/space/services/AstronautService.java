@@ -3,6 +3,7 @@ package ies301.space.services;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -44,5 +45,9 @@ public class AstronautService {
 
     public List<Astronaut> getAllAstronauts() {
         return astronautRepository.findAll();
+    }
+
+    public List<Astronaut> getAstronautsByIds(Set<Long> astronautIds) {
+        return astronautRepository.findByIdIn(astronautIds);
     }
 }

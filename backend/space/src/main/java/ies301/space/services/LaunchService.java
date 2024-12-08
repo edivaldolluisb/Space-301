@@ -10,9 +10,6 @@ import ies301.space.entities.Launch;
 import ies301.space.entities.Status;
 import ies301.space.repositories.LaunchRepository;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 @Service
 public class LaunchService {
     private final LaunchRepository launchRepository;
