@@ -49,7 +49,7 @@ public class Launch {
 
     public Launch() {}
     
-    public Launch(String missionName, Date lauchDate, int rocketId, String address, Status status, Set<Long> astronauts) {
+    public Launch(String missionName, Date launchDate, int rocketId, String address, Status status, Set<Long> astronauts) {
 
 
         this.missionName = missionName;
