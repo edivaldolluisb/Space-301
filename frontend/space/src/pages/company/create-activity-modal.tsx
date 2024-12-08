@@ -1,6 +1,6 @@
 import { Calendar, X, Loader2, Rocket, MapPin } from "lucide-react";
 import { Button } from "../../components/button";
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useEffect } from "react";
 import { api } from "../../lib/axios";
 
 import {
@@ -29,6 +29,7 @@ interface ConfirmLaunchModalProps {
 
 interface Astronaut {
 	id: number;
+	name: string;
 }
 
 export function CreateActivityModal({
@@ -45,27 +46,29 @@ export function CreateActivityModal({
 
 
 	const [selectedAstronauts, setSelectedAstronauts] = useState<Astronaut[]>([]);
-	const [astronaustsList, setAstronautsList] = useState([]);
+	const [astronautsList, setAstronautsList] = useState<Astronaut[]>([]);
 	const fetchAstronautas = async () => {
 		try {
-		  const response = await api.get('/astronauts');
-		  return response.data
-	
-		} catch (error) {
-		  console.log("Erro ao buscar lançamentos:", error)
-		  return null
-		}
-	
-	  }
+			const response = await api.get('/astronauts');
+			return response.data || [];
 
-	useState(() => {
+		} catch (error) {
+			console.log("Erro ao buscar lançamentos:", error)
+			return null
+		}
+
+	}
+
+	useEffect(() => { // 😪
 		const fetchAstro = async () => {
 			const res = await fetchAstronautas();
 			console.log(`Astros: ${res}`)
-			setAstronautsList(res);
-		}
+			if (res) {
+				setAstronautsList(res);
+			}
+		};
 		fetchAstro();
-	});
+	}, []);
 
 
 	const handleCheckboxChange = (astronaut: Astronaut) => {
@@ -111,7 +114,7 @@ export function CreateActivityModal({
 							className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
 							onChange={(event) => setMissionName(event.target.value)}
 							disabled={isLoading}
-							// required
+						// required
 						/>
 					</div>
 
@@ -124,7 +127,7 @@ export function CreateActivityModal({
 							className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
 							onChange={(event) => setLaunchDate(event.target.value)}
 							disabled={isLoading}
-							// required
+						// required
 						/>
 					</div>
 
@@ -138,7 +141,7 @@ export function CreateActivityModal({
 							className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
 							onChange={(event) => setAddress(event.target.value)}
 							disabled={isLoading}
-							// required
+						// required
 						/>
 					</div>
 
@@ -156,10 +159,14 @@ export function CreateActivityModal({
 					<ScrollArea className="h-72	px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2 focus-within:ring-2 focus-within:ring-violet-500/20 transition-all">
 						<div className="p-4">
 							<h4 className="mb-4 text-sm font-medium leading-none">Austronautas</h4>
-							{astronaustsList.map((astronaut) => (
+							
+							{astronautsList.length === 0 && 
+									(<p className="text-sm text-zinc-400">Nenhum astronauta disponível no momento.</p>)}
+							{astronautsList.map((astronaut) => (
 								<>
-									<div className="flex items-center space-x-3 mb-3">
-										<Checkbox key={astronaut.id} value={astronaut.id}
+									<div key={astronaut.id} className="flex items-center space-x-3 mb-3">
+										<Checkbox 
+											value={astronaut.id}
 											id={`checkbox-${astronaut.id}`}
 											checked={selectedAstronauts.some((item) => item.id === astronaut.id)}
 											onCheckedChange={() => handleCheckboxChange(astronaut)}
@@ -180,7 +187,7 @@ export function CreateActivityModal({
 					<Button
 						type="submit"
 						size="full"
-						// disabled={isLoading}
+						disabled={isLoading}
 						className="flex items-center justify-center gap-2"
 					>
 						{isLoading ? (
