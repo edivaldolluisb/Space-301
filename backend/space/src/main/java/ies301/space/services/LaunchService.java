@@ -22,6 +22,16 @@ public class LaunchService {
         return launchRepository.save(launch);
     }
 
+    // update launch status
+    public Launch updateLaunchStatus(Long id, Status status) {
+        Optional<Launch> launch = launchRepository.findById(id);
+        if (launch.isPresent()) {
+            launch.get().setStatus(status);
+            return launchRepository.save(launch.get());
+        }
+        return null;
+    }
+
     public List<Launch> getAllLaunches() {
         return launchRepository.findAll();
     }

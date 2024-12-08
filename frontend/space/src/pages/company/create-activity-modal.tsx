@@ -23,8 +23,8 @@ interface ConfirmLaunchModalProps {
 	setRocketId: (id: string) => void;
 	setAddress: (address: string) => void;
 	setAstronauts: (astronauts: Astronaut[]) => void;
-	// error: string | null;
-	// isLoading: boolean;
+	error: string | null;
+	isLoading: boolean;
 }
 
 interface Astronaut {
@@ -39,6 +39,8 @@ export function CreateActivityModal({
 	setRocketId,
 	setAddress,
 	setAstronauts,
+	error,
+	isLoading,
 }: ConfirmLaunchModalProps) {
 
 
@@ -70,11 +72,11 @@ export function CreateActivityModal({
 		const updatedAstronauts = selectedAstronauts.some((item) => item.id === astronaut.id)
 			? selectedAstronauts.filter((item) => item.id !== astronaut.id)
 			: [...selectedAstronauts, astronaut];
-	
+
 		setSelectedAstronauts(updatedAstronauts);
 		setAstronauts(updatedAstronauts);
 	};
-	
+
 
 
 	return (
@@ -93,11 +95,11 @@ export function CreateActivityModal({
 					</p>
 				</div>
 
-				{/* {error && (
-          <div className="bg-red-500/10 text-red-400 px-4 py-2 rounded-lg text-sm">
-            {error}
-          </div>
-        )} */}
+				{error && (
+					<div className="bg-red-500/10 text-red-400 px-4 py-2 rounded-lg text-sm">
+						{error}
+					</div>
+				)}
 
 				<form onSubmit={createLaunch} className="space-y-3">
 					<div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2 focus-within:ring-2 focus-within:ring-violet-500/20 transition-all">
@@ -108,8 +110,8 @@ export function CreateActivityModal({
 							placeholder="Nome da missão"
 							className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
 							onChange={(event) => setMissionName(event.target.value)}
-							// disabled={isLoading}
-							required
+							disabled={isLoading}
+							// required
 						/>
 					</div>
 
@@ -121,8 +123,8 @@ export function CreateActivityModal({
 							placeholder="Nome da missão"
 							className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
 							onChange={(event) => setLaunchDate(event.target.value)}
-							// disabled={isLoading}
-							required
+							disabled={isLoading}
+							// required
 						/>
 					</div>
 
@@ -135,8 +137,8 @@ export function CreateActivityModal({
 							placeholder="Endereço do Local de Lançamento"
 							className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
 							onChange={(event) => setAddress(event.target.value)}
-							// disabled={isLoading}
-							required
+							disabled={isLoading}
+							// required
 						/>
 					</div>
 
@@ -181,15 +183,15 @@ export function CreateActivityModal({
 						// disabled={isLoading}
 						className="flex items-center justify-center gap-2"
 					>
-						{/* {isLoading ? (
+						{isLoading ? (
 							<>
 								<Loader2 className="size-4 animate-spin" />
 								Registrando...
 							</>
 						) : (
 							"Registrar Lançamento"
-						)} */}
-						Registrar Lançamento
+						)}
+						{/* Registrar Lançamento */}
 					</Button>
 				</form>
 

@@ -6,12 +6,44 @@ import { apiService } from "../../lib/axios";
 
 import { Client } from "@stomp/stompjs";
 
+import { Link } from "react-router-dom";
+
+// {
+// 	"id": 1,
+// 	"message": "Qualidade do sinal baixa!",
+// 	"date": "2024-12-07T15:15:36.300+00:00",
+// 	"status": true,
+// 	"launch": {
+// 		"id": 1,
+// 		"missionName": "Missão de teste",
+// 		"launchDate": "2024-12-07T15:14:00.000+00:00",
+// 		"rocketId": 2,
+// 		"address": "Universidade de Aveiro",
+// 		"status": "PENDING",
+// 		"astronauts": [
+// 			1,
+// 			2,
+// 			3,
+// 			4
+// 		]
+// 	}
+// }
 interface Activity {
 	date: string;
 	id: number;
 	message: string;
 	status: boolean;
-	launch: number | null;
+	launch: Launch | null;
+}
+
+interface Launch {
+	id: number;
+	missionName: string;
+	launchDate: string;
+	rocketId: number | string | null;
+	address: string;
+	status: string;
+	astronauts: number[];
 }
 
 interface GroupedActivities {
@@ -61,21 +93,21 @@ export function Activities() {
 				console.log("Connected to WebSocket");
 				client.subscribe("/topic/alerts", (message) => {
 					if (message.body) {
-					  const newActivities: Activity[] = JSON.parse(message.body);
-					  console.log("Novas atividades recebidas:", newActivities);
-				  
-					  const grouped = newActivities.reduce<GroupedActivities>(
-						(groups, activity) => {
-						  groups[activity.status ? "true" : "false"].push(activity);
-						  return groups;
-						},
-						{ true: [], false: [] }
-					  );
-				  
-					  setGroupedActivities(grouped);
+						const newActivities: Activity[] = JSON.parse(message.body);
+						console.log("Novas atividades recebidas:", newActivities);
+
+						const grouped = newActivities.reduce<GroupedActivities>(
+							(groups, activity) => {
+								groups[activity.status ? "true" : "false"].push(activity);
+								return groups;
+							},
+							{ true: [], false: [] }
+						);
+
+						setGroupedActivities(grouped);
 					}
-				  });
-				  
+				});
+
 
 			},
 		});
@@ -96,7 +128,7 @@ export function Activities() {
 				</div>
 				{groupedActivities.false.length > 0 ? (
 					<div>
-						{groupedActivities.false.map(activity => {
+						{groupedActivities.false.slice(0, 100).map(activity => {
 							return (
 								<div key={activity.id} className="space-y-2.5 mb-2">
 									<div className="px-4 py-2.5 bg-zinc-900 rounded-xl shadow-shape flex items-center gap-3">
@@ -108,7 +140,9 @@ export function Activities() {
 												{format(new Date(activity.date), 'HH:mm')}h
 											</span>
 											<span className="text-zinc-400 text-sm">
-												Ver foguete
+												<Link to={`/rocket/${activity?.launch?.id}`} className="">
+													Ver foguete
+												</Link>
 											</span>
 										</div>
 									</div>
@@ -127,7 +161,7 @@ export function Activities() {
 				</div>
 				{groupedActivities.true.length > 0 ? (
 					<div>
-						{groupedActivities.true.map(activity => {
+						{groupedActivities.true.slice(0, 100).map(activity => {
 							return (
 								<div key={activity.id} className="space-y-2.5 mb-2">
 									<div className="px-4 py-2.5 bg-zinc-900 rounded-xl shadow-shape flex items-center gap-3">
@@ -138,6 +172,11 @@ export function Activities() {
 										</span>
 										<span className="text-zinc-400 text-sm ml-auto">
 											{format(new Date(activity.date), 'HH:mm')}h
+										</span>
+										<span className="text-zinc-400 text-sm">
+											<Link to={`/rocket/${activity.launch?.id}`} className="">
+												Ver foguete
+											</Link>
 										</span>
 									</div>
 								</div>

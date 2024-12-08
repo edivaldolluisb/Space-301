@@ -1,5 +1,5 @@
 import { Plus } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, } from "react";
 import { CreateActivityModal } from "./create-activity-modal";
 import { ImportantLinks } from "./important-links";
 import { Guests } from "./guests";
@@ -15,6 +15,7 @@ interface Astronaut {
 }
 
 interface Launch {
+  id?: number;
   missionName: string;
   launchDate: string;
   rocketId: number | string | null;
@@ -33,6 +34,7 @@ export function DashboardPage() {
 	const [status, setStatus] = useState('PENDING');
 	const [astronauts, setAstronauts] = useState<Astronaut[]>([]);
   
+  const [launches, setLaunches] = useState<Launch[]>([])
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -62,8 +64,8 @@ export function DashboardPage() {
     }
 
     // check if at least one astronaut is selected
-    if (!astronauts.length) {
-      setError('Selecione pelo menos um astronauta');
+    if (astronauts.length < 4) {
+      setError('Selecione 4 astronautas');
       setIsLoading(false);
       return;
     }
@@ -93,8 +95,12 @@ export function DashboardPage() {
       console.log('Dados do lançamento:', NewlaunchData);
       const response = await api.post('/launches', NewlaunchData);
 
-      console.log('Lançamento registrado com sucesso:', response.data);
+      const newLaunch = response.data;
+      console.log('Lançamento registrado com sucesso:', newLaunch);
+
+      setIsLoading(false);
       closeCreateLaunchModal();
+      setLaunches([...launches, newLaunch]);
       // Aqui você pode atualizar a lista de lançamentos no estado, se necessário.
     } catch (error) {
       console.error('Erro ao registrar lançamento:', error);
@@ -118,7 +124,7 @@ export function DashboardPage() {
             </button>
           </div>
 
-          <Activities />
+          <Activities  launches={launches} />
         </div>
 
         <div className="w-80 space-y-6">
@@ -139,6 +145,8 @@ export function DashboardPage() {
           setAddress={setAddress}
           setAstronauts={setAstronauts}
           createLaunch={createLaunch}
+          error={error}
+          isLoading={isLoading}
 
         />
       )}
