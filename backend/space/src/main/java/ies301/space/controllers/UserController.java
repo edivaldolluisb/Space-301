@@ -1,13 +1,12 @@
 package ies301.space.controllers;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +22,7 @@ public class UserController {
 
     private final UserService userService;
 
+    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -39,17 +39,13 @@ public class UserController {
                       .orElse(ResponseEntity.notFound().build());
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<User> updateUser(
-        @PathVariable("id") String id,
-        @RequestBody Map<String, Object> userDetails) {
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable("id") String id,
+    @RequestBody User user) {
+        user.setId(id);
+        User updatedUser = userService.updateUser(user);
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+    }
 
-            User existingUser = userService.updateUser(id, userDetails);
 
-            if (existingUser != null) {
-                return ResponseEntity.ok(existingUser);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        }
 }

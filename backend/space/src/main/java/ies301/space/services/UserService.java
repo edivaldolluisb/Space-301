@@ -36,29 +36,13 @@ public class UserService {
     public User createUser(User user) {
         return userRepository.save(user);
     }
-    //
-    @Transactional
-    public User updateUser(String id, Map<String, Object> userDetails) {
-        Optional<User> userOptional = userRepository.findById(id);
-
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-
-            if (userDetails.containsKey("name")) {
-                user.setName((String) userDetails.get("name"));
-            }
-            if (userDetails.containsKey("email")) {
-                user.setEmail((String) userDetails.get("email"));
-            }
-            if (userDetails.containsKey("address")) {
-                user.setAddress((String) userDetails.get("address"));
-            }
-
-            User savedUser = userRepository.save(user);
-            userRepository.flush();
-            return savedUser;
-        }
-
-        return null;
+    
+    public User updateUser(User user) {
+        User existingUser = userRepository.findById(user.getId()).get();
+        existingUser.setName(user.getName());
+        existingUser.setEmail(user.getEmail());
+        existingUser.setPassword(user.getPassword());
+        existingUser.setAddress(user.getAddress());
+        return userRepository.save(existingUser);
     }
 }
