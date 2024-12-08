@@ -110,9 +110,19 @@ public class LaunchController {
                 Long parsedEntityId = "null".equals(entityId) ? null : Long.valueOf(entityId); // Converter se necessário
 
         try {
-            logger.info("Fetching dynamic data for launchId: {}, entity: {}, entityId: {}, field: {}", launchId, entity, parsedEntityId, field);
             List<Map<String, Object>> data = launchService.getDynamicData(launchId, entity, parsedEntityId, field);
-            return ResponseEntity.ok(data);
+
+
+        // Transformar os dados para conter apenas os campos necessários
+        List<Map<String, Object>> processedData = data.stream()
+        .map(record -> Map.of(
+            "_field", record.get("_field"),
+            "_value", record.get("_value"),
+            "_time", record.get("_time")
+        ))
+        .toList();
+
+            return ResponseEntity.ok(processedData);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
