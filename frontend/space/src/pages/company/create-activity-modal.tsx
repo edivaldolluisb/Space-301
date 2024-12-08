@@ -1,6 +1,7 @@
 import { Calendar, X, Loader2, Rocket, MapPin } from "lucide-react";
 import { Button } from "../../components/button";
 import { FormEvent, useState } from "react";
+import { api } from "../../lib/axios";
 
 import {
 	Select,
@@ -28,65 +29,7 @@ interface ConfirmLaunchModalProps {
 
 interface Astronaut {
 	id: number;
-	// Tenho que depois adicionar os outros campos 😩
 }
-
-const items = [
-	{
-		id: 1,
-		name: "Ivan Vagner",
-	},
-	{
-		id: 2,
-		name: "Sergei Kud-Sverchkov",
-	},
-	{
-		id: 3,
-		name: "Victor Glover",
-	},
-	{
-		id: 4,
-		name: "Pyotr Dubrov",
-	},
-	{
-		id: 5,
-		name: "Hayley Arceneaux",
-	},
-	{
-		id: 6,
-		name: "Jared Isaacman",
-	},
-	{
-		id: 7,
-		name: "Sian Proctor",
-	},
-	{
-		id: 8,
-		name: "Christopher Sembroski",
-	},
-	{
-		id: 9,
-		name: "Yulia Peresild",
-	},
-	{
-		id: 10,
-		name: "Klim Shipenko",
-	},
-	{
-		id: 11,
-		name: "Naruto Uzumaki",
-	},
-	{
-		id: 12,
-		name: "Ye Guangfu",
-	},
-	{
-		id: 13,
-		name: "Leonid Popov",
-	}
-
-] as const;
-
 
 export function CreateActivityModal({
 	closeCreateLaunchModal,
@@ -102,6 +45,27 @@ export function CreateActivityModal({
 
 
 	const [selectedAstronauts, setSelectedAstronauts] = useState<Astronaut[]>([]);
+	const [astronaustsList, setAstronautsList] = useState([]);
+	const fetchAstronautas = async () => {
+		try {
+		  const response = await api.get('/astronauts');
+		  return response.data
+	
+		} catch (error) {
+		  console.log("Erro ao buscar lançamentos:", error)
+		  return null
+		}
+	
+	  }
+
+	useState(() => {
+		const fetchAstro = async () => {
+			const res = await fetchAstronautas();
+			console.log(`Astros: ${res}`)
+			setAstronautsList(res);
+		}
+		fetchAstro();
+	});
 
 
 	const handleCheckboxChange = (astronaut: Astronaut) => {
@@ -192,7 +156,7 @@ export function CreateActivityModal({
 					<ScrollArea className="h-72	px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2 focus-within:ring-2 focus-within:ring-violet-500/20 transition-all">
 						<div className="p-4">
 							<h4 className="mb-4 text-sm font-medium leading-none">Austronautas</h4>
-							{items.map((astronaut) => (
+							{astronaustsList.map((astronaut) => (
 								<>
 									<div className="flex items-center space-x-3 mb-3">
 										<Checkbox key={astronaut.id} value={astronaut.id}
@@ -235,21 +199,3 @@ export function CreateActivityModal({
 		</div>
 	)
 }
-
-
-// {
-//   "missionName": "Your Mission Name",
-//   "launchDate": "2023-11-22T10:00:00Z", // ISO 8601 format
-//   "rocketId": 123,
-//   "address": "Launch Site Address",
-//   "status": "PENDING", // or other valid status
-//   "astronauts": [ // Optional, array of astronaut IDs
-//       {
-//           "id": 456
-//       },
-//       {
-//           "id": 789
-//       }
-//   ]
-// }
-

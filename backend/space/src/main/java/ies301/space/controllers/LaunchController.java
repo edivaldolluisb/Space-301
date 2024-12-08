@@ -3,6 +3,7 @@ package ies301.space.controllers;
 import java.util.List;
 import java.util.Optional;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,8 +38,19 @@ public class LaunchController {
     }
 
     @GetMapping("/launches/{id}/astronauts")
-    public List<Astronaut> getAstronautsByLaunchId(@PathVariable Long id) {
-        return astronautService.getAstronautsByLaunchId(id);
+    public ResponseEntity<List<Astronaut>> getAstronautsByLaunchId(@PathVariable Long id) {
+        Optional<Launch> launchOpt = launchService.getLaunchById(id);
+
+        if (launchOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        Launch launch = launchOpt.get();
+        Set<Long> astronautIds = launch.getAstronauts();
+
+        List<Astronaut> astronauts = astronautService.getAstronautsByIds(astronautIds);
+
+        return ResponseEntity.ok(astronauts);
     }
 
     @GetMapping("/launches/{launchId}/astronaut/{astronautId}")
@@ -77,14 +89,18 @@ public class LaunchController {
     @PostMapping("/launches")
     public ResponseEntity<Launch> createLaunch(@RequestBody Launch launch) {
         Launch savedLaunch = launchService.saveLaunch(launch);
-        // TODO: Send launch data to the queue
-        // queueSender.send(launch.toString());
         return new ResponseEntity<>(savedLaunch, HttpStatus.CREATED);
     }
 
     @GetMapping("/launches")
     public ResponseEntity<List<Launch>> getAllLaunches() {
         List<Launch> launches = launchService.getAllLaunches();
+        return ResponseEntity.ok(launches);
+    }
+
+    @GetMapping("/launches/completed")
+    public ResponseEntity<List<Launch>> getAllCompletedLaunches() {
+        List<Launch> launches = launchService.getCompletedLauches();
         return ResponseEntity.ok(launches);
     }
 

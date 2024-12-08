@@ -89,4 +89,12 @@ public class LaunchService {
     //     return influxDBService.getAveragedData(launchId, entity, entityId, field, interval);
     // }
     
+    //TODO: --
+    //FIXME: Refactor later
+    public List<Launch> getCompletedLauches() {
+        List<Launch> successLaunches = launchRepository.findByStatus(Status.SUCCESS);
+        successLaunches.addAll(launchRepository.findByStatus(Status.FAILED));
+
+        return successLaunches;
+    }
 }

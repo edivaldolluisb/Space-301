@@ -62,6 +62,7 @@ public class LaunchesDataService {
             }
 
             messagingTemplate.convertAndSend("/topic/"+message.getIdLancamento()+"/astronaut-data", message.getTripulantes());
+            message.getTripulantes().forEach(astronaut -> messagingTemplate.convertAndSend("/topic/"+message.getIdLancamento()+"/astronaut-data/"+astronaut.getId(), astronaut));
             messagingTemplate.convertAndSend("/topic/"+message.getIdLancamento()+"/launch-data", message.getNave());
 
             // find launch by id
