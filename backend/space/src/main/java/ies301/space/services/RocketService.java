@@ -1,6 +1,6 @@
 package ies301.space.services;
 
-import java.util.Optional;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,11 @@ public class RocketService {
         this.rocketRepository = rocketRepository;
     }
 
-    public Optional<Rocket> getRocketById(Long id) {
-        return rocketRepository.findById(id);
+    public List<Rocket> getAllRockets() {
+        return rocketRepository.findAll();
+    }
+
+    public Rocket saveRocket(Rocket rocket) {
+        return rocketRepository.save(rocket);
     }
 }
