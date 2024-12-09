@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 interface DashboardProps {
-  launchId: String | undefined;
+  launchId: string | undefined;
 }
 
 interface CardProps {
@@ -38,22 +38,51 @@ interface StatusCardProps {
   className?: string;
 }
 
-type Nave = {
+
+const titleMappings: { [key: string]: string } = {
+  altitude: "Altitude (Nível Atual)",
+  velocidade: "Velocidade",
+  velocidade_x: "Velocidade Horizontal",
+  aceleracao: "Aceleração",
+  forca_g: "Força G",
+  pressao_atual: "Pressão",
+  temperatura_atual: "Temperatura Interna",
+  temperatura_motor_atual: "Temperatura do Motor",
+  temperatura_externa_atual: "Temperatura Externa",
+  combustivel: "Nível de Combustível",
+  qualidade_atual: "Qualidade do Sinal",
+  oxigenio_atual: "Nível de Oxigênio",
+  energia_atual: "Energia Restante",
+};
+
+const camelCaseToTitleCase = (str: string) =>
+  str.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
+
+
+interface WebSocketData {
   altitude: number;
   velocidade: number;
   velocidade_x: number;
   aceleracao: number;
+  combustivel: number;
+  alertas: Array<{
+    parametro: string | null;
+    status: boolean;
+    nome_alerta: string | null;
+    alerta_nome: string;
+    alerta_descricao: string;
+  }>;
   forca_g: number;
   pressao_atual: number;
   temperatura_atual: number;
   temperatura_motor_atual: number;
   temperatura_externa_atual: number;
-  combustivel: number;
   qualidade_atual: number;
   oxigenio_atual: number;
   energia_atual: number;
-  alerta: any[];
-};
+}
+
+
 
 const unitMappings: { [key: string]: string } = {
   altitude: 'm',
@@ -151,7 +180,7 @@ const StatusCard: React.FC<StatusCardProps> = ({
   status,
   className = "",
 }) => (
-  <Card className={className }>
+  <Card className={className}>
     <div className="flex items-center gap-3 mb-4">
       <div className={`p-2 rounded-lg ${iconBgColor}`}>
         <Icon className={`w-6 h-6 ${iconTextColor}`} />
@@ -163,19 +192,17 @@ const StatusCard: React.FC<StatusCardProps> = ({
       <span className="text-gray-400">{unit}</span>
     </div>
     {status && (
-    <span className="inline-block mt-2 px-2 py-1 bg-green-500/20 text-green-500 rounded text-sm">
-      {status}
-    </span>
+      <span className="inline-block mt-2 px-2 py-1 bg-green-500/20 text-green-500 rounded text-sm">
+        {status}
+      </span>
     )}
   </Card>
 );
 
 
 
-const Dashboard: React.FC<DashboardProps> = ({launchId}) => {
-  const [rocketData, setRocketData] = useState({});
-  const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
+const Dashboard: React.FC<DashboardProps> = ({ launchId }) => {
+  const [rocketData, setRocketData] = useState(null as WebSocketData | null);
 
   useEffect(() => {
     const client = new Client({
@@ -184,54 +211,59 @@ const Dashboard: React.FC<DashboardProps> = ({launchId}) => {
       onConnect: () => {
         console.log(`Conectado ao WebSocket: /topic/${launchId}/launch-data`);
         client.subscribe(`/topic/${launchId}/launch-data`, (msg) => {
-          console.log('Mensagem recebida do WebSocket:', msg); // Inspecionar a mensagem
-          const data = JSON.parse(msg.body); // Parse do payload
-          console.log('Dados processados:', data);
-          if (data)
-          setRocketData(data);
+
+          try {
+            const data: WebSocketData = JSON.parse(msg.body); // Parse do payload
+            console.log('Dados processados:', data);
+            if (data)
+              setRocketData(data);
+          } catch (error) {
+            console.error('Erro ao processar a mensagem do WebSocket:', error);
+          }
         });
       },
       onDisconnect: () => {
-        setError("Desconectado do WebSocket");
         console.log('Desconectado do WebSocket');
       },
     });
-  
+
     client.activate();
-  
+
     return () => {
       client.deactivate();
     };
-  }, []);
+  }, [launchId]);
 
   if (!rocketData) return <h1 className="text-3xl font-semibold">Sem Dados do Lançamento selecionado.</h1>;
-  
+
   return (
     <div className="max-w-6xl px-6 py-10 mx-auto space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <RocketInfo />
-            {Object.entries(rocketData).map(([key, value]) => {
-              if (key === 'alerta') return null; // Ignorar o campo alerta
+        <RocketInfo />
+        {Object.entries(rocketData).map(([key, value]) => {
+          if (key === 'alertas' || key === 'alerta') return null; // Ignorar o campo alerta
+          const title = titleMappings[key] || camelCaseToTitleCase(key);
 
-              const unit = unitMappings[key] || '';
-              const status = statusMappings[key] || 'Normal';
-              const Icon = iconMappings[key] || Flame;
-              const iconTextColor = 'text-blue-500';
-              const iconBgColor = 'bg-blue-500/20';
 
-              return (
-                <StatusCard
-                  key={key}
-                  icon={Icon}
-                  title={key.charAt(0).toUpperCase() + key.slice(1)}
-                  value={value}
-                  unit={unit}
-                  status={status}
-                  iconTextColor={iconTextColor}
-                  iconBgColor={iconBgColor}
-                />
-              );
-            })}
+          const unit = unitMappings[key] || '';
+          const status = statusMappings[key] || 'Normal';
+          const Icon = iconMappings[key] || Flame;
+          const iconTextColor = 'text-blue-500';
+          const iconBgColor = 'bg-blue-500/20';
+
+          return (
+            <StatusCard
+              key={key}
+              icon={Icon}
+              title={title}
+              value={value as number}
+              unit={unit}
+              status={status}
+              iconTextColor={iconTextColor}
+              iconBgColor={iconBgColor}
+            />
+          );
+        })}
       </div>
     </div>
   )

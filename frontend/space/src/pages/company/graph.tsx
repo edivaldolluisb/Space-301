@@ -1,6 +1,6 @@
 "use client"
 
-import { TrendingUp, Gauge } from "lucide-react"
+import { TrendingUp, Gauge, Thermometer } from "lucide-react"
 import { Bar, BarChart, CartesianGrid, Line, LineChart, XAxis, YAxis, ReferenceLine, LabelList } from "recharts"
 
 import {
@@ -98,7 +98,7 @@ export function SpeedGraph({ launchId }: { launchId: string }) {
 		fetchSpeedData()
 
 		// 🙃
-		const intervalId = setInterval(fetchSpeedData, 5000);
+		const intervalId = setInterval(fetchSpeedData, 120000);
 
 		return () => clearInterval(intervalId);
 	}, [launchId])
@@ -234,7 +234,7 @@ export function TemperatureGraph({ launchId }: { launchId: string }) {
 
 
 		// 🙃
-		const intervalId = setInterval(fetchTemperatureData, 5000);
+		const intervalId = setInterval(fetchTemperatureData, 120000);
 
 		return () => clearInterval(intervalId);
 
@@ -256,7 +256,8 @@ export function TemperatureGraph({ launchId }: { launchId: string }) {
 		<Card>
 			<CardHeader>
 				<CardTitle>Temperatura</CardTitle>
-				<CardDescription>{`Máxima: ${maxTemp?.toFixed(2)}°`} | {formatDate(startTempDate)} - {formatDate(endTempDate)}</CardDescription>
+				<CardDescription>{`Máxima: ${maxTemp?.toFixed(2)}°`} </CardDescription>
+				{/* {formatDate(startTempDate)} - {formatDate(endTempDate)} */}
 			</CardHeader>
 			<CardContent>
 				<ChartContainer config={tempConfig}>
@@ -269,13 +270,6 @@ export function TemperatureGraph({ launchId }: { launchId: string }) {
 							axisLine={false}
 							tickFormatter={(value) => value.slice(0, 2)}
 						/>
-						{/* 
-			  <YAxis
-				tickLine={true}
-				axisLine={false}
-				tickMargin={40}
-				tickFormatter={(value) => value}
-				/> */}
 
 						<ChartTooltip
 							cursor={false}
@@ -287,7 +281,7 @@ export function TemperatureGraph({ launchId }: { launchId: string }) {
 			</CardContent>
 			<CardFooter className="flex-col items-start gap-2 text-sm">
 				<div className="flex gap-2 font-medium leading-none">
-					{`Temperatura Média: ${averageTemp?.toFixed(2)}° | Temperatura Máxima: ${maxTemp?.toFixed(2)}°`} <TrendingUp className="h-4 w-4" />
+					{`Temperatura Média: ${averageTemp?.toFixed(2)}° | Temperatura Máxima: ${maxTemp?.toFixed(2)}°`} <Thermometer className="h-4 w-4" />
 				</div>
 				<div className="leading-none text-muted-foreground">
 					Showing total temperatures for the period
