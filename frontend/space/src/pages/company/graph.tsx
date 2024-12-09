@@ -37,11 +37,13 @@ interface SpeedData {
 
 // Função para formatar a data
 function formatDate(date: Date): string {
-	const options: Intl.DateTimeFormatOptions = { day: "numeric", month: "long",
+	const options: Intl.DateTimeFormatOptions = {
+		day: "numeric", month: "long",
 		//  year: "numeric",
-		hour: "2-digit",  
-		minute: "2-digit", 
-		hour12: false, };
+		hour: "2-digit",
+		minute: "2-digit",
+		hour12: false,
+	};
 	return new Intl.DateTimeFormat("pt-PT", options).format(date);
 }
 
@@ -191,8 +193,6 @@ export function TemperatureGraph({ launchId }: { launchId: string }) {
 	const [temperatureData, setTemperatureData] = useState<TemperatureData[]>([]);
 	const [averageTemp, setAverageTemp] = useState<number | null>(null);
 	const [maxTemp, setMaxTemp] = useState<number | null>(null);
-	const [startTempDate, setStartTempDate] = useState<Date>(new Date());
-	const [endTempDate, setEndTempDate] = useState<Date>(new Date());
 
 	useEffect(() => {
 		const fetchTemperatureData = async () => {
@@ -202,7 +202,6 @@ export function TemperatureGraph({ launchId }: { launchId: string }) {
 				const formattedData = response.data.map((item: ApiResponseData) => {
 					// Obtém o mês da data
 					const date = new Date(item._time);
-					console.log("Date:", date)
 					const month = `${date.getMinutes()}`;
 
 					return {
@@ -219,12 +218,6 @@ export function TemperatureGraph({ launchId }: { launchId: string }) {
 
 				setAverageTemp(avgTemp);
 				setMaxTemp(maxTemp);
-
-				
-				const start = new Date(formattedData[0].month);
-				const end = new Date(formattedData[formattedData.length - 1].month);
-				setStartTempDate(start);
-				setEndTempDate(end);
 
 			} catch (error) {
 				console.log("Erro ao buscar temperatura:", error);
@@ -256,7 +249,7 @@ export function TemperatureGraph({ launchId }: { launchId: string }) {
 		<Card>
 			<CardHeader>
 				<CardTitle>Temperatura</CardTitle>
-				<CardDescription>{`Máxima: ${maxTemp?.toFixed(2)}°`} </CardDescription>
+				<CardDescription>{`Máxima: ${maxTemp?.toFixed(2)}°`}  </CardDescription>
 				{/* {formatDate(startTempDate)} - {formatDate(endTempDate)} */}
 			</CardHeader>
 			<CardContent>
@@ -290,3 +283,365 @@ export function TemperatureGraph({ launchId }: { launchId: string }) {
 		</Card>
 	)
 }
+
+
+
+// grafico de altitude:
+
+interface AltitudeData {
+	day: string;
+	altitude: number;
+	time: string;
+}
+
+const altitudeConfig = {
+	altitude: {
+		label: "Altitude",
+		color: "hsl(var(--chart-2))",
+	},
+} satisfies ChartConfig;
+
+export function AltitudeGraph({ launchId }: { launchId: string }) {
+	const [altitudeData, setAltitudeData] = useState<AltitudeData[]>([]);
+	const [averageAltitude, setAverageAltitude] = useState<number | null>(null);
+	const [maxAltitude, setMaxAltitude] = useState<number | null>(null);
+
+	useEffect(() => {
+		const fetchAltitudeData = async () => {
+			try {
+				const response = await api.get(`/launches/${launchId}/nave/null/altitude`);
+				const formattedData = response.data.map((item: ApiResponseData) => ({
+					day: `${new Date(item._time).getHours()}:${new Date(item._time).getMinutes()}`,
+					altitude: item._value,
+					time: item._time,
+				}));
+				setAltitudeData(formattedData);
+
+				const totalAltitude = formattedData.reduce((sum: number, item: AltitudeData) => sum + item.altitude, 0);
+				const avgAltitude = totalAltitude / formattedData.length;
+				const maxAltitude = Math.max(...formattedData.map((item: AltitudeData) => item.altitude));
+
+				setAverageAltitude(avgAltitude);
+				setMaxAltitude(maxAltitude);
+			} catch (error) {
+				console.log("Erro ao buscar altitude:", error);
+			}
+		};
+		fetchAltitudeData();
+
+		const intervalId = setInterval(fetchAltitudeData, 120000);
+
+		return () => clearInterval(intervalId);
+	}, [launchId]);
+
+	if (altitudeData.length === 0) {
+		return (
+			<Card>
+				<CardHeader>
+					<CardTitle>Altitude</CardTitle>
+				</CardHeader>
+				<CardContent>
+					<p>Carregando dados ou nenhum dado disponível.</p>
+				</CardContent>
+			</Card>
+		);
+	}
+
+	return (
+		<Card>
+			<CardHeader>
+				<CardTitle>Altitude</CardTitle>
+				<CardDescription>
+					{`Média: ${averageAltitude?.toFixed(2)} | Máxima: ${maxAltitude?.toFixed(2)}`}
+				</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<ChartContainer config={altitudeConfig}>
+					<LineChart data={altitudeData} margin={{ left: 12, right: 12 }}>
+						<CartesianGrid vertical={false} />
+						<XAxis dataKey="day" tickLine={false} axisLine={false} tickMargin={8} />
+						<YAxis tickLine={true} axisLine={false} tickMargin={15} />
+						<ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+						<Line dataKey="altitude" type="natural" stroke="var(--color-altitude)" strokeWidth={2} dot={false} />
+					</LineChart>
+				</ChartContainer>
+			</CardContent>
+		</Card>
+	);
+}
+
+
+// grafiico da pressão:
+
+interface PressureData {
+	day: string;
+	pressure: number;
+	time: string;
+}
+
+const pressureConfig = {
+	pressure: {
+		label: "Pressão Atual",
+		color: "hsl(var(--chart-3))",
+	},
+} satisfies ChartConfig;
+
+export function PressureGraph({ launchId }: { launchId: string }) {
+	const [pressureData, setPressureData] = useState<PressureData[]>([]);
+	const [averagePressure, setAveragePressure] = useState<number | null>(null);
+	const [maxPressure, setMaxPressure] = useState<number | null>(null);
+
+	useEffect(() => {
+		const fetchPressureData = async () => {
+			try {
+				const response = await api.get(`/launches/${launchId}/nave/null/pressaoAtual`);
+				const formattedData = response.data.map((item: ApiResponseData) => ({
+					day: `${new Date(item._time).getHours()}:${new Date(item._time).getMinutes()}`,
+					pressure: item._value,
+					time: item._time,
+				}));
+				setPressureData(formattedData);
+
+				const totalPressure = formattedData.reduce((sum: number, item: PressureData) => sum + item.pressure, 0);
+				const avgPressure = totalPressure / formattedData.length;
+				const maxPressure = Math.max(...formattedData.map((item: PressureData) => item.pressure));
+
+				setAveragePressure(avgPressure);
+				setMaxPressure(maxPressure);
+			} catch (error) {
+				console.log("Erro ao buscar pressão:", error);
+			}
+		};
+		fetchPressureData();
+
+		const intervalId = setInterval(fetchPressureData, 120000);
+
+		return () => clearInterval(intervalId);
+	}, [launchId]);
+
+	if (pressureData.length === 0) {
+		return (
+			<Card>
+				<CardHeader>
+					<CardTitle>Pressão Atual</CardTitle>
+				</CardHeader>
+				<CardContent>
+					<p>Carregando dados ou nenhum dado disponível.</p>
+				</CardContent>
+			</Card>
+		);
+	}
+
+	return (
+		<Card>
+			<CardHeader>
+				<CardTitle>Pressão Atual</CardTitle>
+				<CardDescription>
+					{`Média: ${averagePressure?.toFixed(2)} | Máxima: ${maxPressure?.toFixed(2)}`}
+				</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<ChartContainer config={pressureConfig}>
+					<LineChart data={pressureData} margin={{ left: 12, right: 12 }}>
+						<CartesianGrid vertical={false} />
+						<XAxis dataKey="day" tickLine={false} axisLine={false} tickMargin={8} />
+						<YAxis tickLine={true} axisLine={false} tickMargin={15} />
+						<ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+						<Line dataKey="pressure" type="natural" stroke="var(--color-pressure)" strokeWidth={2} dot={true} />
+					</LineChart>
+				</ChartContainer>
+			</CardContent>
+		</Card>
+	);
+}
+
+
+// grafico de oxigenio:
+
+interface OxygenData {
+	day: string;
+	oxygen: number;
+	time: string;
+}
+
+const oxygenConfig = {
+	oxygen: {
+		label: "Oxigênio",
+		color: "hsl(var(--chart-4))",
+	},
+} satisfies ChartConfig;
+
+export function OxygenGraph({ launchId }: { launchId: string }) {
+	const [oxygenData, setOxygenData] = useState<OxygenData[]>([]);
+	const [averageOxygen, setAverageOxygen] = useState<number | null>(null);
+	const [maxOxygen, setMaxOxygen] = useState<number | null>(null);
+
+	useEffect(() => {
+		const fetchOxygenData = async () => {
+			try {
+				const response = await api.get(`/launches/${launchId}/nave/null/oxigenioAtual`);
+				const formattedData = response.data.map((item: ApiResponseData) => ({
+					day: `${new Date(item._time).getHours()}:${new Date(item._time).getMinutes()}`,
+					oxygen: item._value,
+					time: item._time,
+				}));
+				setOxygenData(formattedData);
+
+				const totalOxygen = formattedData.reduce((sum: number, item: OxygenData) => sum + item.oxygen, 0);
+				const avgOxygen = totalOxygen / formattedData.length;
+				const maxOxygen = Math.max(...formattedData.map((item: OxygenData) => item.oxygen));
+
+				setAverageOxygen(avgOxygen);
+				setMaxOxygen(maxOxygen);
+			} catch (error) {
+				console.log("Erro ao buscar oxigênio:", error);
+			}
+		};
+		fetchOxygenData();
+
+		const intervalId = setInterval(fetchOxygenData, 120000);
+
+		return () => clearInterval(intervalId);
+	}, [launchId]);
+
+	if (oxygenData.length === 0) {
+		return (
+			<Card>
+				<CardHeader>
+					<CardTitle>Oxigênio Atual</CardTitle>
+				</CardHeader>
+				<CardContent>
+					<p>Carregando dados ou nenhum dado disponível.</p>
+				</CardContent>
+			</Card>
+		);
+	}
+
+	return (
+		<Card>
+			<CardHeader>
+				<CardTitle>Grafico de Oxigénio</CardTitle>
+				<CardDescription>
+					{`Média: ${averageOxygen?.toFixed(2)} | Máxima: ${maxOxygen?.toFixed(2)}`}
+				</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<ChartContainer config={oxygenConfig}>
+					<LineChart data={oxygenData} margin={{ left: 12, right: 12 }}>
+						<CartesianGrid vertical={false} />
+						<XAxis dataKey="day" tickLine={false} axisLine={false} tickMargin={8} />
+						<YAxis tickLine={true} axisLine={false} tickMargin={40} />
+						<ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+						<Line dataKey="oxygen" type="natural" stroke="var(--color-oxygen)" strokeWidth={5} dot={false} />
+					</LineChart>
+				</ChartContainer>
+			</CardContent>
+		</Card>
+	);
+}
+
+
+// grafico da temperatura externa:
+
+interface ExternalTemperatureData {
+  day: string;
+  externalTemperature: number;
+}
+
+const externalTempConfig = {
+  externalTemperature: {
+    label: "Temperatura Externa",
+    color: "hsl(var(--chart-5))",  // Pode personalizar a cor aqui
+  },
+} satisfies ChartConfig;
+
+export function ExternalTemperatureGraph({ launchId }: { launchId: string }) {
+  const [externalTemperatureData, setExternalTemperatureData] = useState<ExternalTemperatureData[]>([]);
+  const [averageExternalTemperature, setAverageExternalTemperature] = useState<number | null>(null);
+  const [maxExternalTemperature, setMaxExternalTemperature] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchExternalTemperatureData = async () => {
+      try {
+        const response = await api.get(`/launches/${launchId}/nave/null/temperaturaExterna`);
+
+        const formattedData = response.data.map((item: ApiResponseData) => {
+          const date = new Date(item._time); 
+          const hours = date.getHours().toString().padStart(2, "0"); 
+          const minutes = date.getMinutes().toString().padStart(2, "0");
+
+          return {
+            day: `${hours}:${minutes}`, 
+            externalTemperature: Number(item._value.toFixed(2)),
+          };
+        });
+        setExternalTemperatureData(formattedData);
+
+        // Calcular a média e a máxima das temperaturas
+        const totalTemp = formattedData.reduce((sum: number, item: ExternalTemperatureData) => sum + item.externalTemperature, 0);
+        const avgTemp = totalTemp / formattedData.length;
+        const maxTemp = Math.max(...formattedData.map((item: ExternalTemperatureData) => item.externalTemperature));
+
+        setAverageExternalTemperature(avgTemp);
+        setMaxExternalTemperature(maxTemp);
+      } catch (error) {
+        console.log("Erro ao buscar temperatura externa:", error);
+      }
+    };
+    fetchExternalTemperatureData();
+
+    const intervalId = setInterval(fetchExternalTemperatureData, 120000);
+
+    return () => clearInterval(intervalId);
+  }, [launchId]);
+
+  if (externalTemperatureData.length === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Temperatura Externa</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p>Carregando dados ou nenhum dado disponível.</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Temperatura Externa</CardTitle>
+        <CardDescription>
+          {`Média: ${averageExternalTemperature?.toFixed(2)}° | Máxima: ${maxExternalTemperature?.toFixed(2)}°`}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ChartContainer config={externalTempConfig}>
+          <BarChart data={externalTemperatureData} margin={{ top: 20 }}>
+            <CartesianGrid vertical={false} />
+            <XAxis dataKey="day" tickLine={false} tickMargin={10} axisLine={false} />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+            <Bar dataKey="externalTemperature" fill="#ff5733" radius={8}>
+              <LabelList
+                position="top"
+                offset={12}
+                className="fill-foreground"
+                fontSize={12}
+              />
+            </Bar>
+          </BarChart>
+        </ChartContainer>
+      </CardContent>
+      <CardFooter className="flex-col items-start gap-2 text-sm">
+        <div className="flex gap-2 font-medium leading-none">
+          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+        </div>
+        <div className="leading-none text-muted-foreground">
+          Showing total temperatures for the period
+        </div>
+      </CardFooter>
+    </Card>
+  );
+}
+
