@@ -234,7 +234,10 @@ const Dashboard: React.FC<DashboardProps> = ({ launchId }) => {
     };
   }, [launchId]);
 
-  if (!rocketData) return <h1 className="text-3xl font-semibold">Sem Dados do Lançamento selecionado.</h1>;
+  if (!rocketData) return (
+    <div className="max-w-6xl px-6 py-10 mx-auto space-y-8">
+      <RocketInfo />
+  </div>);
 
   return (
     <div className="max-w-6xl px-6 py-10 mx-auto space-y-8">
