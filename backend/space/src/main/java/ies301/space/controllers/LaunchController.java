@@ -93,6 +93,12 @@ public class LaunchController {
         return ResponseEntity.ok(launches);
     }
 
+    @GetMapping("/launches/current")
+    public ResponseEntity<List<Launch>> getCurrentLaunches() {
+        List<Launch> currentLaunches = launchService.getCurrentLaunches();
+        return ResponseEntity.ok(currentLaunches);
+    }
+
     @GetMapping("/launches/completed")
     public ResponseEntity<List<Launch>> getAllCompletedLaunches() {
         List<Launch> launches = launchService.getCompletedLauches();
