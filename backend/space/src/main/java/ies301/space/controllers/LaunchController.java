@@ -2,6 +2,7 @@ package ies301.space.controllers;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +14,19 @@ import ies301.space.broker.QueueSender;
 import ies301.space.entities.Astronaut;
 import ies301.space.entities.Launch;
 import ies301.space.services.AstronautService;
+import ies301.space.services.InfluxDBService;
 import ies301.space.services.LaunchService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/v1")
 public class LaunchController {
     private final AstronautService astronautService;
+
+    private static final Logger logger = LoggerFactory.getLogger(LaunchController.class);
+
     private final LaunchService launchService;
 
     @Autowired
@@ -49,9 +57,9 @@ public class LaunchController {
     public ResponseEntity<?> getAstronautByLaunchAndAstronautId(
             @PathVariable Long launchId,
             @PathVariable Long astronautId) {
-        
+
         Optional<Astronaut> astronaut = astronautService.getAstronautByLaunchIdAndAstronautId(launchId, astronautId);
-        
+
         if (astronaut.isPresent()) {
             return new ResponseEntity<>(astronaut.get(), HttpStatus.OK);
         } else {
@@ -59,12 +67,11 @@ public class LaunchController {
         }
     }
 
-
     @PostMapping("launches/{launchId}/astronaut/{astronautId}")
     public ResponseEntity<String> addAstronautToLaunch(
             @PathVariable Long launchId,
             @PathVariable Long astronautId) {
-        
+
         Optional<Launch> launchOpt = launchService.getLaunchById(launchId);
         Optional<Astronaut> astronautOpt = astronautService.getAstronautById(astronautId);
 
@@ -78,8 +85,6 @@ public class LaunchController {
             return new ResponseEntity<>("Launch or Astronaut not found", HttpStatus.NOT_FOUND);
         }
     }
-
-
 
     @PostMapping("/launches")
     public ResponseEntity<Launch> createLaunch(@RequestBody Launch launch) {
@@ -108,4 +113,52 @@ public class LaunchController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    // dados do influxdb para os gráficos
+    @GetMapping("/launches/{launchId}/{entity}/{entityId}/{field}")
+    public ResponseEntity<?> getDynamicData(
+            @PathVariable Long launchId,
+            @PathVariable String entity,
+            @PathVariable(required = false) String entityId, // Para nave, pode ser null
+            @PathVariable String field,
+            @RequestParam(defaultValue = "1d") String interval) {
+
+        Long parsedEntityId = "null".equals(entityId) ? null : Long.valueOf(entityId); // Converter se necessário
+
+        try {
+            List<Map<String, Object>> data = launchService.getDynamicData(launchId, entity, parsedEntityId, field);
+            // List<Map<String, Object>> data = launchService.getAveragedData(launchId,
+            // entity, parsedEntityId, field, interval);
+
+            return ResponseEntity.ok(data);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error fetching data: " + e.getMessage());
+        }
+    }
+
+    // @GetMapping("/launches/{launchId}/{entity}/{entityId}/{field}/average")
+    // public ResponseEntity<?> getAveragedData(
+    //         @PathVariable Long launchId,
+    //         @PathVariable String entity,
+    //         @PathVariable(required = false) String entityId, 
+    //         @PathVariable String field,
+    //         @RequestParam(defaultValue = "1m") String interval) { 
+
+    //     Long parsedEntityId = "null".equals(entityId) ? null : Long.valueOf(entityId); 
+
+    //     try {
+    //         List<Map<String, Object>> averagedData = launchService.getAveragedData(launchId, entity, parsedEntityId,
+    //                 field, interval);
+    //         return ResponseEntity.ok(averagedData);
+    //     } catch (IllegalArgumentException e) {
+    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    //     } catch (Exception e) {
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+    //                 .body("Error fetching averaged data: " + e.getMessage());
+    //     }
+    // }
+
 }

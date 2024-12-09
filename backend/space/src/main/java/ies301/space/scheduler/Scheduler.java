@@ -47,8 +47,8 @@ public class Scheduler {
     private QueueSender queueSender;
 
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS");
-
-    @Scheduled(fixedRate = 5000)
+    
+    @Scheduled(fixedRate = 60000)
     public void checkForPendingLaunches() {
         String strDate = dateFormat.format(new Date());
         
