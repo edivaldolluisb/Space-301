@@ -1,3 +1,6 @@
+import { DestinationAndDateHeader } from "../components/destination-and-date-header";
+
+
 const SettingsPage = () => {
     return (
       <div className="min-h-screen bg-gray-900 text-white">

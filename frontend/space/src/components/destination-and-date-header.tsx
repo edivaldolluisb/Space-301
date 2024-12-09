@@ -34,11 +34,6 @@ export function DestinationAndDateHeader() {
 
         <div className="w-px h-6 bg-zinc-800" />
 
-        {/* <Button variant="secondary">
-            Página inicial
-            <Rocket className="size-5" />
-          </Button> */}
-
 
         <Link to={"/dashboard"} className="">
           <Button variant="secondary">
@@ -48,10 +43,12 @@ export function DestinationAndDateHeader() {
         </Link>
 
 
-        <Button variant="secondary">
-          Definições
-          <Settings2 className="size-5" />
-        </Button>
+        <Link to={"/settings"} className="">
+          <Button variant="secondary">
+            Definições
+            <Settings2 className="size-5" />
+          </Button>
+        </Link>
       </div>
     </div>
   )

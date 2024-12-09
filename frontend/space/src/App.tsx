@@ -8,6 +8,7 @@ import { DashboardPage } from "./pages/company"
 import { RocketDetailsPage } from "./pages/company/rocket-dashboard"
 import SinaisVitais from "./pages/SinaisVitais"
 import Dashboard from "./pages/company/dashboard"
+import SettingsPage from "./pages/SettingsPage"
 
 
 const router = createBrowserRouter([
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
   {
     path: "/history/details/:id",
     element: <HistoryDetails />
+  },
+  {
+    path: "/settings",
+    element: <SettingsPage />
   },
 ])
 
