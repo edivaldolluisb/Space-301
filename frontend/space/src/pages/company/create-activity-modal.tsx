@@ -32,6 +32,21 @@ interface Astronaut {
 	name: string;
 }
 
+const foguetes = [
+  {
+      id: "1",
+      nome: 'Falcon 9'
+  },
+  {
+      id: "2",
+      nome: 'Starship'
+  },
+  {
+      id: "3",
+      nome: 'Ariane 5'
+  }
+];
+
 export function CreateActivityModal({
 	closeCreateLaunchModal,
 	createLaunch,
@@ -45,8 +60,10 @@ export function CreateActivityModal({
 }: ConfirmLaunchModalProps) {
 
 
+
 	const [selectedAstronauts, setSelectedAstronauts] = useState<Astronaut[]>([]);
 	const [astronautsList, setAstronautsList] = useState<Astronaut[]>([]);
+
 	const fetchAstronautas = async () => {
 		try {
 			const response = await api.get('/astronauts');
@@ -70,19 +87,16 @@ export function CreateActivityModal({
 		fetchAstro();
 	}, []);
 
-
-	const handleCheckboxChange = (astronaut: Astronaut) => {
-		const updatedAstronauts = selectedAstronauts.some((item) => item.id === astronaut.id)
-			? selectedAstronauts.filter((item) => item.id !== astronaut.id)
+  const handleCheckboxChange = (astronaut: Astronaut) => {
+		const updatedAstronauts = selectedAstronauts.some((item: Astronaut) => item.id === astronaut.id)
+			? selectedAstronauts.filter((item: Astronaut) => item.id !== astronaut.id)
 			: [...selectedAstronauts, astronaut];
 
 		setSelectedAstronauts(updatedAstronauts);
 		setAstronauts(updatedAstronauts);
 	};
 
-
-
-	return (
+  return (
 		<div className="fixed inset-0 bg-black/60 flex items-center justify-center">
 			<div className="w-[640px] rounded-xl py-5 px-6 shadow-shape bg-zinc-900 space-y-5">
 				<div className="space-y-2">
@@ -145,14 +159,16 @@ export function CreateActivityModal({
 						/>
 					</div>
 
-					<Select onValueChange={setRocketId} defaultValue="1">
+					<Select onValueChange={setRocketId}>
 						<SelectTrigger className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2 focus-within:ring-2 focus-within:ring-violet-500/20 transition-all">
 							<SelectValue placeholder="Selecionar o foguete  " />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectItem value="1">Falcon 9</SelectItem>
-							<SelectItem value="2">Starship</SelectItem>
-							<SelectItem value="3">Ariane 5</SelectItem>
+						{foguetes.map((foguete) => (
+							<SelectItem key={foguete.id} value={foguete.id}>
+							{foguete.nome}
+							</SelectItem>
+						))}
 						</SelectContent>
 					</Select>
 
