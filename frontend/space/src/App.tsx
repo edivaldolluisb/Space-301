@@ -3,7 +3,6 @@ import { History } from "./pages/LaunchHistory/History"
 import HistoryDetails from "./pages/LaunchHistory/HistoryDetails"
 import { CreateTripPage } from "./pages/create-account"
 import { TripDetailsPage } from "./pages/trip-details"
-import NewLaunch from "./pages/NewLaunch"
 import { AlertsPage } from "./pages/trip-details"
 import { DashboardPage } from "./pages/company"
 import { RocketDetailsPage } from "./pages/company/rocket-dashboard"
@@ -40,10 +39,6 @@ const router = createBrowserRouter([
     path: "/history/details/:id",
     element: <HistoryDetails />
   },
-  {
-    path: "/launches",
-    element: <NewLaunch />
-  }
 ])
 
 
