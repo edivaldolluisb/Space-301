@@ -25,26 +25,6 @@ export function Activities({ launches }: { launches: Launch[] }) {
 
 
 
-  const transformData = (missions: any[]): Activity[] => {
-    // Agrupar missões por data
-    const grouped = missions.reduce((acc: Record<string, { id: string; title: string; occurs_at: string }[]>, mission) => {
-      const date = mission.lauchDate.split("T")[0]; // Extrai apenas a data
-      if (!acc[date]) acc[date] = [];
-      acc[date].push({
-        id: mission.id.toString(),
-        title: mission.missionName,
-        occurs_at: mission.lauchDate,
-      });
-      return acc;
-    }, {});
-  
-    // Converter para o formato desejado
-    return Object.entries(grouped).map(([date, activities]) => ({
-      date,
-      activities,
-    }));
-  };
-
   const fetchLancamentos = async () => {
     try {
       const response = await api.get('/launches');
