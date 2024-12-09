@@ -46,6 +46,7 @@ export function CreateActivityModal({
 
 	const [selectedAstronauts, setSelectedAstronauts] = useState<Astronaut[]>([]);
 	const [astronaustsList, setAstronautsList] = useState([]);
+	const [rocketsList, setRocketsList] = useState([]);
 	const fetchAstronautas = async () => {
 		try {
 		  const response = await api.get('/astronauts');
@@ -55,16 +56,33 @@ export function CreateActivityModal({
 		  console.log("Erro ao buscar lançamentos:", error)
 		  return null
 		}
+	  }
+
+	  const fetchRockets = async () => {
+		try {
+		  const response = await api.get('/rockets');
+		  return response.data
+	
+		} catch (error) {
+		  console.log("Erro ao buscar foguetes:", error)
+		  return null
+		}
 	
 	  }
 
 	useState(() => {
-		const fetchAstro = async () => {
+		const setAstronautsData = async () => {
 			const res = await fetchAstronautas();
 			console.log(`Astros: ${res}`)
 			setAstronautsList(res);
 		}
-		fetchAstro();
+		const setRocketData = async () => {
+			const res = await fetchRockets();
+			console.log(`Rockets: ${res}`)
+			setRocketsList(res);
+		}
+		setAstronautsData();
+		setRocketData();
 	});
 
 
@@ -147,9 +165,9 @@ export function CreateActivityModal({
 							<SelectValue placeholder="Selecionar o foguete  " />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectItem value="1">Falcon 9</SelectItem>
-							<SelectItem value="2">Starship</SelectItem>
-							<SelectItem value="3">Ariane 5</SelectItem>
+							{rocketsList.map((rocket) => {
+								<SelectItem value={`${rocket.id}`}>{rocket.name}</SelectItem>
+							})}
 						</SelectContent>
 					</Select>
 
