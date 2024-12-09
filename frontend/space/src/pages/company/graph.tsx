@@ -1,7 +1,7 @@
 "use client"
 
 import { TrendingUp, Gauge } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, Line, LineChart, XAxis, YAxis, ReferenceLine,LabelList } from "recharts"
+import { Bar, BarChart, CartesianGrid, Line, LineChart, XAxis, YAxis, ReferenceLine, LabelList } from "recharts"
 
 import {
 	Card,
@@ -37,7 +37,11 @@ interface SpeedData {
 
 // Função para formatar a data
 function formatDate(date: Date): string {
-	const options: Intl.DateTimeFormatOptions = { day: "numeric", month: "long", year: "numeric" };
+	const options: Intl.DateTimeFormatOptions = { day: "numeric", month: "long",
+		//  year: "numeric",
+		hour: "2-digit",  
+		minute: "2-digit", 
+		hour12: false, };
 	return new Intl.DateTimeFormat("pt-PT", options).format(date);
 }
 
@@ -92,7 +96,12 @@ export function SpeedGraph({ launchId }: { launchId: string }) {
 
 		}
 		fetchSpeedData()
-	}, [])
+
+		// 🙃
+		const intervalId = setInterval(fetchSpeedData, 5000);
+
+		return () => clearInterval(intervalId);
+	}, [launchId])
 
 	if (speedData.length === 0) {
 		return (
@@ -111,7 +120,7 @@ export function SpeedGraph({ launchId }: { launchId: string }) {
 		<Card>
 			<CardHeader>
 				<CardTitle>Velocidade</CardTitle>
-				<CardDescription>{formatDate(startDate)}</CardDescription>
+				<CardDescription>{formatDate(startDate)} - {formatDate(endDate)}</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<ChartContainer config={chartConfig}>
@@ -170,97 +179,120 @@ export function SpeedGraph({ launchId }: { launchId: string }) {
 interface TemperatureData {
 	month: string;
 	temperature: number;
-  }
+}
 
-  const tempConfig = {
+const tempConfig = {
 	desktop: {
-	  label: "Desktop",
-	  color: "hsl(var(--chart-1))",
+		label: "Desktop",
+		color: "hsl(var(--chart-1))",
 	},
-  } satisfies ChartConfig
-  export function TemperatureGraph({ launchId }: { launchId: string }) {
+} satisfies ChartConfig
+export function TemperatureGraph({ launchId }: { launchId: string }) {
 	const [temperatureData, setTemperatureData] = useState<TemperatureData[]>([]);
 	const [averageTemp, setAverageTemp] = useState<number | null>(null);
 	const [maxTemp, setMaxTemp] = useState<number | null>(null);
-  
+	const [startTempDate, setStartTempDate] = useState<Date>(new Date());
+	const [endTempDate, setEndTempDate] = useState<Date>(new Date());
+
 	useEffect(() => {
-	  const fetchTemperatureData = async () => {
-		try {
-		  // Endpoint para obter as temperaturas
-		  const response = await api.get(`/launches/${launchId}/nave/null/temperaturaAtual`);
-		  const formattedData = response.data.map((item: ApiResponseData) => {
-			// Obtém o mês da data
-			const date = new Date(item._time);
-			const month = date.toLocaleString("default", { month: "long" }); // Exemplo: "January"
-			
-			return {
-			  month,
-			  temperature: item._value
-			};
-		  });
-		  setTemperatureData(formattedData);
-  
-		  // Calcular média e máximo
-		  const totalTemp = formattedData.reduce((sum: number, item: TemperatureData) => sum + item.temperature, 0);
-		  const avgTemp = totalTemp / formattedData.length;
-		  const maxTemp = Math.max(...formattedData.map((item: TemperatureData) => item.temperature));
-  
-		  setAverageTemp(avgTemp);
-		  setMaxTemp(maxTemp);
-  
-		} catch (error) {
-		  console.log("Erro ao buscar temperatura:", error);
-		}
-	  };
-	  fetchTemperatureData();
-	}, []);
+		const fetchTemperatureData = async () => {
+			try {
+				// Endpoint para obter as temperaturas
+				const response = await api.get(`/launches/${launchId}/nave/null/temperaturaAtual`);
+				const formattedData = response.data.map((item: ApiResponseData) => {
+					// Obtém o mês da data
+					const date = new Date(item._time);
+					console.log("Date:", date)
+					const month = `${date.getMinutes()}`;
+
+					return {
+						month,
+						temperature: item._value
+					};
+				});
+				setTemperatureData(formattedData);
+
+				// Calcular média e máximo
+				const totalTemp = formattedData.reduce((sum: number, item: TemperatureData) => sum + item.temperature, 0);
+				const avgTemp = totalTemp / formattedData.length;
+				const maxTemp = Math.max(...formattedData.map((item: TemperatureData) => item.temperature));
+
+				setAverageTemp(avgTemp);
+				setMaxTemp(maxTemp);
+
+				
+				const start = new Date(formattedData[0].month);
+				const end = new Date(formattedData[formattedData.length - 1].month);
+				setStartTempDate(start);
+				setEndTempDate(end);
+
+			} catch (error) {
+				console.log("Erro ao buscar temperatura:", error);
+			}
+		};
+		fetchTemperatureData();
+
+
+		// 🙃
+		const intervalId = setInterval(fetchTemperatureData, 5000);
+
+		return () => clearInterval(intervalId);
+
+	}, [launchId]);
 
 	if (temperatureData.length === 0) {
 		return (
-		  <Card>
+			<Card>
+				<CardHeader>
+					<CardTitle>Temperatura</CardTitle>
+				</CardHeader>
+				<CardContent>
+					<p>Carregando dados ou nenhum dado disponível.</p>
+				</CardContent>
+			</Card>
+		);
+	}
+	return (
+		<Card>
 			<CardHeader>
-			  <CardTitle>Temperatura</CardTitle>
+				<CardTitle>Temperatura</CardTitle>
+				<CardDescription>{`Máxima: ${maxTemp?.toFixed(2)}°`} | {formatDate(startTempDate)} - {formatDate(endTempDate)}</CardDescription>
 			</CardHeader>
 			<CardContent>
-			  <p>Carregando dados ou nenhum dado disponível.</p>
-			</CardContent>
-		  </Card>
-		);
-	  }
-	return (
-	  <Card>
-		<CardHeader>
-		  <CardTitle>Temperatura</CardTitle>
-		  <CardDescription>{`Máxima: ${maxTemp?.toFixed(2)}°`}</CardDescription>
-		</CardHeader>
-		<CardContent>
-		  <ChartContainer config={tempConfig}>
-			<BarChart accessibilityLayer data={temperatureData}>
-			  <CartesianGrid vertical={false} />
-			  <XAxis
-				dataKey="month"
-				tickLine={false}
-				tickMargin={10}
+				<ChartContainer config={tempConfig}>
+					<BarChart accessibilityLayer data={temperatureData}>
+						<CartesianGrid vertical={false} />
+						<XAxis
+							dataKey="month"
+							tickLine={false}
+							tickMargin={10}
+							axisLine={false}
+							tickFormatter={(value) => value.slice(0, 2)}
+						/>
+						{/* 
+			  <YAxis
+				tickLine={true}
 				axisLine={false}
-				tickFormatter={(value) => value.slice(0, 3)}
-			  />
-			  
-			  <ChartTooltip
-				cursor={false}
-				content={<ChartTooltipContent hideLabel />}
-			  />
-			  <Bar dataKey="temperature" fill="var(--color-desktop)" radius={8} />
-			</BarChart>
-		  </ChartContainer>
-		</CardContent>
-		<CardFooter className="flex-col items-start gap-2 text-sm">
-		  <div className="flex gap-2 font-medium leading-none">
-		  {`Temperatura Média: ${averageTemp?.toFixed(2)}° | Temperatura Máxima: ${maxTemp?.toFixed(2)}°`} <TrendingUp className="h-4 w-4" />
-		  </div>
-		  <div className="leading-none text-muted-foreground">
-		  Showing total temperatures for the period
-		  </div>
-		</CardFooter>
-	  </Card>
+				tickMargin={40}
+				tickFormatter={(value) => value}
+				/> */}
+
+						<ChartTooltip
+							cursor={false}
+							content={<ChartTooltipContent hideLabel />}
+						/>
+						<Bar dataKey="temperature" fill="var(--color-desktop)" radius={8} />
+					</BarChart>
+				</ChartContainer>
+			</CardContent>
+			<CardFooter className="flex-col items-start gap-2 text-sm">
+				<div className="flex gap-2 font-medium leading-none">
+					{`Temperatura Média: ${averageTemp?.toFixed(2)}° | Temperatura Máxima: ${maxTemp?.toFixed(2)}°`} <TrendingUp className="h-4 w-4" />
+				</div>
+				<div className="leading-none text-muted-foreground">
+					Showing total temperatures for the period
+				</div>
+			</CardFooter>
+		</Card>
 	)
-  }
+}
