@@ -104,7 +104,7 @@ export function Activities({ launches }: { launches: Launch[] }) {
                                 {launch.status === "SUCCESS"
                                   ? <CircleCheck className="size-5 text-lime-500  shrink-0" />
                                   : launch.status === "PENDING"
-                                  ? <CircleDashed className="size-5 text-lime-300" />
+                                  ? <CircleDashed className="size-5 text-zinc-400" />
                                   : launch.status === "LAUNCHED"
                                   ? <CircleFadingArrowUp className="size-5 text-lime-500" />
                                   : <CircleX className="size-5 text-red-500" />
