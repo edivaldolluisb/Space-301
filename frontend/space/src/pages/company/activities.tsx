@@ -101,14 +101,11 @@ export function Activities({ launches }: { launches: Launch[] }) {
                             <Link to={`/rocket/${launch.id}`} className="">
                               <div className="px-4 py-2.5 bg-zinc-900 rounded-xl shadow-shape flex items-center gap-3">
                                 
-                                {launch.status === "SUCCESS"
-                                  ? <CircleCheck className="size-5 text-lime-500  shrink-0" />
-                                  : launch.status === "PENDING"
-                                  ? <CircleDashed className="size-5 text-zinc-400" />
-                                  : launch.status === "LAUNCHED"
-                                  ? <CircleFadingArrowUp className="size-5 text-lime-500" />
-                                  : <CircleX className="size-5 text-red-500" />
-                                }
+                                {launch.status === "PENDING" ? (
+                                  <CircleDashed className="size-5 text-gray-400" />
+                                ) : (
+                                  <CircleFadingArrowUp className="size-5 text-lime-500  shrink-0" />
+                                )}
                                 {/* <CircleCheck className="size-5 text-lime-300" /> */}
                                 <span className="text-zinc-100">{launch.missionName}</span>
                                 <span className="text-zinc-400 text-sm ml-auto">
