@@ -635,10 +635,10 @@ export function ExternalTemperatureGraph({ launchId }: { launchId: string }) {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+		A máxima do lançamento foi: ${maxExternalTemperature?.toFixed(2)} <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total temperatures for the period
+          Apresentando todos dos dados da temperatura externa
         </div>
       </CardFooter>
     </Card>
