@@ -37,8 +37,8 @@ public class UserService {
         return userRepository.save(user);
     }
     
-    public User updateUser(User user) {
-        User existingUser = userRepository.findById(user.getId()).get();
+    public User updateUser(String id, User user) {
+        User existingUser = userRepository.findById(id).get();
         existingUser.setName(user.getName());
         existingUser.setEmail(user.getEmail());
         existingUser.setPassword(user.getPassword());
