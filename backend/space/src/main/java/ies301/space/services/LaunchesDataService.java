@@ -6,15 +6,19 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.query.FluxTable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ies301.space.model.Message;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
+import java.util.Map;
 
 import ies301.space.model.Message.*;
 import ies301.space.entities.*;
@@ -36,6 +40,9 @@ public class LaunchesDataService {
 
     @Autowired
     private AlertService alertService;
+
+    @Autowired
+    private InfluxDBService influxDBService;
 
 
     @Autowired
@@ -72,6 +79,11 @@ public class LaunchesDataService {
             if (!savedAlerts.isEmpty()) {
                 logger.info("Alertas salvos e notificados: {}", savedAlerts.size());
             }
+
+            // Salvar no InfluxDB
+            influxDBService.saveDataToInfluxDB(message);
+            // influxDBService.deleteMeasurementData("home", "docs", "tripulantes");
+            // influxDBService.deleteMeasurementData("home", "docs", "nave");
 
         } catch (Exception e) {
             logger.error("Erro ao processar mensagem: ", e.getMessage(), e);

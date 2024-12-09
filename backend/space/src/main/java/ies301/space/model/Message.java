@@ -62,7 +62,7 @@ public class Message {
             return temperature;
         }
 
-        public void setTemperature(int temperature) {
+        public void setTemperature(double temperature) {
             this.temperature = temperature;
         }
 
