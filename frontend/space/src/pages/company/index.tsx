@@ -43,6 +43,12 @@ export function DashboardPage() {
   }
 
   function closeCreateLaunchModal() {
+    setMissionName('');
+		setLaunchDate('');
+		setRocketId(null);
+		setAddress('');
+		setAstronauts([]);
+    setError(null);
     setIsCreateActivityModalOpen(false)
   }
 
