@@ -3,7 +3,6 @@ import { DestinationAndDateHeader } from "../../components/destination-and-date-
 import { Button } from "../../components/button";
 import Dashboard from "./dashboard";
 import { SpeedGraph, TemperatureGraph, AltitudeGraph, PressureGraph, OxygenGraph, ExternalTemperatureGraph } from "./graph";
-import { ListTelemetricData } from "./list-rocket-data";
 
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -19,6 +18,7 @@ export function RocketDetailsPage() {
 
   if (!launchId) {
     navigate('/dashboard')
+    return null
   }
 
 
@@ -51,13 +51,13 @@ export function RocketDetailsPage() {
 
           {/* <Activities /> */}
           <Dashboard launchId={launchId} />
-          <SpeedGraph launchId={launchId} />
+          <AltitudeGraph launchId={launchId} />
 
           {/* show the others graphs if history is clicked */}
           {isHistorySectionOpen && (
             <>
               <TemperatureGraph launchId={launchId} />
-              <AltitudeGraph launchId={launchId} />
+              <SpeedGraph launchId={launchId} />
               <PressureGraph launchId={launchId} />
               <OxygenGraph launchId={launchId} />
               <ExternalTemperatureGraph launchId={launchId} />
@@ -65,14 +65,6 @@ export function RocketDetailsPage() {
           )}
 
         </div>
-
-        {/* <div className="w-80 space-y-6"> */}
-        {/* <ImportantLinks /> */}
-
-        {/* <div className="w-full h-px bg-zinc-800" />
-
-          <ListTelemetricData />
-        </div> */}
       </main >
 
     </div >

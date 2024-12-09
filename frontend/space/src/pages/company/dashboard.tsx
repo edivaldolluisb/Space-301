@@ -244,7 +244,7 @@ const Dashboard: React.FC<DashboardProps> = ({ launchId }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <RocketInfo />
         {Object.entries(rocketData).map(([key, value]) => {
-          if (key === 'alertas' || key === 'alerta') return null; // Ignorar o campo alerta
+          if (key === 'alertas' || key === 'alerta') return null; 
           const title = titleMappings[key] || camelCaseToTitleCase(key);
 
 
