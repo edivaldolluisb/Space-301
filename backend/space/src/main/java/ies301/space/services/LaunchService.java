@@ -53,18 +53,10 @@ public class LaunchService {
 
     }
 
-    public List<Launch> getFutureLaunchs() {
-        List<Launch> launches = launchRepository.findByStatus(Status.PENDING);
-        Date currentDate = new Date();
-        launches.removeIf(launch -> launch.getLaunchDate().compareTo(currentDate) < 0);
-
-        return launches;
-
-    }
-
     public List<Launch> getCurrentLaunches() {
         List<Launch> currentLaunches = launchRepository.findByStatus(Status.LAUNCHED);
-        currentLaunches.addAll(getFutureLaunchs());
+        currentLaunches.addAll(launchRepository.findByStatus(Status.PENDING));
+        
         return currentLaunches;
     }
 

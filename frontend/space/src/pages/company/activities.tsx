@@ -37,7 +37,7 @@ export function Activities({ launches }: { launches: Launch[] }) {
       });
       return acc;
     }, {});
-  
+
     // Converter para o formato desejado
     return Object.entries(grouped).map(([date, activities]) => ({
       date,
@@ -45,9 +45,10 @@ export function Activities({ launches }: { launches: Launch[] }) {
     }));
   };
 
+
   const fetchLancamentos = async () => {
     try {
-      const response = await api.get('/launches');
+      const response = await api.get('/launches/current');
       return response.data
 
     } catch (error) {
