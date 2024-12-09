@@ -20,9 +20,6 @@ import {
 
 import { useState, useEffect } from "react";
 import { api } from "../../lib/axios";
-import { time } from "console"
-
-
 
 interface ApiResponseData {
 	_value: number;
@@ -32,7 +29,8 @@ interface ApiResponseData {
 
 
 interface SpeedData {
-	day: number;
+	day: string;
+	time: string;
 	speed: number;
 }
 
@@ -40,7 +38,7 @@ interface SpeedData {
 // Função para formatar a data
 function formatDate(date: Date): string {
 	const options: Intl.DateTimeFormatOptions = { day: "numeric", month: "long", year: "numeric" };
-	return new Intl.DateTimeFormat("pt-BR", options).format(date);
+	return new Intl.DateTimeFormat("pt-PT", options).format(date);
 }
 
 const chartConfig = {
@@ -64,7 +62,7 @@ export function SpeedGraph() {
 				// localhost:8080/api/v1/launches/1/nave/null/velocidade
 				const response = await api.get('/launches/1/nave/null/velocidade')
 				const formattedData = response.data.map((item: ApiResponseData) => ({
-					day: new Date(item._time).getDate(),
+					day: `${new Date(item._time).getHours()}:${new Date(item._time).getMinutes()}`,
 					speed: item._value,
 					time: item._time
 				}));
@@ -72,9 +70,9 @@ export function SpeedGraph() {
 
 				console.log("Speed data:", response.data)
 				// Calcular média e máximo
-				const totalSpeed = formattedData.reduce((sum, item) => sum + item.speed, 0);
+				const totalSpeed = formattedData.reduce((sum: number, item: SpeedData) => sum + item.speed, 0);
 				const avgSpeed = totalSpeed / formattedData.length;
-				const maxSpeed = Math.max(...formattedData.map((item) => item.speed));
+				const maxSpeed = Math.max(...formattedData.map((item: SpeedData) => item.speed));
 
 				setAverageSpeed(avgSpeed);
 				setMaxSpeed(maxSpeed);
@@ -112,7 +110,7 @@ export function SpeedGraph() {
 		<Card>
 			<CardHeader>
 				<CardTitle>Velocidade</CardTitle>
-				<CardDescription>{formatDate(startDate)} - {formatDate(endDate) || formatDate(new Date())}</CardDescription>
+				<CardDescription>{formatDate(startDate)} - {formatDate(endDate)}</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<ChartContainer config={chartConfig}>
