@@ -26,8 +26,8 @@ export function RocketDetailsPage() {
 
           {/* <Activities /> */}
           <Dashboard launchId={launchId} />
-          <SpeedGraph />
-          <TemperatureGraph />
+          <SpeedGraph launchId={launchId}/>
+          <TemperatureGraph launchId={launchId}/>
         </div>
 
         <div className="w-80 space-y-6">
