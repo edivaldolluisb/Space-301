@@ -1,6 +1,6 @@
 import { Calendar, X, Loader2, Rocket, MapPin } from "lucide-react";
 import { Button } from "../../components/button";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { api } from "../../lib/axios";
 
 import {
@@ -31,21 +31,6 @@ interface Astronaut {
 	id: number;
 }
 
-const foguetes = [
-  {
-      id: "1",
-      nome: 'Falcon 9'
-  },
-  {
-      id: "2",
-      nome: 'Starship'
-  },
-  {
-      id: "3",
-      nome: 'Ariane 5'
-  }
-];
-
 export function CreateActivityModal({
 	closeCreateLaunchModal,
 	createLaunch,
@@ -61,6 +46,7 @@ export function CreateActivityModal({
 
 	const [selectedAstronauts, setSelectedAstronauts] = useState<number[]>([]);
 	const [astronaustsList, setAstronautsList] = useState([]);
+	const [rocketsList, setRocketsList] = useState([]);
 	const fetchAstronautas = async () => {
 		try {
 		  const response = await api.get('/astronauts');
@@ -71,16 +57,35 @@ export function CreateActivityModal({
 		  return null
 		}
 	
-	  }
+	}
 
-	useState(() => {
+	const fetchRockets = async () => {
+		try {
+		  const response = await api.get('/rockets');
+		  return response.data
+
+		} catch (error) {
+		  console.log("Erro ao buscar foguetes:", error)
+		  return null
+		}
+
+	}
+
+	useEffect(() => {
 		const fetchAstro = async () => {
 			const res = await fetchAstronautas();
-			console.log(`Astros: ${res}`)
+			console.log(`Astros: `, res)
 			setAstronautsList(res);
 		}
+		const setRocketsData = async () => {
+			const res = await fetchRockets();
+			console.log(`Rockets: ${res}`)
+			console.log(`Rockets: `, res)
+			setRocketsList(res);
+		}
 		fetchAstro();
-	});
+		setRocketsData();
+	}, []);
 
   const handleCheckboxChange = (astronaut: Astronaut) => {
 		const updatedAstronauts = selectedAstronauts.some((item: Astronaut) => item.id === astronaut.id)
@@ -159,9 +164,9 @@ export function CreateActivityModal({
 							<SelectValue placeholder="Selecionar o foguete  " />
 						</SelectTrigger>
 						<SelectContent>
-						{foguetes.map((foguete) => (
+						{rocketsList.map((foguete) => (
 							<SelectItem key={foguete.id} value={foguete.id}>
-							{foguete.nome}
+							{foguete.name}
 							</SelectItem>
 						))}
 						</SelectContent>
