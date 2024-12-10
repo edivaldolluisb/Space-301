@@ -271,13 +271,13 @@ const Dashboard: React.FC<DashboardProps> = ({ launchId }) => {
 
   if (!rocketData) return (
     <div className="max-w-6xl px-6 py-10 mx-auto space-y-8">
-      <RocketInfo rocket={rocket} />
+      {!rocket ? <h1 className="text-zinc-500 text-sm">Nenhum lançamento cadastrado para essa data.</h1> : <RocketInfo rocket={rocket} />}
     </div>);
 
   return (
     <div className="max-w-6xl px-6 py-10 mx-auto space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <RocketInfo rocket={rocket} />
+        {!rocket ? <h1 className="text-zinc-500 text-sm">Nenhum lançamento cadastrado para essa data.</h1> : <RocketInfo rocket={rocket} />}
         {Object.entries(rocketData).map(([key, value]) => {
           if (key === 'alertas' || key === 'alerta') return null;
           const title = titleMappings[key] || camelCaseToTitleCase(key);

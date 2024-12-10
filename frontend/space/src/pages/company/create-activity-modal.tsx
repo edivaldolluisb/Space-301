@@ -57,6 +57,7 @@ export function CreateActivityModal({
 	const [selectedAstronauts, setSelectedAstronauts] = useState<Astronaut[]>([]);
 	const [astronautsList, setAstronautsList] = useState<Astronaut[]>([]);
 	const [rocketsList, setRocketsList] = useState<Rocket[]>([]);
+
 	const fetchAstronautas = async () => {
 		try {
 			const response = await api.get('/astronauts');
@@ -64,7 +65,7 @@ export function CreateActivityModal({
 
 		} catch (error) {
 			console.log("Erro ao buscar lançamentos:", error)
-			return null
+			return []
 		}
 
 	}
@@ -76,7 +77,7 @@ export function CreateActivityModal({
 
 		} catch (error) {
 			console.log("Erro ao buscar foguetes:", error)
-			return null
+			return []
 		}
 
 	}
@@ -91,7 +92,7 @@ export function CreateActivityModal({
 			const res = await fetchRockets();
 			console.log(`Rockets: ${res}`)
 			console.log(`Rockets: `, res)
-			setRocketsList(res);
+			setRocketsList(res || []);
 		}
 		fetchAstro();
 		setRocketsData();

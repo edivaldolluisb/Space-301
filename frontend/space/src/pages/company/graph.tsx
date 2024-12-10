@@ -237,7 +237,7 @@ export function TemperatureGraph({ launchId }: { launchId: string }) {
 		return (
 			<Card>
 				<CardHeader>
-					<CardTitle>Temperatura</CardTitle>
+					<CardTitle>Temperatura Interna</CardTitle>
 				</CardHeader>
 				<CardContent>
 					<p>Carregando dados ou nenhum dado disponível.</p>
@@ -248,7 +248,7 @@ export function TemperatureGraph({ launchId }: { launchId: string }) {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>Temperatura</CardTitle>
+				<CardTitle>Temperatura Interna</CardTitle>
 				<CardDescription>{`Máxima: ${maxTemp?.toFixed(2)}°`}  </CardDescription>
 				{/* {formatDate(startTempDate)} - {formatDate(endTempDate)} */}
 			</CardHeader>
@@ -381,7 +381,7 @@ interface PressureData {
 
 const pressureConfig = {
 	pressure: {
-		label: "Pressão Atual",
+		label: "Pressão",
 		color: "hsl(var(--chart-3))",
 	},
 } satisfies ChartConfig;
@@ -423,7 +423,7 @@ export function PressureGraph({ launchId }: { launchId: string }) {
 		return (
 			<Card>
 				<CardHeader>
-					<CardTitle>Pressão Atual</CardTitle>
+					<CardTitle>Pressão</CardTitle>
 				</CardHeader>
 				<CardContent>
 					<p>Carregando dados ou nenhum dado disponível.</p>
@@ -435,7 +435,7 @@ export function PressureGraph({ launchId }: { launchId: string }) {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>Pressão Atual</CardTitle>
+				<CardTitle>Pressão</CardTitle>
 				<CardDescription>
 					{`Média: ${averagePressure?.toFixed(2)} | Máxima: ${maxPressure?.toFixed(2)}`}
 				</CardDescription>
@@ -508,7 +508,7 @@ export function OxygenGraph({ launchId }: { launchId: string }) {
 		return (
 			<Card>
 				<CardHeader>
-					<CardTitle>Oxigênio Atual</CardTitle>
+					<CardTitle>Oxigênio</CardTitle>
 				</CardHeader>
 				<CardContent>
 					<p>Carregando dados ou nenhum dado disponível.</p>
