@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 // import { api } from "../../lib/axios";
 import { format } from "date-fns";
+import { pt } from "date-fns/locale"; 
 import { Link } from "react-router-dom";
 
 
@@ -15,7 +16,7 @@ export function DestinationAndDateHeader() {
   }, [tripId])
 
   const todayDate = new Date()
-  const displayedDate = format(todayDate, "d' de 'LLLL")
+  const displayedDate = format(todayDate, "d' de 'LLLL", { locale: pt })
 
   const Address = "Aveiro, Portugal"
 

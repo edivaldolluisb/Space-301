@@ -75,7 +75,7 @@ export function CreateUserModal({
 							className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
 							onChange={handleInputChange}
 							disabled={isLoading}
-						// required
+						required
 						/>
 					</div>
 
@@ -88,7 +88,7 @@ export function CreateUserModal({
 							className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
 							onChange={handleInputChange}
 							disabled={isLoading}
-						// required
+						required
 						/>
 					</div>
 
@@ -102,7 +102,7 @@ export function CreateUserModal({
 							className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
 							onChange={handleInputChange}
 							disabled={isLoading}
-						// required
+						required
 						/>
 					</div>
 

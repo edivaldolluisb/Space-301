@@ -139,7 +139,7 @@ export function CreateActivityModal({
 							className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
 							onChange={(event) => setMissionName(event.target.value)}
 							disabled={isLoading}
-						// required
+							required
 						/>
 					</div>
 
@@ -152,7 +152,7 @@ export function CreateActivityModal({
 							className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
 							onChange={(event) => setLaunchDate(event.target.value)}
 							disabled={isLoading}
-						// required
+							required
 						/>
 					</div>
 
@@ -166,7 +166,7 @@ export function CreateActivityModal({
 							className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
 							onChange={(event) => setAddress(event.target.value)}
 							disabled={isLoading}
-						// required
+							required
 						/>
 					</div>
 
