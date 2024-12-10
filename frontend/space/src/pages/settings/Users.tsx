@@ -71,6 +71,10 @@ export function Users() {
         }
     };
 
+    const filteredUsers = usersList.filter(user =>
+        user.name.toLowerCase().includes(userSearchName.toLowerCase())
+    );
+
 
     return (
         <div className="max-w-6xl px-6 py-10 mx-auto space-y-8">
@@ -97,13 +101,13 @@ export function Users() {
                         />
                     </div>
 
-                    <Activities users={usersList} onUserClick={handleUserClick} />
+                    <Activities users={filteredUsers} onUserClick={handleUserClick} />
                 </div>
 
-                <div className="w-80 space-y-6">
-                    <div className="space-y-6">
-                        {selectedUser && (
-                            <>
+                {selectedUser && (
+                    <>
+                        <div className="w-80 space-y-6">
+                            <div className="space-y-6">
                                 <h2 className="font-semibold text-xl">Dados do Utilizador</h2>
 
                                 <div className="space-y-5">
@@ -123,11 +127,11 @@ export function Users() {
                                         </div>
                                     </div>
                                 </div>
-                            </>
-                        )}
-                    </div>
+                            </div>
 
-                </div>
+                        </div>
+                    </>
+                )}
             </main>
 
             {/* {isCreateActivityModalOpen && (

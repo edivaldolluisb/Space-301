@@ -22,7 +22,7 @@ export function Activities({ users, onUserClick  }: ActivitiesProps) {
   const [usersList, setUsersList] = useState<User[]>(users);
 
   useEffect(() => {
-    // Atualiza a lista de usuários sempre que a prop 'users' for alterada
+    
     setUsersList(users);
   }, [users]);
 
@@ -44,7 +44,7 @@ export function Activities({ users, onUserClick  }: ActivitiesProps) {
                 <span className="text-zinc-400 text-sm ml-auto">
                   <Button variant="secondary"
                     onClick={() => onUserClick(user.id)}>
-                    <BookUser className="size-5 text-zinc-500  shrink-0" />
+                    <BookUser className="size-5 text-zinc-500  shrink-0" /> 
                   </Button>
                 </span>
               </div>
