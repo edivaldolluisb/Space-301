@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import ies301.space.dto.UserResponseDTO;
 
 @Service
 public class UserService {
@@ -16,19 +19,26 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponseDTO> findAllUsers() {
+        return userRepository.findAll().stream()
+                .map(user -> new UserResponseDTO(user.getId(), user.getName(), user.getEmail()))
+                .collect(Collectors.toList());
     }
 
-    public User findUserById(String id) {
-        return userRepository.findById(id).orElse(null);
+    public UserResponseDTO findUserById(String id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isEmpty()) {
+            return null;
+        }
+        User user = userOptional.get();
+        return new UserResponseDTO(user.getId(), user.getName(), user.getEmail());
     }
 
     public User saveUser(User user) {
         return userRepository.save(user);
     }
 
-    public User updateUser(String id, User updatedUser) {
+    public UserResponseDTO updateUser(String id, User updatedUser) {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isEmpty()) {
             return null;
@@ -43,7 +53,9 @@ public class UserService {
         if (updatedUser.getPassword() != null) {
             existingUser.setPassword(updatedUser.getPassword());
         }
-        return userRepository.save(existingUser);
+
+        User savedUser = userRepository.save(existingUser);
+        return new UserResponseDTO(savedUser.getId(), savedUser.getName(), savedUser.getEmail());
     }
 
     public boolean deleteUser(String id) {

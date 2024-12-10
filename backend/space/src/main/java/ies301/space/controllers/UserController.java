@@ -14,10 +14,11 @@ import ies301.space.entities.user.User;
 import ies301.space.services.UserService;
 
 import java.util.List;
+import ies301.space.dto.UserResponseDTO;
 
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/v1/user")
 public class UserController {
 
     private final UserService userService;
@@ -27,15 +28,15 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.findAllUsers();
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+        List<UserResponseDTO> users = userService.findAllUsers();
         return ResponseEntity.ok(users);
     }
 
     
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable String id) {
-        User user = userService.findUserById(id);
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable String id) {
+        UserResponseDTO user = userService.findUserById(id);
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
@@ -51,10 +52,10 @@ public class UserController {
 
     
     @PatchMapping("/{id}")
-    public ResponseEntity<User> updateUser(
+    public ResponseEntity<UserResponseDTO> updateUser(
             @PathVariable String id,
             @RequestBody User updatedUser) {
-        User user = userService.updateUser(id, updatedUser);
+                UserResponseDTO user = userService.updateUser(id, updatedUser);
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
