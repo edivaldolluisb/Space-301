@@ -59,6 +59,7 @@ public class InfluxDBService {
                     .addField("pressaoAtual", message.getNave().getPressaoAtual())
                     .addField("temperaturaAtual", message.getNave().getTemperaturaAtual())
                     .addField("oxigenioAtual", message.getNave().getOxigenioAtual())
+                    .addField("temperaturaExterna", message.getNave().getTemperaturaExternaAtual())
                     .time(System.currentTimeMillis(), WritePrecision.MS);
             writeApi.writePoint(navePoint);
 
