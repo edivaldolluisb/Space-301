@@ -16,6 +16,7 @@ interface User extends Credentials {
 
 interface AuthResponse {
   token: string;
+  id: number | string;
   user: User;
 }
 
@@ -62,6 +63,7 @@ export const auth = {
     const response = await authApi.post<AuthResponse>('/register', user);
     if (response.data.token) {
       localStorage.setItem('token', response.data.token);
+      localStorage.setItem('userId', response.data.id.toString());
     }
     return response.data;
   },
@@ -70,6 +72,7 @@ export const auth = {
     const response = await authApi.post<AuthResponse>('/login', credentials);
     if (response.data.token) {
       localStorage.setItem('token', response.data.token);
+      localStorage.setItem('userId', response.data.id.toString());
     }
     return response.data;
   },

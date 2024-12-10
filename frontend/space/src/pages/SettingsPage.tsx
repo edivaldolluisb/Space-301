@@ -19,6 +19,7 @@ const SettingsPage = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const userId = localStorage.getItem('userId');
 
   const generateRandomKey = () => {
     const randomKey = Math.random().toString(36).slice(-12);
@@ -52,7 +53,11 @@ const SettingsPage = () => {
     
     const updatedData = { name: formData.name, email: formData.email, password: formData.password};
     try {
-      const response = await updateUser("64db4558-bab7-4a4c-8adc-bdcdb7721db0", updatedData);
+      if (!userId) {
+        console.error("ID do utilizador não encontrado.");
+        return;
+      }
+      const response = await updateUser(userId, updatedData);
 
       if (response && response.data) {
         console.log("Usuário atualizado com sucesso:", response.data);
@@ -109,10 +114,10 @@ const SettingsPage = () => {
     try {
 
       // const response = api.get('/user/1ba117d3-1b38-47a7-94a2-06a8638e7240');
-      const response = await api.get('/user/64db4558-bab7-4a4c-8adc-bdcdb7721db0');
+      const response = await api.get(`/user/${userId}`);
       const userData = response.data;
 
-      console.log('Dados do utilizador:', userData);
+      // console.log('Dados do utilizador:', userData);
       setFormData({
         name: userData.name || "",
         email: userData.email || "",
@@ -123,7 +128,7 @@ const SettingsPage = () => {
       setError('Erro ao carregar os dados do utilizador');
       console.error(err);
     } finally {
-      setIsLoading(false);
+      // setIsLoading(false);
     }
   };
 
