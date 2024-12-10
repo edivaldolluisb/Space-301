@@ -1,114 +1,62 @@
-import { Calendar, X, Loader2, Rocket, MapPin } from "lucide-react";
+import { Calendar, X, Loader2, User, MapPin, AtSign, KeyRound } from "lucide-react";
 import { Button } from "../../components/button";
-import { FormEvent, useState, useEffect } from "react";
-import { api } from "../../lib/axios";
-
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select"
-
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Checkbox } from "@/components/ui/checkbox"
+import { FormEvent, useState } from "react";
 
 
-interface ConfirmLaunchModalProps {
-	closeCreateLaunchModal: () => void;
-	createLaunch: (event: FormEvent<HTMLFormElement>) => void;
-	setMissionName: (name: string) => void;
-	setLaunchDate: (date: string) => void;
-	setRocketId: (id: string) => void;
-	setAddress: (address: string) => void;
-	setAstronauts: (astronauts: Astronaut[]) => void;
+interface CreateUserModalProps {
+	closeCreateUserModal: () => void;
+	createUser: (event: FormEvent<HTMLFormElement>, user: User) => void;
+	setNewUser: (astronauts: User[]) => void;
 	error: string | null;
 	isLoading: boolean;
 }
 
-interface Astronaut {
-	id: number;
+
+interface User {
+	id: number | string;
 	name: string;
+	email: string;
+	password: string;
+	role: string;
 }
 
-const foguetes = [
-  {
-      id: "1",
-      nome: 'Falcon 9'
-  },
-  {
-      id: "2",
-      nome: 'Starship'
-  },
-  {
-      id: "3",
-      nome: 'Ariane 5'
-  }
-];
 
 export function CreateActivityModal({
-	closeCreateLaunchModal,
-	createLaunch,
-	setMissionName,
-	setLaunchDate,
-	setRocketId,
-	setAddress,
-	setAstronauts,
+	closeCreateUserModal,
+	createUser,
 	error,
 	isLoading,
-}: ConfirmLaunchModalProps) {
+}: CreateUserModalProps) {
+	const [user, setUser] = useState<User>({
+		id: "",
+		name: "",
+		email: "",
+		password: "",
+		role: "user", // Valor padrão
+	});
 
 
-
-	const [selectedAstronauts, setSelectedAstronauts] = useState<Astronaut[]>([]);
-	const [astronautsList, setAstronautsList] = useState<Astronaut[]>([]);
-
-	const fetchAstronautas = async () => {
-		try {
-			const response = await api.get('/astronauts');
-			return response.data || [];
-
-		} catch (error) {
-			console.log("Erro ao buscar lançamentos:", error)
-			return null
-		}
-
-	}
-
-	useEffect(() => { // 😪
-		const fetchAstro = async () => {
-			const res = await fetchAstronautas();
-			console.log(`Astros: ${res}`)
-			if (res) {
-				setAstronautsList(res);
-			}
-		};
-		fetchAstro();
-	}, []);
-
-  const handleCheckboxChange = (astronaut: Astronaut) => {
-		const updatedAstronauts = selectedAstronauts.some((item: Astronaut) => item.id === astronaut.id)
-			? selectedAstronauts.filter((item: Astronaut) => item.id !== astronaut.id)
-			: [...selectedAstronauts, astronaut];
-
-		setSelectedAstronauts(updatedAstronauts);
-		setAstronauts(updatedAstronauts);
+	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = event.target;
+		setUser({ ...user, [name]: value });
 	};
 
-  return (
+
+	// const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
+	return (
 		<div className="fixed inset-0 bg-black/60 flex items-center justify-center">
 			<div className="w-[640px] rounded-xl py-5 px-6 shadow-shape bg-zinc-900 space-y-5">
 				<div className="space-y-2">
 					<div className="flex items-center justify-between">
-						<h2 className="font-lg font-semibold">Registar Lançamento</h2>
+						<h2 className="font-lg font-semibold">Registar Utilizador</h2>
 						<button>
-							<X className="size-5 text-zinc-400" onClick={closeCreateLaunchModal} />
+							<X className="size-5 text-zinc-400" onClick={closeCreateUserModal} />
 						</button>
 					</div>
 
 					<p className="text-sm text-zinc-400">
-						Preencha os detalhes do lançamento para prosseguir.
+						Preencha os detalhes do utilizador para prosseguir.
 					</p>
 				</div>
 
@@ -118,28 +66,28 @@ export function CreateActivityModal({
 					</div>
 				)}
 
-				<form onSubmit={createLaunch} className="space-y-3">
+				<form onSubmit={(e) => createUser(e, user)} className="space-y-3">
 					<div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2 focus-within:ring-2 focus-within:ring-violet-500/20 transition-all">
-						<Rocket className="text-zinc-400 size-5" />
+						<User className="text-zinc-400 size-5" />
 						<input
 							type="text"
-							name="missionName"
-							placeholder="Nome da missão"
+							name="name"
+							placeholder="Nome do Utilizador"
 							className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
-							onChange={(event) => setMissionName(event.target.value)}
+							onChange={handleInputChange}
 							disabled={isLoading}
 						// required
 						/>
 					</div>
 
 					<div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2 focus-within:ring-2 focus-within:ring-violet-500/20 transition-all">
-						<Calendar className="text-zinc-400 size-5" />
+						<AtSign className="text-zinc-400 size-5" />
 						<input
-							type="datetime-local"
-							name="launchDate"
-							placeholder="Nome da missão"
+							type="email"
+							name="email"
+							placeholder="Email do Utilizador"
 							className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
-							onChange={(event) => setLaunchDate(event.target.value)}
+							onChange={handleInputChange}
 							disabled={isLoading}
 						// required
 						/>
@@ -147,58 +95,17 @@ export function CreateActivityModal({
 
 
 					<div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2 focus-within:ring-2 focus-within:ring-violet-500/20 transition-all">
-						<MapPin className="text-zinc-400 size-5" />
+						<KeyRound className="text-zinc-400 size-5" />
 						<input
-							type="text"
-							name="address"
-							placeholder="Endereço do Local de Lançamento"
+							type="password"
+							name="password"
+							placeholder="Palavra-passe do Utilizador"
 							className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
-							onChange={(event) => setAddress(event.target.value)}
+							onChange={handleInputChange}
 							disabled={isLoading}
 						// required
 						/>
 					</div>
-
-					<Select onValueChange={setRocketId}>
-						<SelectTrigger className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2 focus-within:ring-2 focus-within:ring-violet-500/20 transition-all">
-							<SelectValue placeholder="Selecionar o foguete  " />
-						</SelectTrigger>
-						<SelectContent>
-						{foguetes.map((foguete) => (
-							<SelectItem key={foguete.id} value={foguete.id}>
-							{foguete.nome}
-							</SelectItem>
-						))}
-						</SelectContent>
-					</Select>
-
-					<ScrollArea className="h-72	px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2 focus-within:ring-2 focus-within:ring-violet-500/20 transition-all">
-						<div className="p-4">
-							<h4 className="mb-4 text-sm font-medium leading-none">Austronautas</h4>
-							
-							{astronautsList.length === 0 && 
-									(<p className="text-sm text-zinc-400">Nenhum astronauta disponível no momento.</p>)}
-							{astronautsList.map((astronaut) => (
-								<>
-									<div key={astronaut.id} className="flex items-center space-x-3 mb-3">
-										<Checkbox 
-											value={astronaut.id}
-											id={`checkbox-${astronaut.id}`}
-											checked={selectedAstronauts.some((item) => item.id === astronaut.id)}
-											onCheckedChange={() => handleCheckboxChange(astronaut)}
-										/>
-										<label
-											htmlFor={`checkbox-${astronaut.id}`}
-											className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-										>
-											{astronaut.name}
-										</label>
-									</div>
-								</>
-							))}
-
-						</div>
-					</ScrollArea>
 
 					<Button
 						type="submit"
@@ -212,9 +119,8 @@ export function CreateActivityModal({
 								Registrando...
 							</>
 						) : (
-							"Registrar Lançamento"
+							"Registrar Utilizador"
 						)}
-						{/* Registrar Lançamento */}
 					</Button>
 				</form>
 

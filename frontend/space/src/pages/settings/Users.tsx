@@ -16,12 +16,13 @@ interface User {
 }
 
 export function Users() {
-    const [isCreateActivityModalOpen, setIsCreateActivityModalOpen] = useState(false)
+    const [isCreateUserModalOpen, setIsCreateUserModalOpen] = useState(false)
 
 
     const [usersList, setUsersList] = useState<User[]>([])
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [userSearchName, setUserSearchName] = useState<string>("");
+    const [newUser, setNewUser] = useState<User | null>(null);
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -29,7 +30,12 @@ export function Users() {
 
 
     function openCreateUserModal() {
-        setIsCreateActivityModalOpen(true)
+        setIsCreateUserModalOpen(true)
+    }
+
+    function closeCreateUserModal() {
+        setError(null);
+        setIsCreateUserModalOpen(false)
     }
 
 
@@ -74,6 +80,38 @@ export function Users() {
     const filteredUsers = usersList.filter(user =>
         user.name.toLowerCase().includes(userSearchName.toLowerCase())
     );
+
+
+    const createUser = async (event: FormEvent<HTMLFormElement>, user: User) => {
+        event.preventDefault();
+        setError(null);
+        setIsLoading(true);
+
+        const newUser = {
+            name: user.name, 
+            email: user.email, 
+            password: user.password, 
+            // role: user.role
+        }
+        
+        console.log("Utilizador a ser criado:", newUser);
+      
+        try {
+          const response = await api.post("/user", user);
+      
+          const UserResponse = response.data;
+          console.log("Utilizador registado com sucesso:", UserResponse);
+      
+          setUsersList([...usersList, UserResponse]);
+          setIsLoading(false);
+          closeCreateUserModal();
+        } catch (error) {
+          console.error("Erro ao registrar utilizador:", error);
+          setError("Erro ao registrar utilizador");
+          setIsLoading(false);
+        }
+      };
+      
 
 
     return (
@@ -134,16 +172,16 @@ export function Users() {
                 )}
             </main>
 
-            {/* {isCreateActivityModalOpen && (
+            {isCreateUserModalOpen && (
                 <CreateActivityModal
-                    closeCreateLaunchModal={closeCreateLaunchModal}
-                    setAstronauts={setAstronauts}
-                    createLaunch={createLaunch}
+                    closeCreateLaunchModal={closeCreateUserModal}
+                    createUser={createUser}
+                    setUser={setNewUser}
                     error={error}
                     isLoading={isLoading}
 
                 />
-            )} */}
+            )}
         </div>
     )
 }
