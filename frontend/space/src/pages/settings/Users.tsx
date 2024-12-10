@@ -1,6 +1,6 @@
 import { Plus, Siren, User, Search } from "lucide-react";
 import { FormEvent, useState, useEffect } from "react";
-import { CreateActivityModal } from "./create-activity-modal";
+import { CreateUserModal } from "./create-user-modal";
 import { Activities } from "./ListUsers";
 import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
 
@@ -22,7 +22,6 @@ export function Users() {
     const [usersList, setUsersList] = useState<User[]>([])
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [userSearchName, setUserSearchName] = useState<string>("");
-    const [newUser, setNewUser] = useState<User | null>(null);
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -173,10 +172,9 @@ export function Users() {
             </main>
 
             {isCreateUserModalOpen && (
-                <CreateActivityModal
-                    closeCreateLaunchModal={closeCreateUserModal}
+                <CreateUserModal
+                closeCreateUserModal={closeCreateUserModal}
                     createUser={createUser}
-                    setUser={setNewUser}
                     error={error}
                     isLoading={isLoading}
 

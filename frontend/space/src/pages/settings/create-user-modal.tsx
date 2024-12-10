@@ -6,7 +6,6 @@ import { FormEvent, useState } from "react";
 interface CreateUserModalProps {
 	closeCreateUserModal: () => void;
 	createUser: (event: FormEvent<HTMLFormElement>, user: User) => void;
-	setNewUser: (astronauts: User[]) => void;
 	error: string | null;
 	isLoading: boolean;
 }
@@ -21,7 +20,7 @@ interface User {
 }
 
 
-export function CreateActivityModal({
+export function CreateUserModal({
 	closeCreateUserModal,
 	createUser,
 	error,
