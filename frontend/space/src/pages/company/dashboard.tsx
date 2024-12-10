@@ -150,8 +150,8 @@ const RocketInfo: React.FC = ({rocket}) => (
         <MapPin className="w-5 h-5 text-gray-400" />
         <span>Aveiro, Portugal</span>
       </div>
-      <span className="px-2 py-1 bg-red-500/20 text-red-500 rounded text-sm">
-        Failed
+      <span className="px-2 py-1 bg-green-500/20 text-white-500 rounded text-sm">
+        In progress
       </span>
     </div>
   </Card>
