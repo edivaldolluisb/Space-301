@@ -34,7 +34,7 @@ const SettingsPage = () => {
   const [formErrors, setFormErrors] = useState<FormErrors>({});
 
   const validateForm = () => {
-    const errors: FormErrors  = {};
+    const errors: FormErrors = {};
     if (!formData.name) errors.name = "Nome é obrigatório.";
     if (!formData.email.includes("@")) errors.email = "E-mail inválido.";
     if (!formData.address) errors.address = "Endereço é obrigatório.";
@@ -51,6 +51,28 @@ const SettingsPage = () => {
     setFormErrors({});
     console.log("Formulário enviado:", formData);
   };
+
+  
+  const copyPasswordToClipboard = () => {
+    console.log("Copiando senha para a área de transferência...");
+    if (!formData.password) {
+      console.log("Nenhuma senha disponível para copiar.");
+      // alert("Nenhuma senha disponível para copiar.");
+      return;
+    }
+
+    navigator.clipboard
+      .writeText(formData.password)
+      .then(() => {
+        console.log("Senha copiada:", formData.password);
+        // alert("Senha copiada com sucesso!");
+      })
+      .catch(() => {
+        console.error("Erro ao copiar a senha.");
+        // alert("Erro ao copiar a senha.");
+      });
+  };
+
 
 
   return (
@@ -83,12 +105,11 @@ const SettingsPage = () => {
                   onChange={(e) =>
                     setFormData((prev) => ({ ...prev, name: e.target.value }))
                   }
-                  // onChange={event => setCompanyName(event.target.value)}
                   disabled={isLoading}
                   required
                 />
               </div>
-              {formErrors.name && <p className="text-red-500">{formErrors.name}</p>}
+              {/* {formErrors.name && <p className="text-red-400">{formErrors.name}</p>} */}
 
               <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2 focus-within:ring-2 focus-within:ring-violet-500/20 transition-all">
                 <AtSign className="text-zinc-400 size-5" />
@@ -97,7 +118,6 @@ const SettingsPage = () => {
                   name="email"
                   placeholder="E-mail da empresa"
                   className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
-                  // onChange={event => setCompanyEmail(event.target.value)}
                   disabled={isLoading}
                   required
                   minLength={6}
@@ -114,7 +134,6 @@ const SettingsPage = () => {
                   name="address"
                   placeholder="Endereço da empresa"
                   className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
-                  // onChange={event => setCompanyPassword(event.target.value)}
                   disabled={isLoading}
                   required
                   minLength={6}
@@ -140,11 +159,13 @@ const SettingsPage = () => {
                   name="password"
                   placeholder="password da empresa"
                   className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1 w-full "
-                  // onChange={event => setCompanyPassword(event.target.value)}
                   disabled={isLoading}
                   required
                   minLength={6}
                   value={formData.password}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, password: e.target.value }))
+                  }
                 />
               </div>
 
@@ -152,7 +173,7 @@ const SettingsPage = () => {
                 <div className="w-px h-6 bg-zinc-800" />
 
                 <Button variant="secondary">
-                  <ClipboardCopy className="size-5" />
+                  <ClipboardCopy className="size-5" onClick={copyPasswordToClipboard}/>
                   Copiar
                 </Button>
 
@@ -180,12 +201,12 @@ const SettingsPage = () => {
                 {isLoading ? "Atualizar dados" : "Cancelar"}
               </Button>
 
-              
+
               <div className={`transition-opacity duration-300 ${isLoading ? "opacity-0" : "opacity-100"}`}>
                 {!isLoading && (
                   <Button
                     variant="primary"
-                    onClick={handleSubmit} 
+                    onClick={handleSubmit}
                     type="submit"
                   >
                     Enviar
