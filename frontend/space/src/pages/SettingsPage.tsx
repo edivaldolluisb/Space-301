@@ -1,9 +1,13 @@
 import { DestinationAndDateHeader } from "../components/destination-and-date-header";
 import { Plus, X, Loader2, User, AtSign, KeyRound, MapPin, Eye, ClipboardCopy, RefreshCw } from "lucide-react";
 import { Button } from "../components/button";
+import { useState } from "react";
 
 
 const SettingsPage = () => {
+  
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
 
   return (
@@ -34,12 +38,12 @@ const SettingsPage = () => {
                   placeholder="Nome da empresa"
                   className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
                   // onChange={event => setCompanyName(event.target.value)}
-                  // disabled={isLoading}
+                  disabled={isLoading}
                   required
                 />
               </div>
 
-              <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2">
+              <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2 focus-within:ring-2 focus-within:ring-violet-500/20 transition-all">
                 <AtSign className="text-zinc-400 size-5" />
                 <input
                   type="email"
@@ -47,11 +51,11 @@ const SettingsPage = () => {
                   placeholder="E-mail da empresa"
                   className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
                   // onChange={event => setCompanyEmail(event.target.value)}
-                  // disabled={isLoading}
+                  disabled={isLoading}
                   required
                 />
               </div>
-              <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2">
+              <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2 focus-within:ring-2 focus-within:ring-violet-500/20 transition-all">
                 <MapPin className="text-zinc-400 size-5" />
                 <input
                   type="text"
@@ -59,7 +63,7 @@ const SettingsPage = () => {
                   placeholder="Endereço da empresa"
                   className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
                   // onChange={event => setCompanyPassword(event.target.value)}
-                  // disabled={isLoading}
+                  disabled={isLoading}
                   required
                   minLength={6}
                 />
@@ -72,9 +76,18 @@ const SettingsPage = () => {
             </div>
 
             <div className="px-4 h-16 rounded-xl bg-zinc-900 shadow-shape flex items-center justify-between">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 ">
                 <KeyRound className="size-5 text-zinc-400" />
-                <span className="text-zinc-100">endereço</span>
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="********************"
+                  className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1 w-full "
+                  // onChange={event => setCompanyPassword(event.target.value)}
+                  disabled={isLoading}
+                  required
+                  minLength={6}
+                />
               </div>
 
               <div className="flex items-center gap-5">
@@ -99,7 +112,7 @@ const SettingsPage = () => {
 
             <div className="flex items-center gap-5">
 
-              <Button variant="secondary">
+              <Button variant={isLoading ? "secondary" : "primary"} onClick={() => setIsLoading(!isLoading)}>
                 Atualizar dados
               </Button>
 
