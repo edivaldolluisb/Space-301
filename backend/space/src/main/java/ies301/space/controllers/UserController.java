@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import ies301.space.entities.user.User;
 import ies301.space.services.UserService;
 
@@ -23,8 +24,11 @@ public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    private final PasswordEncoder passwordEncoder;
+
+    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping
@@ -55,7 +59,13 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> updateUser(
             @PathVariable String id,
             @RequestBody User updatedUser) {
-                UserResponseDTO user = userService.updateUser(id, updatedUser);
+
+        if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
+            
+            updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        }
+        
+        UserResponseDTO user = userService.updateUser(id, updatedUser);
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
