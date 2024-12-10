@@ -50,15 +50,11 @@ public class Launch {
     public Launch() {}
     
     public Launch(String missionName, Date launchDate, Long rocketId, String address, Status status, Set<Long> astronauts) {
-
-
         this.missionName = missionName;
         this.launchDate = launchDate;
         this.rocketId = rocketId;
         this.address = address;
-
         this.status = status;
-
         this.astronauts = astronauts;
     }
 

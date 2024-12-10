@@ -1,6 +1,6 @@
 import { Calendar, X, Loader2, Rocket, MapPin } from "lucide-react";
 import { Button } from "../../components/button";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { api } from "../../lib/axios";
 
 import {
@@ -70,7 +70,7 @@ export function CreateActivityModal({
 	
 	  }
 
-	useState(() => {
+	useEffect(() => {
 		const setAstronautsData = async () => {
 			const res = await fetchAstronautas();
 			console.log(`Astros: ${res}`)
@@ -78,12 +78,12 @@ export function CreateActivityModal({
 		}
 		const setRocketData = async () => {
 			const res = await fetchRockets();
-			console.log(`Rockets: ${res}`)
+			console.log(`Rockets: `, res)
 			setRocketsList(res);
 		}
 		setAstronautsData();
 		setRocketData();
-	});
+	}, []);
 
 
 	const handleCheckboxChange = (astronaut: Astronaut) => {

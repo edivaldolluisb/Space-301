@@ -16,6 +16,7 @@ import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from 'recharts';
 import { DestinationAndDateHeader } from './destination-and-date-header';
 import { Client } from '@stomp/stompjs';
 import { useNavigate } from 'react-router-dom';
+import { api } from "../../lib/axios";
 
 
 interface DashboardProps {
@@ -173,9 +174,21 @@ const StatusCard: React.FC<StatusCardProps> = ({
 
 
 const Dashboard: React.FC<DashboardProps> = ({launchId}) => {
-  const [rocketData, setRocketData] = useState({});
+  const [rocketData, setRocketData] = useState();
+  const [rocket, setRocket] = useState();
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const fetchRockets = async () => {
+		try {
+		  const response = await api.get(`/launches/${launchId}/rocket`);
+		  console.log(`Rocket ${response.data}`);
+      return response.data
+		} catch (error) {
+		  console.log("Erro ao buscar foguetes:", error)
+		  return null
+		}
+	}
 
   useEffect(() => {
     const client = new Client({

@@ -14,7 +14,7 @@ import ies301.space.services.RocketService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
-@RequestMapping("api/v1/rockets")
+@RequestMapping("/api/v1/rockets")
 public class RocketController {
     private final RocketService rocketService;
     public RocketController(RocketService rocketService) {
@@ -32,4 +32,10 @@ public class RocketController {
         List<Rocket> rockets = rocketService.getAllRockets();
         return ResponseEntity.ok(rockets);
     }
+
+    @PostMapping("/test")
+    public Rocket test(@RequestBody Rocket r) {
+        return r;
+    }
+
 }

@@ -7,29 +7,20 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="rocket")
+@Table(name = "foguete")
 public class Rocket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private int capacity;
-    private double weigth;
-    private int num_astronauts;
+    private double weight;
+    private int numAstronauts;
     private double height;
     private double diameter;
-    private String origin_country;
+    private String originCountry;
 
-    public Rocket() {}
-
-    public Rocket(String name, int capacity, double weigth, int num_astronauts, double height, double diameter, String origin_country) {
-        this.name = name;
-        this.capacity = capacity;
-        this.weigth = weigth;
-        this.num_astronauts = num_astronauts;
-        this.height = height;
-        this.diameter = diameter;
-        this.origin_country = origin_country;
+    public Rocket() {
     }
 
     public Long getId() {
@@ -44,12 +35,12 @@ public class Rocket {
         return capacity;
     }
 
-    public double getWeigth() {
-        return weigth;
+    public double getWeight() {
+        return weight;
     }
 
-    public int getNum_astronauts() {
-        return num_astronauts;
+    public int getNumAstronauts() {
+        return numAstronauts;
     }
 
     public double getHeight() {
@@ -60,8 +51,8 @@ public class Rocket {
         return diameter;
     }
 
-    public String getOrigin_country() {
-        return origin_country;
+    public String getOriginCountry() {
+        return originCountry;
     }
 
     public void setId(Long id) {
@@ -76,12 +67,12 @@ public class Rocket {
         this.capacity = capacity;
     }
 
-    public void setWeigth(double weigth) {
-        this.weigth = weigth;
+    public void setWeight(double weight) {
+        this.weight = weight;
     }
 
-    public void setNum_astronauts(int num_astronauts) {
-        this.num_astronauts = num_astronauts;
+    public void setNumAstronauts(int numAstronauts) {
+        this.numAstronauts = numAstronauts;
     }
 
     public void setHeight(double height) {
@@ -92,8 +83,8 @@ public class Rocket {
         this.diameter = diameter;
     }
 
-    public void setOrigin_country(String origin_country) {
-        this.origin_country = origin_country;
+    public void setOriginCountry(String originCountry) {
+        this.originCountry = originCountry;
     }
 
 }
