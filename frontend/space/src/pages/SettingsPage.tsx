@@ -6,9 +6,41 @@ import { useState } from "react";
 
 const SettingsPage = () => {
   
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const generateRandomKey = () => {
+    const randomKey = Math.random().toString(36).slice(-12); 
+    console.log("Nova chave gerada:", randomKey); 
+  };
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    address: "",
+  });
+  const [formErrors, setFormErrors] = useState({});
+
+  const validateForm = () => {
+    const errors: any = {};
+    if (!formData.name) errors.name = "Nome é obrigatório.";
+    if (!formData.email.includes("@")) errors.email = "E-mail inválido.";
+    if (!formData.address) errors.address = "Endereço é obrigatório.";
+    return errors;
+  };
+  
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const errors = validateForm();
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+    setFormErrors({});
+    console.log("Formulário enviado:", formData);
+  };
+  
 
   return (
 
@@ -28,8 +60,7 @@ const SettingsPage = () => {
               </div>
             </div>
 
-            {/* <form onSubmit={createTrip} className="space-y-3"> */}
-            <form className="space-y-3">
+            <form onSubmit={handleSubmit} className="space-y-3">
               <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2 focus-within:ring-2 focus-within:ring-violet-500/20 transition-all">
                 <User className="text-zinc-400 size-5" />
                 <input
@@ -37,11 +68,16 @@ const SettingsPage = () => {
                   name="name"
                   placeholder="Nome da empresa"
                   className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, name: e.target.value }))
+                  }
                   // onChange={event => setCompanyName(event.target.value)}
                   disabled={isLoading}
                   required
                 />
               </div>
+              {formErrors.name && <p className="text-red-500">{formErrors.name}</p>}
 
               <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2 focus-within:ring-2 focus-within:ring-violet-500/20 transition-all">
                 <AtSign className="text-zinc-400 size-5" />
@@ -53,6 +89,11 @@ const SettingsPage = () => {
                   // onChange={event => setCompanyEmail(event.target.value)}
                   disabled={isLoading}
                   required
+                  minLength={6}
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, email: e.target.value }))
+                  }
                 />
               </div>
               <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2 focus-within:ring-2 focus-within:ring-violet-500/20 transition-all">
@@ -66,6 +107,11 @@ const SettingsPage = () => {
                   disabled={isLoading}
                   required
                   minLength={6}
+                  value={formData.address}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, address: e.target.value }))
+                  } 
+
                 />
               </div>
 
@@ -79,9 +125,9 @@ const SettingsPage = () => {
               <div className="flex items-center gap-2 ">
                 <KeyRound className="size-5 text-zinc-400" />
                 <input
-                  type="password"
+                  type={isPasswordVisible ? "text" : "password"}
                   name="password"
-                  placeholder="********************"
+                  placeholder="password da empresa"
                   className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1 w-full "
                   // onChange={event => setCompanyPassword(event.target.value)}
                   disabled={isLoading}
@@ -98,12 +144,14 @@ const SettingsPage = () => {
                   Copiar
                 </Button>
 
-                <Button variant="secondary">
-                  Ver chave
+                <Button variant="secondary"
+                  onClick={() => setIsPasswordVisible((prev) => !prev)}
+                  >
+                  {isPasswordVisible ? "Ocultar chave" : "Ver chave"}
                   <Eye className="size-5" />
                 </Button>
 
-                <Button variant="secondary">
+                <Button variant="secondary" onClick={generateRandomKey}>
                   Sugerir nova chave
                   <RefreshCw className="size-5" />
                 </Button>
