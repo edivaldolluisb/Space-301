@@ -4,14 +4,9 @@ import random
 from sender import SendData
 
 class Rocket:
-    def __init__(self, id_lancamento, astronaut1, astronaut2, astronaut3, astronaut4) -> None:
+    def __init__(self, id_lancamento, *astronauts) -> None:
         self.id_lancamento = int(id_lancamento)
-        self.TRIPULANTES = [
-            {'id': astronaut1},
-            {'id': astronaut2},
-            {'id': astronaut3},
-            {'id': astronaut4}
-        ]
+        self.TRIPULANTES = [{'id': astronaut} for astronaut in astronauts]
 
         # Constantes
         self.GRAVIDADE = 9.81  # m/s²
@@ -265,7 +260,7 @@ class Rocket:
                 "alerta": list(alertas)
                 }
             
-            self.sender.send({"id_lancamento": self.id_lancamento, "tripulantes": dados_tripulantes, "nave": parametros})
+            self.sender.send({"id_lancamento": self.id_lancamento, "tripulantes": dados_tripulantes, "nave": parametros, "terminado": False})
             await asyncio.sleep(1)
-
-            
+        
+        self.sender.send({"id_lancamento": self.id_lancamento, "tripulantes": None, "nave": None, "terminado": True})

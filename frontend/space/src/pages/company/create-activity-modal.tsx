@@ -1,6 +1,6 @@
 import { Calendar, X, Loader2, Rocket, MapPin } from "lucide-react";
 import { Button } from "../../components/button";
-import { FormEvent, useState, useEffect } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { api } from "../../lib/axios";
 
 import {
@@ -32,20 +32,10 @@ interface Astronaut {
 	name: string;
 }
 
-const foguetes = [
-  {
-      id: "1",
-      nome: 'Falcon 9'
-  },
-  {
-      id: "2",
-      nome: 'Starship'
-  },
-  {
-      id: "3",
-      nome: 'Ariane 5'
-  }
-];
+interface Rocket {
+	id: number;
+	name: string;
+}
 
 export function CreateActivityModal({
 	closeCreateLaunchModal,
@@ -61,9 +51,12 @@ export function CreateActivityModal({
 
 
 
+	// const [selectedAstronauts, setSelectedAstronauts] = useState<Astronaut[]>([]);
+	// const [astronautsList, setAstronautsList] = useState<Astronaut[]>([]);
+
 	const [selectedAstronauts, setSelectedAstronauts] = useState<Astronaut[]>([]);
 	const [astronautsList, setAstronautsList] = useState<Astronaut[]>([]);
-
+	const [rocketsList, setRocketsList] = useState<Rocket[]>([]);
 	const fetchAstronautas = async () => {
 		try {
 			const response = await api.get('/astronauts');
@@ -76,18 +69,35 @@ export function CreateActivityModal({
 
 	}
 
-	useEffect(() => { // 😪
+	const fetchRockets = async () => {
+		try {
+			const response = await api.get('/rockets');
+			return response.data || [];
+
+		} catch (error) {
+			console.log("Erro ao buscar foguetes:", error)
+			return null
+		}
+
+	}
+
+	useEffect(() => {
 		const fetchAstro = async () => {
 			const res = await fetchAstronautas();
-			console.log(`Astros: ${res}`)
-			if (res) {
-				setAstronautsList(res);
-			}
-		};
+			console.log(`Astros: `, res)
+			setAstronautsList(res);
+		}
+		const setRocketsData = async () => {
+			const res = await fetchRockets();
+			console.log(`Rockets: ${res}`)
+			console.log(`Rockets: `, res)
+			setRocketsList(res);
+		}
 		fetchAstro();
+		setRocketsData();
 	}, []);
 
-  const handleCheckboxChange = (astronaut: Astronaut) => {
+	const handleCheckboxChange = (astronaut: Astronaut) => {
 		const updatedAstronauts = selectedAstronauts.some((item: Astronaut) => item.id === astronaut.id)
 			? selectedAstronauts.filter((item: Astronaut) => item.id !== astronaut.id)
 			: [...selectedAstronauts, astronaut];
@@ -96,7 +106,7 @@ export function CreateActivityModal({
 		setAstronauts(updatedAstronauts);
 	};
 
-  return (
+	return (
 		<div className="fixed inset-0 bg-black/60 flex items-center justify-center">
 			<div className="w-[640px] rounded-xl py-5 px-6 shadow-shape bg-zinc-900 space-y-5">
 				<div className="space-y-2">
@@ -164,24 +174,29 @@ export function CreateActivityModal({
 							<SelectValue placeholder="Selecionar o foguete  " />
 						</SelectTrigger>
 						<SelectContent>
-						{foguetes.map((foguete) => (
-							<SelectItem key={foguete.id} value={foguete.id}>
-							{foguete.nome}
-							</SelectItem>
-						))}
+							{rocketsList.length > 0 ?
+								(rocketsList.map((foguete) => (
+									<SelectItem key={foguete.id} value={foguete.id.toString()}>
+										{foguete.name}
+									</SelectItem>
+								))
+								) : (
+									<p className="text-sm text-zinc-400 px-4">Nenhum foguete disponível.</p>
+								)
+							}
 						</SelectContent>
 					</Select>
 
 					<ScrollArea className="h-72	px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2 focus-within:ring-2 focus-within:ring-violet-500/20 transition-all">
 						<div className="p-4">
 							<h4 className="mb-4 text-sm font-medium leading-none">Austronautas</h4>
-							
-							{astronautsList.length === 0 && 
-									(<p className="text-sm text-zinc-400">Nenhum astronauta disponível no momento.</p>)}
+
+							{astronautsList.length === 0 &&
+								(<p className="text-sm text-zinc-400">Nenhum astronauta disponível no momento.</p>)}
 							{astronautsList.map((astronaut) => (
 								<>
 									<div key={astronaut.id} className="flex items-center space-x-3 mb-3">
-										<Checkbox 
+										<Checkbox
 											value={astronaut.id}
 											id={`checkbox-${astronaut.id}`}
 											checked={selectedAstronauts.some((item) => item.id === astronaut.id)}

@@ -32,7 +32,7 @@ public class Launch {
     @NotNull(message="Date is mandotory")
     private Date launchDate;
     @NotNull(message="Rocket is mandotory")
-    private int rocketId;
+    private Long rocketId;
     @NotBlank(message="Address is mandotory")
     private String address;
 
@@ -49,7 +49,7 @@ public class Launch {
 
     public Launch() {}
     
-    public Launch(String missionName, Date launchDate, int rocketId, String address, Status status, Set<Long> astronauts) {
+    public Launch(String missionName, Date launchDate, Long rocketId, String address, Status status, Set<Long> astronauts) {
 
 
         this.missionName = missionName;
@@ -98,11 +98,11 @@ public class Launch {
         this.launchDate = launchDate;
     }
 
-    public int getRocketId() {
+    public Long getRocketId() {
         return rocketId;
     }
 
-    public void setRocketId(int rocketId) {
+    public void setRocketId(Long rocketId) {
         this.rocketId = rocketId;
     }
 
