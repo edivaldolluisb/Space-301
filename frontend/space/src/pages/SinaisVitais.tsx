@@ -5,7 +5,9 @@ import '../styles/sinaisvitais.css';
 import { api } from '../lib/axios';
 import { DestinationAndDateHeader } from '../components/destination-and-date-header';
 import { Client } from '@stomp/stompjs';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Button } from "../components/button";
+import { Undo2 } from 'lucide-react';
 
 type Alerta = {
     parametro: string;
@@ -52,6 +54,7 @@ export default function SinaisVitais() {
     const [parametros, setParametros] = useState([]);
     const [error, setError] = useState<string | null>(null);
     const { launchId } = useParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchAstronauts = async () => {
@@ -158,6 +161,10 @@ export default function SinaisVitais() {
                                 </div>
                             </div>
                             <div className='astronauts-list'>
+                            <Button onClick={() => navigate(`/rocket/${launchId}`) } variant="secondary" size="full">
+                                <Undo2 className="size-5" />
+                                Voltar ao Lançamento
+                            </Button>
                                 <h2>Astronautas</h2>
                                 {astronauts.map((astronaut:Astronaut) => <Profile photo={astronaut.photo}
                                     key={astronaut.id}

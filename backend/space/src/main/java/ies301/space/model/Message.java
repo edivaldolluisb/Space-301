@@ -10,6 +10,7 @@ public class Message {
     private String idLancamento;
     private List<Tripulante> tripulantes;
     private Nave nave;
+    private boolean terminado;
 
     // Getters e Setters
     @JsonProperty("id_lancamento")
@@ -36,6 +37,14 @@ public class Message {
 
     public void setNave(Nave nave) {
         this.nave = nave;
+    }
+
+    public boolean getTerminado() {
+        return terminado;
+    }
+
+    public void setTerminado(boolean terminado) {
+        this.terminado = terminado;
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
