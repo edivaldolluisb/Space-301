@@ -1,7 +1,8 @@
 import { DestinationAndDateHeader } from "../components/destination-and-date-header";
 import { Plus, X, Loader2, User, AtSign, KeyRound, MapPin, Eye, ClipboardCopy, RefreshCw, EyeOff } from "lucide-react";
 import { Button } from "../components/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { api } from "../lib/axios";
 
 
 
@@ -41,18 +42,47 @@ const SettingsPage = () => {
     return errors;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const errors = validateForm();
-    if (Object.keys(errors).length > 0) {
+    if (Object.keys(errors).length > 2) {
       setFormErrors(errors);
       return;
     }
+    
+    const updatedData = { name: formData.name, email: formData.email, password: formData.password};
+    try {
+      const response = await updateUser("64db4558-bab7-4a4c-8adc-bdcdb7721db0", updatedData);
+
+      if (response && response.data) {
+        console.log("Usuário atualizado com sucesso:", response.data);
+        const userData = response.data;
+      }
+
+    } catch (err) {
+      console.error("Erro ao enviar os dados:", err);
+    }
+
+    console.log("Formulário enviado:", updatedData);
     setFormErrors({});
-    console.log("Formulário enviado:", formData);
   };
 
-  
+  const updateUser = async (userId: string, updatedData: { name: string; email: string }) => {
+    try {
+      const response = await api.patch(`/user/${userId}`, updatedData);
+
+
+      console.log("Resposta do servidor:", response);
+      return response;
+    } catch (err) {
+
+      console.error("Erro ao enviar os dados:", err);
+    }
+  };
+
+
+
+
   const copyPasswordToClipboard = () => {
     console.log("Copiando senha para a área de transferência...");
     if (!formData.password) {
@@ -75,6 +105,33 @@ const SettingsPage = () => {
 
 
 
+  const fetchUserData = async () => {
+    try {
+
+      // const response = api.get('/user/1ba117d3-1b38-47a7-94a2-06a8638e7240');
+      const response = await api.get('/user/64db4558-bab7-4a4c-8adc-bdcdb7721db0');
+      const userData = response.data;
+
+      console.log('Dados do utilizador:', userData);
+      setFormData({
+        name: userData.name || "",
+        email: userData.email || "",
+        address: userData.address || "",
+        password: "",
+      });
+    } catch (err) {
+      setError('Erro ao carregar os dados do utilizador');
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+
   return (
 
     <div className="max-w-6xl px-6 py-10 mx-auto space-y-8">
@@ -93,7 +150,8 @@ const SettingsPage = () => {
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-3">
+            {/* <form onSubmit={handleSubmit} className="space-y-3"> */}
+            <form className="space-y-3">
               <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2 focus-within:ring-2 focus-within:ring-violet-500/20 transition-all">
                 <User className="text-zinc-400 size-5" />
                 <input
@@ -173,7 +231,7 @@ const SettingsPage = () => {
                 <div className="w-px h-6 bg-zinc-800" />
 
                 <Button variant="secondary">
-                  <ClipboardCopy className="size-5" onClick={copyPasswordToClipboard}/>
+                  <ClipboardCopy className="size-5" onClick={copyPasswordToClipboard} />
                   Copiar
                 </Button>
 
