@@ -1,35 +1,46 @@
 import { DestinationAndDateHeader } from "../components/destination-and-date-header";
-import { Plus, X, Loader2, User, AtSign, KeyRound, MapPin, Eye, ClipboardCopy, RefreshCw } from "lucide-react";
+import { Plus, X, Loader2, User, AtSign, KeyRound, MapPin, Eye, ClipboardCopy, RefreshCw, EyeOff } from "lucide-react";
 import { Button } from "../components/button";
 import { useState } from "react";
 
 
+
+interface FormErrors {
+  name?: string;
+  email?: string;
+  address?: string;
+  password?: string;
+}
+
+
 const SettingsPage = () => {
-  
+
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const generateRandomKey = () => {
-    const randomKey = Math.random().toString(36).slice(-12); 
-    console.log("Nova chave gerada:", randomKey); 
+    const randomKey = Math.random().toString(36).slice(-12);
+    console.log("Nova chave gerada:", randomKey);
+    setFormData((prev) => ({ ...prev, password: randomKey }));
   };
 
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     address: "",
+    password: "",
   });
-  const [formErrors, setFormErrors] = useState({});
+  const [formErrors, setFormErrors] = useState<FormErrors>({});
 
   const validateForm = () => {
-    const errors: any = {};
+    const errors: FormErrors  = {};
     if (!formData.name) errors.name = "Nome é obrigatório.";
     if (!formData.email.includes("@")) errors.email = "E-mail inválido.";
     if (!formData.address) errors.address = "Endereço é obrigatório.";
     return errors;
   };
-  
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const errors = validateForm();
@@ -40,7 +51,7 @@ const SettingsPage = () => {
     setFormErrors({});
     console.log("Formulário enviado:", formData);
   };
-  
+
 
   return (
 
@@ -110,7 +121,7 @@ const SettingsPage = () => {
                   value={formData.address}
                   onChange={(e) =>
                     setFormData((prev) => ({ ...prev, address: e.target.value }))
-                  } 
+                  }
 
                 />
               </div>
@@ -133,6 +144,7 @@ const SettingsPage = () => {
                   disabled={isLoading}
                   required
                   minLength={6}
+                  value={formData.password}
                 />
               </div>
 
@@ -146,9 +158,10 @@ const SettingsPage = () => {
 
                 <Button variant="secondary"
                   onClick={() => setIsPasswordVisible((prev) => !prev)}
-                  >
+                >
                   {isPasswordVisible ? "Ocultar chave" : "Ver chave"}
-                  <Eye className="size-5" />
+
+                  {isPasswordVisible ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
                 </Button>
 
                 <Button variant="secondary" onClick={generateRandomKey}>
@@ -160,9 +173,25 @@ const SettingsPage = () => {
 
             <div className="flex items-center gap-5">
 
-              <Button variant={isLoading ? "secondary" : "primary"} onClick={() => setIsLoading(!isLoading)}>
-                Atualizar dados
+              <Button
+                // variant={isLoading ? "secondary" : "primary"} 
+                variant="secondary"
+                onClick={() => setIsLoading(!isLoading)}>
+                {isLoading ? "Atualizar dados" : "Cancelar"}
               </Button>
+
+              
+              <div className={`transition-opacity duration-300 ${isLoading ? "opacity-0" : "opacity-100"}`}>
+                {!isLoading && (
+                  <Button
+                    variant="primary"
+                    onClick={handleSubmit} 
+                    type="submit"
+                  >
+                    Enviar
+                  </Button>
+                )}
+              </div>
 
               <Button variant="secondary">
                 Ver funcionários
