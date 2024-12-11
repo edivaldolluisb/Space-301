@@ -1,6 +1,16 @@
 version: '3.8'
 
 services:
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq-container
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
   postgres:
     image: postgres:14
     container_name: meu_postgres
@@ -12,6 +22,29 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  influxdb2:
+    image: influxdb:2
+    ports:
+      - 8086:8086
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: MyInitialAdminPassword
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: MyInitialAdminToken0==
+      DOCKER_INFLUXDB_INIT_ORG: docs
+      DOCKER_INFLUXDB_INIT_BUCKET: home
+    secrets:
+      - influxdb2-admin-username
+      - influxdb2-admin-password
+      - influxdb2-admin-token
+    # volumes:
+    #   - type: volume
+    #     source: influxdb2-data
+    #     target: /var/lib/influxdb2
+    #   - type: volume
+    #     source: influxdb2-config
+    #     target: /etc/influxdb2
 
   backend:
     build:
@@ -25,6 +58,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: space
     depends_on:
       - postgres
+      - rabbitmq
 
   frontend:
     build:
@@ -37,5 +71,24 @@ services:
     depends_on:
       - backend
 
+  gerador:
+    build:
+      context: ./rocket_generator
+    container_name: gerador
+    depends_on:
+      - rabbitmq
+    command: ["poetry", "run", "python", "rocket_generator/receiver.py"]
+    restart: always
+
+secrets:
+  influxdb2-admin-username:
+    file: ./backend/space/secrets/.env.influxdb2-admin-username
+  influxdb2-admin-password:
+    file: ./backend/space/secrets/.env.influxdb2-admin-password
+  influxdb2-admin-token:
+    file: ./backend/space/secrets/.env.influxdb2-admin-token
+
 volumes:
   postgres_data:
+  # influxdb2-data:
+  influxdb2-config:

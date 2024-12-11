@@ -1,21 +1,119 @@
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { FormEvent, useState, } from "react";
 import { CreateActivityModal } from "./create-activity-modal";
 import { ImportantLinks } from "./important-links";
 import { Guests } from "./guests";
 import { Activities } from "./activities";
 import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
 
+import { api } from "../../lib/axios";
+
+
+
+interface Astronaut {
+	id: number;
+}
+
+interface Launch {
+  id?: number;
+  missionName: string;
+  launchDate: string;
+  rocketId: number | string | null;
+  address: string;
+  status: string;
+  astronauts: number[];
+}
+
 export function DashboardPage() {
   const [isCreateActivityModalOpen, setIsCreateActivityModalOpen] = useState(false)
+  
+	const [missionName, setMissionName] = useState('');
+	const [launchDate, setLaunchDate] = useState('');
+	const [rocketId, setRocketId] = useState<number | string | null>(null);
+	const [address, setAddress] = useState('');
+	const [status, setStatus] = useState('PENDING');
+	const [astronauts, setAstronauts] = useState<Astronaut[]>([]);
+  
+  const [launches, setLaunches] = useState<Launch[]>([])
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   function openCreateActivityModal() {
     setIsCreateActivityModalOpen(true)
   }
 
-  function closeCreateActivityModal() {
+  function closeCreateLaunchModal() {
+    setMissionName('');
+		setLaunchDate('');
+		setRocketId(null);
+		setAddress('');
+		setAstronauts([]);
+    setError(null);
     setIsCreateActivityModalOpen(false)
   }
+
+  // create a new launch
+  async function createLaunch(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    setError(null);
+    setIsLoading(true);
+
+    // check if date is valid
+    const date = new Date(launchDate);
+    const currentDate = new Date();
+    if (date < currentDate) {
+      console.error('A data introduzida é menor do que a data atual:', date, currentDate);
+      setError('A data introduzida é menor do que a data atual');
+      setIsLoading(false);
+      return;
+    }
+
+    // check if at least one astronaut is selected
+    if (astronauts.length < 4) {
+      setError('Selecione 4 astronautas');
+      setIsLoading(false);
+      return;
+    }
+
+    if (!missionName || !launchDate || !rocketId || !address) {
+      setError('Todos os campos são obrigatórios');
+      setIsLoading(false);
+      console.error('Todos os campos são obrigatórios:', missionName, launchDate, rocketId, address);
+      return;
+    }
+    console.log('Criando lançamento...');
+  
+    try {
+      // return an array of ids
+      const astronautsIds = astronauts.map((astronaut) => astronaut.id);
+
+      const NewlaunchData: Launch = {
+        missionName,
+        launchDate: new Date(launchDate).toISOString(),
+        rocketId,
+        address,
+        status,
+        // array of ids
+        astronauts: astronautsIds
+      };
+
+      console.log('Dados do lançamento:', NewlaunchData);
+      const response = await api.post('/launches', NewlaunchData);
+
+      const newLaunch = response.data;
+      console.log('Lançamento registrado com sucesso:', newLaunch);
+
+      setIsLoading(false);
+      closeCreateLaunchModal();
+      setLaunches([...launches, newLaunch]);
+      // Aqui você pode atualizar a lista de lançamentos no estado, se necessário.
+    } catch (error) {
+      console.error('Erro ao registrar lançamento:', error);
+      alert('Falha ao registrar o lançamento. Verifique os dados e tente novamente.');
+    }
+  }
+  
 
   return (
     <div className="max-w-6xl px-6 py-10 mx-auto space-y-8">
@@ -32,7 +130,7 @@ export function DashboardPage() {
             </button>
           </div>
 
-          <Activities />
+          <Activities  launches={launches} />
         </div>
 
         <div className="w-80 space-y-6">
@@ -46,7 +144,16 @@ export function DashboardPage() {
 
       {isCreateActivityModalOpen && (
         <CreateActivityModal 
-          closeCreateActivityModal={closeCreateActivityModal}
+          closeCreateLaunchModal={closeCreateLaunchModal}
+          setMissionName={setMissionName}
+          setLaunchDate={setLaunchDate}
+          setRocketId={setRocketId}
+          setAddress={setAddress}
+          setAstronauts={setAstronauts}
+          createLaunch={createLaunch}
+          error={error}
+          isLoading={isLoading}
+
         />
       )}
     </div>

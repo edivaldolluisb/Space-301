@@ -1,114 +1,119 @@
-import { CircleCheck } from "lucide-react";
+import { CircleCheck, CircleX } from "lucide-react";
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
-import { apiService } from "../../lib/axios";
+import { api } from "../../lib/axios";
+import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-interface Activity {
-	date: string;
-	id: number;
-	message: string;
-	status: boolean;
-	launch: number | null;
+interface Astronaut {
+  id: number;
 }
-
-interface GroupedActivities {
-	true: Activity[];
-	false: Activity[];
+interface Alert {
+  id: number;
+  message: string;
+  date: string;
+  status: string;
+  launch: Launch | null;
 }
 
 interface Launch {
-	id: number;
-	name: string;
-	date: string;
-	status: string;
+  id: number;
+  missionName: string;
+  launchDate: string;
+  rocketId: number | string | null;
+  address: string;
+  status: string;
+  astronauts: Astronaut[];
+  alerts: Alert[];
 }
 
 export function ListLaunchHistory() {
-	const [groupedByMonth, setGroupedByMonth] = useState<Record<string, Launch[]>>({});
+  const { tripId } = useParams()
+  const [organizedLaunches, setOrganizedLaunches] = useState<{ [year: string]: { [month: string]: Launch[] } }>({})
 
-	const launchHistory = [
-		{ id: 1, name: 'Antares', date: '2024-12-15T10:00:00.000+00:00', status: 'success' },
-		{ id: 2, name: 'Atlas V', date: '2024-10-15T10:00:00.000+00:00', status: 'success' },
-		{ id: 3, name: 'LauncherOne', date: '2024-11-15T10:00:00.000+00:00', status: 'success' },
-		{ id: 4, name: 'LauncherOne', date: '2024-12-15T10:00:00.000+00:00', status: 'failure' }]
+  const fetchLancamentos = async () => {
+    try {
+      const response = await api.get('/launches/completed');
+      return response.data
 
-	interface Launch {
-		id: number;
-		name: string;
-		date: string;
-		status: string;
-	}
-	type MonthLaunches = {
-		monthYear: string;
-		launches: Launch[];
-	};
+    } catch (error) {
+      console.log("Erro ao buscar lançamentos:", error)
+      return null
+    }
 
-	function organizeLaunchesByMonth(launchHistory: Launch[]): MonthLaunches[] {
-		const launchesByMonth: Record<string, Launch[]> = {};
+  }
 
-		launchHistory.forEach(launch => {
-			const launchDate = new Date(launch.date);
-			const monthYear = `${launchDate.getFullYear()}-${launchDate.getMonth() + 1}`;
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await fetchLancamentos();
+      console.log("resultados de fetch da api", result)
+      if (result && result.length > 0) {
+        const launches: Launch[] = result;
 
-			if (!launchesByMonth[monthYear]) {
-				launchesByMonth[monthYear] = [];
-			}
+        const organizedLaunches: { [year: string]: { [month: string]: Launch[] } } = {};
+        launches.forEach(launch => {
+          const date = new Date(launch.launchDate);
+          const year = date.getFullYear().toString();
+          const month = date.toLocaleString('default', { month: 'short' });
+          if (!organizedLaunches[year]) { organizedLaunches[year] = {}; }
+          if (!organizedLaunches[year][month]) { organizedLaunches[year][month] = []; } organizedLaunches[year][month].push(launch);
+        });
+        console.log(organizedLaunches);
+        setOrganizedLaunches(organizedLaunches);
 
-			launchesByMonth[monthYear].push(launch);
-		});
+      }
+    };
 
-		return Object.entries(launchesByMonth).map(([monthYear, launches]) => ({
-			monthYear,
-			launches,
-		}));
-	}
+    fetchData();
+  }, [tripId]);
 
+  return (
+    <>
+      {Object.keys(organizedLaunches).length > 0 ? (
+        <>
+          {
+            Object.keys(organizedLaunches).map(year => (
+              <div key={year} className="space-y-8">
+                {Object.keys(organizedLaunches[year]).map(month => (
+                  <div key={month} className="space-y-2.5">
+                    <div className="flex gap-2 items-baseline">
+                      <span className="text-xl text-zinc-300 font-semibold">{month}</span>
+                      <span className="text-xs text-zinc-500">{year}</span>
+                    </div>
+                    {organizedLaunches[year][month].length > 0 ? (
+                      <div>
+                        {organizedLaunches[year][month].map(launch => (
+                          <div key={launch.id} className="space-y-2.5 mb-2">
+                            <Link to={`/rocket/${launch.id}`} className="">
+                            <div className="px-4 py-2.5 bg-zinc-900 rounded-xl shadow-shape flex items-center gap-3">
+                              {launch.status === "FAILED" ? (
+                                <CircleX className="size-5 text-red-500" />
+                              ) : (
+                                <CircleCheck className="size-5 text-lime-300" />
+                              )}
+                              <span className="text-zinc-100">{launch.missionName}</span>
+                              <span className="text-zinc-400 text-sm ml-auto">
+                                {format(launch.launchDate, "d' de 'LLLL  'às' HH'h'mm", { locale: pt })}
+                              </span>
+                            </div>
+                            </Link>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-zinc-500 text-sm">Nenhum lançamento cadastrado para essa data.</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ))
+          }
+        </>
+      ) : (
+        <p className="text-zinc-500 text-sm">Nenhum lançamento cadastrado.</p>
+      )}
+    </>
 
-	//group launch by month
-	useEffect(() => {
-		const organizedLaunches = organizeLaunchesByMonth(launchHistory);
-
-		const groupedByMonthObj: Record<string, Launch[]> = organizedLaunches.reduce((acc, { monthYear, launches }) => {
-			acc[monthYear] = launches;
-			return acc;
-		}, {});
-
-		setGroupedByMonth(groupedByMonthObj);
-	}, [launchHistory]);
-
-	return (
-		<div className="space-y-8">
-			{Object.entries(groupedByMonth).map(([monthYear, launches]) => (
-				<div key={monthYear} className="space-y-8">
-					<div className="flex gap-2 items-baseline">
-						<span className="text-xl text-zinc-300 font-semibold">
-							{format(new Date(monthYear), 'MMMM', { locale: pt })}
-						</span>
-						<span className="text-zinc-500 text-sm">
-							{format(new Date(monthYear), 'yyyy', { locale: pt })}
-						</span>
-					</div>
-					{launches.map(launch => (
-						<div key={launch.id} className="space-y-2.5 mb-2 mt-0">
-							<div className="px-4 py-2.5 bg-zinc-900 rounded-xl shadow-shape flex items-center gap-3">
-								<CircleCheck className="size-5 text-lime-300" />
-								<span className="text-zinc-100">{launch.name}</span>
-								<div className="flex items-center gap-3 ml-auto">
-									<span className="text-s text-zinc-500">{format(new Date(launch.date), 'dd/MM/yyyy')} </span>
-									<span className="text-zinc-400 text-sm">
-										{format(new Date(launch.date), 'HH:mm')}h
-									</span>
-									<span className="text-zinc-400 text-sm">
-										Ver dados
-									</span>
-								</div>
-							</div>
-						</div>
-
-					))}
-				</div>
-			))}
-		</div>
-	);
+  )
 }
