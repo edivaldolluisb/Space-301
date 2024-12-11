@@ -59,6 +59,7 @@ public class InfluxDBService {
                     .addField("pressaoAtual", message.getNave().getPressaoAtual())
                     .addField("temperaturaAtual", message.getNave().getTemperaturaAtual())
                     .addField("oxigenioAtual", message.getNave().getOxigenioAtual())
+                    .addField("temperaturaExterna", message.getNave().getTemperaturaExternaAtual())
                     .time(System.currentTimeMillis(), WritePrecision.MS);
             writeApi.writePoint(navePoint);
 
@@ -130,7 +131,7 @@ public class InfluxDBService {
                 from(bucket: "%s")
                   |> range(start: -1d)
                   |> filter(fn: (r) => r._measurement == "nave" and r.lancamentoId == "%s" and r._field == "%s")
-                    |> aggregateWindow(every: 1m, fn: mean, createEmpty: false)
+                    |> aggregateWindow(every: 2m, fn: mean, createEmpty: false)
                     |> yield(name: "mean")
             """, "home", lancamentoId, field);
     

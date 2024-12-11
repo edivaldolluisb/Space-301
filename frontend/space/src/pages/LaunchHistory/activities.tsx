@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 import { api } from "../../lib/axios";
 import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 interface Astronaut {
   id: number;
@@ -84,6 +85,7 @@ export function ListLaunchHistory() {
                       <div>
                         {organizedLaunches[year][month].map(launch => (
                           <div key={launch.id} className="space-y-2.5 mb-2">
+                            <Link to={`/rocket/${launch.id}`} className="">
                             <div className="px-4 py-2.5 bg-zinc-900 rounded-xl shadow-shape flex items-center gap-3">
                               {launch.status === "FAILED" ? (
                                 <CircleX className="size-5 text-red-500" />
@@ -95,6 +97,7 @@ export function ListLaunchHistory() {
                                 {format(launch.launchDate, "d' de 'LLLL  'às' HH'h'mm", { locale: pt })}
                               </span>
                             </div>
+                            </Link>
                           </div>
                         ))}
                       </div>
