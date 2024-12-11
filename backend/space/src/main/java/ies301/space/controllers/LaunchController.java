@@ -1,24 +1,30 @@
 package ies301.space.controllers;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import ies301.space.broker.QueueSender;
 import ies301.space.entities.Astronaut;
 import ies301.space.entities.Launch;
+import ies301.space.entities.Rocket;
 import ies301.space.services.AstronautService;
-import ies301.space.services.InfluxDBService;
 import ies301.space.services.LaunchService;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import ies301.space.services.RocketService;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -28,13 +34,15 @@ public class LaunchController {
     private static final Logger logger = LoggerFactory.getLogger(LaunchController.class);
 
     private final LaunchService launchService;
+    private final RocketService rocketService;
 
     @Autowired
     private QueueSender queueSender;
 
-    public LaunchController(AstronautService astronautService, LaunchService launchService) {
+    public LaunchController(AstronautService astronautService, LaunchService launchService, RocketService rocketService) {
         this.astronautService = astronautService;
         this.launchService = launchService;
+        this.rocketService = rocketService;
     }
 
     @GetMapping("/launches/{id}/astronauts")
@@ -65,6 +73,18 @@ public class LaunchController {
         } else {
             return ResponseEntity.status(404).body("Astronaut not found for the specified launch and astronaut IDs");
         }
+    }
+
+    @GetMapping("/launches/{launchId}/rocket")
+    public ResponseEntity<?> getRocketByLaunchAndRocketId(@PathVariable Long launchId) {
+        Optional<Launch> launch = launchService.getLaunchById(launchId);
+        Long rocketId = launch.get().getRocketId();
+        Optional<Rocket> rocket = rocketService.getRocketById(rocketId);
+        if (rocket.isPresent()) {
+            return new ResponseEntity<>(rocket.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } 
     }
 
     @PostMapping("launches/{launchId}/astronaut/{astronautId}")
