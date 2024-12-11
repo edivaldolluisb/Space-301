@@ -17,7 +17,7 @@ interface Launch {
   astronauts: number[];
 }
 
-export function Activities({ launches }: { launches: Launch[] }) {
+export function VisitorActivities() {
 
   const [organizedLaunches, setOrganizedLaunches] = useState<{ [year: string]: { [month: string]: Launch[] } }>({})
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +27,7 @@ export function Activities({ launches }: { launches: Launch[] }) {
 
   const fetchLancamentos = async () => {
     try {
-      const response = await api.get('/launches/active');
+      const response = await api.get('/visitor/launches/active');
       return response.data
 
     } catch (error) {
@@ -73,7 +73,7 @@ export function Activities({ launches }: { launches: Launch[] }) {
     };
 
     fetchData();
-  }, [launches]);
+  }, []);
 
   return (
     <>

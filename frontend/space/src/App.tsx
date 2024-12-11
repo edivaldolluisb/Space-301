@@ -10,6 +10,7 @@ import SinaisVitais from "./pages/SinaisVitais"
 import Dashboard from "./pages/company/dashboard"
 import SettingsPage from "./pages/SettingsPage"
 import {Users} from "./pages/settings/Users"
+import VisitorDashboard from "./pages/visitor/VisitorDashboard"
 
 
 const router = createBrowserRouter([
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
     path: "/settings/users",
     element: <Users />
   },
+  {
+    path:"/visitor",
+    element:<VisitorDashboard/>
+  }
 ])
 
 
