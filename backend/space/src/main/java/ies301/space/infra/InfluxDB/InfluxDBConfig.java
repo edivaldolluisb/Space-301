@@ -1,4 +1,4 @@
-package ies301.space.InfluxDB;
+package ies301.space.infra.InfluxDB;
 
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;

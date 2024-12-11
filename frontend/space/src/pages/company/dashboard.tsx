@@ -20,7 +20,7 @@ import { api } from "../../lib/axios";
 
 
 interface DashboardProps {
-  launchId: String | undefined;
+  launchId: string | undefined;
 }
 
 interface CardProps {
@@ -39,22 +39,62 @@ interface StatusCardProps {
   className?: string;
 }
 
-type Nave = {
+
+const titleMappings: { [key: string]: string } = {
+  altitude: "Altitude do foguete",
+  velocidade: "Velocidade do foguete",
+  velocidade_x: "Velocidade Horizontal",
+  aceleracao: "Aceleração do foguete",
+  forca_g: "Força gravitacional experimentada",
+  pressao_atual: "Pressão Interna",
+  temperatura_atual: "Temperatura interna do foguete",
+  temperatura_motor_atual: "Temperatura do motor do foguete",
+  temperatura_externa_atual: "Temperatura externa do foguete",
+  combustivel: "Nível de Combustível",
+  qualidade_atual: "Qualidade do Sinal",
+  oxigenio_atual: "Nível de Oxigênio",
+  energia_atual: "Energia produzida",
+};
+
+const camelCaseToTitleCase = (str: string) =>
+  str.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
+
+
+interface WebSocketData {
   altitude: number;
   velocidade: number;
   velocidade_x: number;
   aceleracao: number;
+  combustivel: number;
+  alertas: Array<{
+    parametro: string | null;
+    status: boolean;
+    nome_alerta: string | null;
+    alerta_nome: string;
+    alerta_descricao: string;
+  }>;
   forca_g: number;
   pressao_atual: number;
   temperatura_atual: number;
   temperatura_motor_atual: number;
   temperatura_externa_atual: number;
-  combustivel: number;
   qualidade_atual: number;
   oxigenio_atual: number;
   energia_atual: number;
-  alerta: any[];
-};
+}
+
+interface Rocket {
+  name: string;
+  height: number;
+  diameter: number;
+  weight: number;
+}
+interface RocketInfoProps {
+  rocket: Rocket;
+}
+
+
+
 
 const unitMappings: { [key: string]: string } = {
   altitude: 'm',
@@ -88,23 +128,6 @@ const statusMappings: { [key: string]: string } = {
   energia_atual: 'Normal',
 };
 
-const namingMappings: { [key: string]: string } = {
-  altitude: 'Altitude do foguete',
-  velocidade: 'Velocidade do foguete',
-  velocidade_x: 'Velocidade horizontal',
-  aceleracao: 'Aceleração do foguete',
-  forca_g: 'Força gravitacional experimentada',
-  pressao_atual: 'Pressão Interna',
-  temperatura_atual: 'Temperatura interna do foguete',
-  temperatura_motor_atual: 'Temperatura do motor do foguete',
-  temperatura_externa_atual: 'Temperatura externa do foguete',
-  combustivel: 'Nível de combustível',
-  qualidade_atual: 'Qualidade do sinal',
-  oxigenio_atual: 'Nível de oxigênio',
-  energia_atual: 'Energia produzida',
-};
-
-
 const iconMappings: { [key: string]: LucideIcon } = {
   altitude: MapPin,
   velocidade: Gauge,
@@ -129,7 +152,7 @@ const Card: React.FC<CardProps> = ({ children, className = '' }) => (
 );
 
 // Componente de Informação do Foguete
-const RocketInfo: React.FC = ({rocket}) => (
+const RocketInfo: React.FC<RocketInfoProps> = ({ rocket }) => (
   <Card className="relative row-span-2">
     <div className="h-32 overflow-hidden rounded-lg mb-4">
       <img
@@ -191,15 +214,14 @@ const StatusCard: React.FC<StatusCardProps> = ({
 
 
 const Dashboard: React.FC<DashboardProps> = ({ launchId }) => {
-  const [rocketData, setRocketData] = useState();
-  const [rocket, setRocket] = useState();
+  const [rocketData, setRocketData] = useState(null as WebSocketData | null);
+  const [rocket, setRocket] = useState(null as Rocket | null);
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
 
   const fetchRocket = async () => {
     try {
       const response = await api.get(`/launches/${launchId}/rocket`);
-      console.log('Rocket :',response.data);
+      console.log('Rocket :', response.data);
       return response.data
     } catch (error) {
       console.log("Erro ao buscar foguetes:", error)
@@ -209,13 +231,13 @@ const Dashboard: React.FC<DashboardProps> = ({ launchId }) => {
 
   useEffect(() => {
     const setRocketData = async () => {
-			const res = await fetchRocket();
-			console.log(`Rockets: ${res}`)
-			console.log(`Rockets: `, res)
-			setRocket(res);
-		}
+      const res = await fetchRocket();
+      console.log(`Rockets: ${res}`)
+      console.log(`Rockets: `, res)
+      setRocket(res);
+    }
     setRocketData();
-  },[]);
+  }, []);
 
   useEffect(() => {
     const client = new Client({
@@ -224,15 +246,18 @@ const Dashboard: React.FC<DashboardProps> = ({ launchId }) => {
       onConnect: () => {
         console.log(`Conectado ao WebSocket: /topic/${launchId}/launch-data`);
         client.subscribe(`/topic/${launchId}/launch-data`, (msg) => {
-          console.log('Mensagem recebida do WebSocket:', msg); // Inspecionar a mensagem
-          const data = JSON.parse(msg.body); // Parse do payload
-          console.log('Dados processados:', data);
-          if (data)
-            setRocketData(data);
+
+          try {
+            const data: WebSocketData = JSON.parse(msg.body); // Parse do payload
+            console.log('Dados processados:', data);
+            if (data)
+              setRocketData(data);
+          } catch (error) {
+            console.error('Erro ao processar a mensagem do WebSocket:', error);
+          }
         });
       },
       onDisconnect: () => {
-        setError("Desconectado do WebSocket");
         console.log('Desconectado do WebSocket');
       },
     });
@@ -242,19 +267,23 @@ const Dashboard: React.FC<DashboardProps> = ({ launchId }) => {
     return () => {
       client.deactivate();
     };
-  });
+  }, [launchId]);
 
-  if (!rocketData) return <h1 className="text-3xl font-semibold">Sem Dados do Lançamento selecionado.</h1>;
+  if (!rocketData) return (
+    <div className="max-w-6xl px-6 py-10 mx-auto space-y-8">
+      {!rocket ? <h1 className="text-zinc-500 text-sm">Nenhum lançamento cadastrado para essa data.</h1> : <RocketInfo rocket={rocket} />}
+    </div>);
 
   return (
     <div className="max-w-6xl px-6 py-10 mx-auto space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <RocketInfo rocket={rocket} />
+        {!rocket ? <h1 className="text-zinc-500 text-sm">Nenhum lançamento cadastrado para essa data.</h1> : <RocketInfo rocket={rocket} />}
         {Object.entries(rocketData).map(([key, value]) => {
-          if (key === 'alerta') return null; // Ignorar o campo alerta
+          if (key === 'alertas' || key === 'alerta') return null;
+          const title = titleMappings[key] || camelCaseToTitleCase(key);
+
 
           const unit = unitMappings[key] || '';
-          const title = namingMappings[key] || key;
           const status = statusMappings[key] || 'Normal';
           const Icon = iconMappings[key] || Flame;
           const iconTextColor = 'text-blue-500';
@@ -265,7 +294,7 @@ const Dashboard: React.FC<DashboardProps> = ({ launchId }) => {
               key={key}
               icon={Icon}
               title={title}
-              value={value}
+              value={value as number}
               unit={unit}
               status={status}
               iconTextColor={iconTextColor}

@@ -1,4 +1,4 @@
-import { CircleCheck } from "lucide-react";
+import { CircleCheck, CircleX, CircleFadingArrowUp, CircleDashed } from "lucide-react";
 import { api } from "../../lib/axios";
 import { useState, useEffect } from "react";
 // import { useParams } from "react-router-dom";
@@ -100,7 +100,13 @@ export function Activities({ launches }: { launches: Launch[] }) {
 
                             <Link to={`/rocket/${launch.id}`} className="">
                               <div className="px-4 py-2.5 bg-zinc-900 rounded-xl shadow-shape flex items-center gap-3">
-                                <CircleCheck className="size-5 text-lime-300" />
+                                
+                                {launch.status === "PENDING" ? (
+                                  <CircleDashed className="size-5 text-gray-400" />
+                                ) : (
+                                  <CircleFadingArrowUp className="size-5 text-lime-500  shrink-0" />
+                                )}
+                                {/* <CircleCheck className="size-5 text-lime-300" /> */}
                                 <span className="text-zinc-100">{launch.missionName}</span>
                                 <span className="text-zinc-400 text-sm ml-auto">
                                   {format(launch.launchDate, "d' de 'LLLL  'às' HH'h'mm", { locale: pt })}
