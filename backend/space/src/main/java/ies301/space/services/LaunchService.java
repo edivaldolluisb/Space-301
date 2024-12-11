@@ -65,11 +65,11 @@ public class LaunchService {
 
     }
 
-    public List<Launch> getCurrentLaunches() {
-        List<Launch> currentLaunches = launchRepository.findByStatus(Status.LAUNCHED);
-        currentLaunches.addAll(launchRepository.findByStatus(Status.PENDING));
+    public List<Launch> getActiveLaunches() {
+        List<Launch> activeLaunches = launchRepository.findByStatus(Status.LAUNCHED);
+        activeLaunches.addAll(launchRepository.findByStatus(Status.PENDING));
         
-        return currentLaunches;
+        return activeLaunches;
     }
 
     public List<Map<String, Object>> getDynamicData(Long launchId, String entity, Long entityId, String field) {

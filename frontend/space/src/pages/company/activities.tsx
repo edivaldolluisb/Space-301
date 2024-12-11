@@ -27,7 +27,7 @@ export function Activities({ launches }: { launches: Launch[] }) {
 
   const fetchLancamentos = async () => {
     try {
-      const response = await api.get('/launches/current');
+      const response = await api.get('/launches/active');
       return response.data
 
     } catch (error) {
