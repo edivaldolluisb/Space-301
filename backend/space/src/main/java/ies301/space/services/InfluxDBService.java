@@ -32,14 +32,24 @@ public class InfluxDBService {
     @Autowired
     private InfluxDBClient influxDBClient;
 
+    @Autowired
+    private WriteApi writeApi;
+
     public void saveDataToInfluxDB(Message message) {
-        try (WriteApi writeApi = influxDBClient.getWriteApi()) {
+
+        logger.info("Salvando dados no InfluxDB para lançamento ID {}", message.getIdLancamento());
+        // logger.info("Dados: {}", message.getTripulantes());
+        // return;
+
+        // try (WriteApi writeApi = influxDBClient.getWriteApi()) {
+        try {
             // Salvar dados de tripulantes
             message.getTripulantes().forEach(tripulante -> {
+                logger.info("Salvando dados do tripulante ID {}", tripulante.getId());
                 Point point = Point
                         .measurement("tripulantes")
                         .addTag("lancamentoId", message.getIdLancamento())
-                        .addField("id", tripulante.getId())
+                        .addTag("id", String.valueOf(tripulante.getId()))
                         .addField("temperature", tripulante.getTemperature())
                         .addField("paSistolica", tripulante.getPaSistolica())
                         .addField("paDiastolica", tripulante.getPaDiastolica())
@@ -86,8 +96,8 @@ public class InfluxDBService {
                     from(bucket: "%s")
                         |> range(start: -1d)
                         |> filter(fn: (r) => r._measurement == "%s" and r.lancamentoId == "%s")
-                        |> filter(fn: (r) => r._field == "altitude" or r._field == "velocidade" or 
-                    r._field == "pressaoAtual" or r._field == "temperaturaAtual" or 
+                        |> filter(fn: (r) => r._field == "altitude" or r._field == "velocidade" or
+                    r._field == "pressaoAtual" or r._field == "temperaturaAtual" or
                     r._field == "oxigenioAtual")
                         |> group(columns: ["_field"])
                 """, "home", measurement, lancamentoId);
@@ -123,82 +133,84 @@ public class InfluxDBService {
             throw new RuntimeException("Erro ao apagar dados do InfluxDB", e);
         }
     }
-  
 
     // pegar dados da nave
     public List<Map<String, Object>> fetchNaveData(Long lancamentoId, String field) {
         String query = String.format("""
-                from(bucket: "%s")
-                  |> range(start: -1d)
-                  |> filter(fn: (r) => r._measurement == "nave" and r.lancamentoId == "%s" and r._field == "%s")
-                    |> aggregateWindow(every: 2m, fn: mean, createEmpty: false)
-                    |> yield(name: "mean")
-            """, "home", lancamentoId, field);
-    
+                    from(bucket: "%s")
+                      |> range(start: -1d)
+                      |> filter(fn: (r) => r._measurement == "nave" and r.lancamentoId == "%s" and r._field == "%s")
+                        |> aggregateWindow(every: 2m, fn: mean, createEmpty: false)
+                        |> yield(name: "mean")
+                """, "home", lancamentoId, field);
+
         return executeInfluxQuery(query);
     }
 
     // pegar dados de um tripulante específico
     public List<Map<String, Object>> fetchTripulanteData(Long lancamentoId, Long tripulanteId, String field) {
-        String query = String.format("""
-                from(bucket: "%s")
-                  |> range(start: -1d)
-                  |> filter(fn: (r) => r._measurement == "tripulantes" and r.lancamentoId == "%s" and r.id == "%s" and r._field == "%s")
-            """, "home", lancamentoId, tripulanteId, field);
-    
+        String query = String.format(
+                """
+                            from(bucket: "%s")
+                              |> range(start: -1d)
+                              |> filter(fn: (r) => r._measurement == "tripulantes" and 
+                              r.lancamentoId == "%s" and 
+                              r.id == "%s" and 
+                              r._field == "%s")
+                        """,
+                "home", lancamentoId, tripulanteId, field);
+
         return executeInfluxQuery(query);
     }
 
     private List<Map<String, Object>> executeInfluxQuery(String query) {
         QueryApi queryApi = influxDBClient.getQueryApi();
         List<FluxTable> tables = queryApi.query(query);
-    
+
         List<Map<String, Object>> results = new ArrayList<>();
         for (FluxTable table : tables) {
             for (FluxRecord record : table.getRecords()) {
                 results.add(Map.of(
-                    "_field", record.getValueByKey("_field"),
-                    "_value", record.getValueByKey("_value"),
-                    "_time", record.getValueByKey("_time")
-                ));
+                        "_field", record.getValueByKey("_field"),
+                        "_value", record.getValueByKey("_value"),
+                        "_time", record.getValueByKey("_time")));
             }
         }
         return results;
     }
 
-    // public List<Map<String, Object>> getAveragedData(Long launchId, String entity, Long entityId, String field, String interval) {
-    //     // Criar a consulta para calcular a média por intervalo
-    //     String query = String.format("""
-    //         from(bucket: "home")
-    //           |> range(start: -1h) // Última hora (ajuste conforme necessário)
-    //           |> filter(fn: (r) => r._measurement == "%s" and r.lancamentoId == "%s" and r._field == "%s")
-    //           %s
-    //           |> aggregateWindow(every: %s, fn: mean, createEmpty: false)
-    //           |> yield(name: "mean")
-    //         """,
-    //         entity, launchId, field,
-    //         (entityId != null ? "and r.id == \"" + entityId + "\"" : ""), // Filtro opcional para ID do tripulante
-    //         interval);
-    
-    //     QueryApi queryApi = influxDBClient.getQueryApi();
-    //     List<FluxTable> tables = queryApi.query(query);
-    
-    //     // Processar os resultados
-    //     List<Map<String, Object>> results = new ArrayList<>();
-    //     for (FluxTable table : tables) {
-    //         for (FluxRecord record : table.getRecords()) {
-    //             results.add(Map.of(
-    //                 "_field", field,
-    //                 "_value", record.getValueByKey("_value"),
-    //                 "_time", record.getValueByKey("_time")
-    //             ));
-    //         }
-    //     }
-    //     return results;
+    // public List<Map<String, Object>> getAveragedData(Long launchId, String
+    // entity, Long entityId, String field, String interval) {
+    // // Criar a consulta para calcular a média por intervalo
+    // String query = String.format("""
+    // from(bucket: "home")
+    // |> range(start: -1h) // Última hora (ajuste conforme necessário)
+    // |> filter(fn: (r) => r._measurement == "%s" and r.lancamentoId == "%s" and
+    // r._field == "%s")
+    // %s
+    // |> aggregateWindow(every: %s, fn: mean, createEmpty: false)
+    // |> yield(name: "mean")
+    // """,
+    // entity, launchId, field,
+    // (entityId != null ? "and r.id == \"" + entityId + "\"" : ""), // Filtro
+    // opcional para ID do tripulante
+    // interval);
+
+    // QueryApi queryApi = influxDBClient.getQueryApi();
+    // List<FluxTable> tables = queryApi.query(query);
+
+    // // Processar os resultados
+    // List<Map<String, Object>> results = new ArrayList<>();
+    // for (FluxTable table : tables) {
+    // for (FluxRecord record : table.getRecords()) {
+    // results.add(Map.of(
+    // "_field", field,
+    // "_value", record.getValueByKey("_value"),
+    // "_time", record.getValueByKey("_time")
+    // ));
     // }
-    
-    
-    
-    
-    
+    // }
+    // return results;
+    // }
+
 }
