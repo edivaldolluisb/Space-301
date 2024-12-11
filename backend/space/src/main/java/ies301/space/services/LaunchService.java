@@ -65,6 +65,13 @@ public class LaunchService {
 
     }
 
+    public List<Launch> getActiveLaunches() {
+        List<Launch> activeLaunches = launchRepository.findByStatus(Status.LAUNCHED);
+        activeLaunches.addAll(launchRepository.findByStatus(Status.PENDING));
+        
+        return activeLaunches;
+    }
+
     public List<Map<String, Object>> getDynamicData(Long launchId, String entity, Long entityId, String field) {
         if (!List.of("nave", "tripulante").contains(entity.toLowerCase())) {
             throw new IllegalArgumentException("Invalid entity type. Must be 'nave' or 'tripulante'.");
