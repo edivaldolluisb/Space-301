@@ -5,12 +5,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ies301.space.model.Message;
 import ies301.space.repositories.LaunchRepository;
+import ies301.space.entities.Launch;
+
+import java.util.Map;
+
+import java.util.List;
+import ies301.space.entities.Alert;
 
 @Service
 public class LaunchesDataService {
@@ -31,7 +38,6 @@ public class LaunchesDataService {
     @Autowired
     private InfluxDBService influxDBService;
 
-
     @Autowired
     private AlertProcessor alertProcessor;
 
@@ -48,11 +54,16 @@ public class LaunchesDataService {
                 return;
             }
 
-            messagingTemplate.convertAndSend("/topic/"+message.getIdLancamento()+"/astronaut-data", message.getTripulantes());
-            message.getTripulantes().forEach(astronaut -> messagingTemplate.convertAndSend("/topic/"+message.getIdLancamento()+"/astronaut-data/"+astronaut.getId(), astronaut));
-            messagingTemplate.convertAndSend("/topic/"+message.getIdLancamento()+"/launch-data", message.getNave());
+            messagingTemplate.convertAndSend("/topic/" + message.getIdLancamento() + "/astronaut-data",
+                    message.getTripulantes());
+            message.getTripulantes().forEach(astronaut -> messagingTemplate.convertAndSend(
+                    "/topic/" + message.getIdLancamento() + "/astronaut-data/" + astronaut.getId(), astronaut));
+            messagingTemplate.convertAndSend("/topic/" + message.getIdLancamento() + "/launch-data", message.getNave());
 
-            // // find launch by id
+            // Processa alertas e salva dados em uma thread separada
+            processAlertsAndSaveData(message);
+
+            // // // find launch by id
             // Long id = Long.parseLong(message.getIdLancamento());
             // logger.info("ID do lançamento: " + id);
             // Launch launch = launchRepository.findById(id).orElse(null);
@@ -61,13 +72,13 @@ public class LaunchesDataService {
             //     return;
             // }
 
-            // // Processa os alertas
+            // // // Processa os alertas
             // List<Alert> savedAlerts = alertProcessor.processAlerts(message, launch);
             // if (!savedAlerts.isEmpty()) {
             //     logger.info("Alertas salvos e notificados: {}", savedAlerts.size());
             // }
 
-            // // Salvar no InfluxDB
+            // // // Salvar no InfluxDB
             // influxDBService.saveDataToInfluxDB(message);
         } catch (Exception e) {
             logger.error("Erro ao processar mensagem: ", e.getMessage(), e);
@@ -75,5 +86,27 @@ public class LaunchesDataService {
         }
     }
 
+    @Async
+    public void processAlertsAndSaveData(Message message) {
+        try {
+            Long id = Long.parseLong(message.getIdLancamento());
+            Launch launch = launchRepository.findById(id).orElse(null);
+            if (launch == null) {
+                logger.error("Lancamento nao encontrado: " + id);
+                return;
+            }
+
+            // Processa os alertas
+            List<Alert> savedAlerts = alertProcessor.processAlerts(message, launch);
+            if (!savedAlerts.isEmpty()) {
+                logger.info("Alertas salvos e notificados: {}", savedAlerts.size());
+            }
+
+            // Salvar dados no InfluxDB
+            influxDBService.saveDataToInfluxDB(message);
+        } catch (Exception e) {
+            logger.error("Erro ao processar alertas ou salvar dados no InfluxDB: ", e.getMessage(), e);
+        }
+    }
 
 }

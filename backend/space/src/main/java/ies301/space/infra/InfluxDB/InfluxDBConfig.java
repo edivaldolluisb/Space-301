@@ -26,5 +26,10 @@ public class InfluxDBConfig {
     public InfluxDBClient influxDBClient() {
         return InfluxDBClientFactory.create(URL, TOKEN.toCharArray(), ORG, BUCKET);
     }
+
+    @Bean
+    public WriteApi writeApi(InfluxDBClient influxDBClient) {
+        return influxDBClient.getWriteApi();
+    }
        
 }
