@@ -1,5 +1,5 @@
 import { VisitorHeader } from "@/components/visitor-header";
-import { Activities } from "./company/activities";
+import { VisitorActivities } from "./VisitorActivities";
 
 
 
@@ -15,7 +15,7 @@ export default function VisitorDashboard(){
                 <div className="flex items-center justify-between">
                     <h2 className="text-3xl font-semibold">Lançamentos</h2>
                 </div>
-                <Activities />
+                <VisitorActivities />
             </div>
         </main>
     </div>
