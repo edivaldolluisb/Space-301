@@ -37,15 +37,10 @@ public class InfluxDBService {
 
     public void saveDataToInfluxDB(Message message) {
 
-        logger.info("Salvando dados no InfluxDB para lançamento ID {}", message.getIdLancamento());
-        // logger.info("Dados: {}", message.getTripulantes());
-        // return;
-
-        // try (WriteApi writeApi = influxDBClient.getWriteApi()) {
         try {
             // Salvar dados de tripulantes
             message.getTripulantes().forEach(tripulante -> {
-                logger.info("Salvando dados do tripulante ID {}", tripulante.getId());
+
                 Point point = Point
                         .measurement("tripulantes")
                         .addTag("lancamentoId", message.getIdLancamento())

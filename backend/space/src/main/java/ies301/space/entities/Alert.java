@@ -27,6 +27,8 @@ public class Alert {
     private Date date; 
     
     private boolean status = false;
+
+    private String parametro;
     
     @ManyToOne 
     @JoinColumn(name = "launch_id")
@@ -38,6 +40,13 @@ public class Alert {
     public Alert(String message, Launch launch) {
         this.message = message;
         this.launch = launch;
+    }
+
+    public Alert(String message, Launch launch, boolean status, String parametro) {
+        this.message = message;
+        this.status = status;
+        this.launch = launch;
+        this.parametro = parametro;
     }
 
     public Long getId() {

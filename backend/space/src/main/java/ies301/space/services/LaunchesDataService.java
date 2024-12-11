@@ -63,23 +63,7 @@ public class LaunchesDataService {
             // Processa alertas e salva dados em uma thread separada
             processAlertsAndSaveData(message);
 
-            // // // find launch by id
-            // Long id = Long.parseLong(message.getIdLancamento());
-            // logger.info("ID do lançamento: " + id);
-            // Launch launch = launchRepository.findById(id).orElse(null);
-            // if (launch == null) {
-            //     logger.error("Lancamento nao encontrado: " + id);
-            //     return;
-            // }
-
-            // // // Processa os alertas
-            // List<Alert> savedAlerts = alertProcessor.processAlerts(message, launch);
-            // if (!savedAlerts.isEmpty()) {
-            //     logger.info("Alertas salvos e notificados: {}", savedAlerts.size());
-            // }
-
-            // // // Salvar no InfluxDB
-            // influxDBService.saveDataToInfluxDB(message);
+           
         } catch (Exception e) {
             logger.error("Erro ao processar mensagem: ", e.getMessage(), e);
 
