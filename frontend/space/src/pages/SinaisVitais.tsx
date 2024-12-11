@@ -24,29 +24,6 @@ type Tripulante = {
     alertas: Alerta[];
 };
 
-type Nave = {
-    altitude: number;
-    velocidade: number;
-    velocidade_x: number;
-    aceleracao: number;
-    forca_g: number;
-    pressao_atual: number;
-    temperatura_atual: number;
-    temperatura_motor_atual: number;
-    temperatura_externa_atual: number;
-    combustivel: number;
-    qualidade_atual: number;
-    oxigenio_atual: number;
-    energia_atual: number;
-    alerta: any[];
-};
-
-type Message = {
-    id_lancamento: string;
-    tripulantes: Tripulante[];
-    nave: Nave;
-};
-
 export default function SinaisVitais() {
     const [astronauts, setAstronauts] = useState([]);
     const [currentAstronautId, setCurrentAstronautId] = useState();
@@ -75,12 +52,12 @@ export default function SinaisVitais() {
     }, []);
 
     useEffect(() => {
-        const getAstro = () => { 
-            for (let astro of astronauts) { 
-                if (astro.id === currentAstronautId) { 
-                    return astro 
-                } 
-            } 
+        const getAstro = () => {
+            for (let astro of astronauts) {
+                if (astro.id === currentAstronautId) {
+                    return astro
+                }
+            }
         }
         setCurrentAstronaut(getAstro());
         const client = new Client({
@@ -149,7 +126,7 @@ export default function SinaisVitais() {
                                     </div>
                                 </div>
                                 <div className='parametros'>
-                                    {parametros.length > 0 ? parametros.map((parametro:VitalParameter, index) => <ParametroVital
+                                    {parametros.length > 0 ? parametros.map((parametro: VitalParameter, index) => <ParametroVital
                                         key={index}
                                         nome={parametro.name}
                                         valor={parametro.valor}
@@ -161,12 +138,12 @@ export default function SinaisVitais() {
                                 </div>
                             </div>
                             <div className='astronauts-list'>
-                            <Button onClick={() => navigate(`/rocket/${launchId}`) } variant="secondary" size="full">
-                                <Undo2 className="size-5" />
-                                Voltar ao Lançamento
-                            </Button>
+                                <Button onClick={() => navigate(`/rocket/${launchId}`)} variant="secondary" size="full">
+                                    <Undo2 className="size-5" />
+                                    Voltar ao Lançamento
+                                </Button>
                                 <h2>Astronautas</h2>
-                                {astronauts.map((astronaut:Astronaut) => <Profile photo={astronaut.photo}
+                                {astronauts.map((astronaut: Astronaut) => <Profile photo={astronaut.photo}
                                     key={astronaut.id}
                                     id={astronaut.id}
                                     name={astronaut.name}
