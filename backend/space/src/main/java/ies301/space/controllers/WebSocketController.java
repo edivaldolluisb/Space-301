@@ -6,12 +6,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Controller
-@CrossOrigin(origins = "*")
 public class WebSocketController {
 
-    @MessageMapping("/send-data")
+    @MessageMapping("/launch-data")
     @SendTo("/topic/launch-data")
-    public String handleWebSocketMessage(String message) {
+    public String handleLauch(String message) {
+        // Processa e responde mensagens enviadas pelo React, se necessário
+        return message;
+    }
+
+    @MessageMapping("/astronaut-data")
+    @SendTo("/topic/astronaut-data")
+    public String handleAstronaut(String message) {
         // Processa e responde mensagens enviadas pelo React, se necessário
         return message;
     }

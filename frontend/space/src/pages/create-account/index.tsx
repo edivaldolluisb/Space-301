@@ -5,6 +5,8 @@ import { Button } from "../../components/button";
 import { auth } from "../../lib/axios";
 import { LoginModal } from "./login";
 import { ConfirmTripModal } from "./confirm-trip-modal";
+import { Link } from "react-router-dom";
+
 
 interface User {
   name: string;
@@ -132,9 +134,11 @@ export function CreateTripPage() {
             Registrar
           </Button>
           <div className="col-span-2">
+            <Link to="/visitor">
             <Button size="full" disabled={isLoading}>
               Visitante
             </Button>
+            </Link>
           </div>
         </div>
 

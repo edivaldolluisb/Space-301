@@ -10,6 +10,7 @@ public class Message {
     private String idLancamento;
     private List<Tripulante> tripulantes;
     private Nave nave;
+    private boolean terminado;
 
     // Getters e Setters
     @JsonProperty("id_lancamento")
@@ -38,6 +39,14 @@ public class Message {
         this.nave = nave;
     }
 
+    public boolean getTerminado() {
+        return terminado;
+    }
+
+    public void setTerminado(boolean terminado) {
+        this.terminado = terminado;
+    }
+
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Tripulante {
         private int id;
@@ -62,7 +71,7 @@ public class Message {
             return temperature;
         }
 
-        public void setTemperature(int temperature) {
+        public void setTemperature(double temperature) {
             this.temperature = temperature;
         }
 
@@ -153,6 +162,14 @@ public class Message {
 
         public void setVelocidade(double velocidade) {
             this.velocidade = velocidade;
+        }
+
+        public List<Alerta> getAlertas() {
+            return alerta;
+        }
+
+        public void setAlertas(List<Alerta> alerta) {
+            this.alerta = alerta;
         }
 
         @JsonProperty("velocidade_x")
@@ -275,6 +292,8 @@ public class Message {
         private String parametro;
         private String nomeAlerta;
 
+        private Boolean status;
+
         @JsonProperty("alerta_nome")
         private String alertaNome;
 
@@ -315,5 +334,14 @@ public class Message {
         public void setAlertaDescricao(String alertaDescricao) {
             this.alertaDescricao = alertaDescricao;
         }
+
+        public Boolean getStatus() {
+            return status;
+        }
+
+        public void setStatus(Boolean status) {
+            this.status = status;
+        }
+
     }
 }

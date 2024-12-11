@@ -1,46 +1,53 @@
-import { CheckCircle2, X, UserCog } from "lucide-react";
+import { CheckCircle2, CircleX, UserCog } from "lucide-react";
 import { Button } from "../../components/button";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-// import { api } from "../../lib/axios";
+import { api } from "../../lib/axios";
 import { Link } from "react-router-dom";
 
-interface Participant {
-  id: string;
-  name: string | null;
+import { format } from "date-fns";
+import { pt } from "date-fns/locale";
+
+
+interface Astronaut {
+  id: number;
+}
+interface Alert {
+  id: number;
+  message: string;
   date: string;
-  is_confirmed: boolean;
+  status: string;
+  launch: Launch | null;
+}
+
+interface Launch {
+  id: number;
+  missionName: string;
+  launchDate: string;
+  rocketId: number | string | null;
+  address: string;
+  status: string;
+  astronauts: Astronaut[];
+  alerts: Alert[];
 }
 
 export function Guests() {
-  const { tripId } = useParams()
-  const [launches, setLaunches] = useState<Participant[]>([])
+  const [launches, setLaunches] = useState<Launch[]>([])
 
   useEffect(() => {
-    // api.get(`trips/${tripId}/launch`).then(response => setParticipants(response.data.launch))
+    async function loadActivities() {
+      try {
+        const response = await api.get('/launches/completed');
+        setLaunches(response.data)
 
-    const Launches = [
-      {
-        id: "1",
-        name: "Thunderbolt",
-        date: "10 de Setembro",
-        is_confirmed: true
-      },
-      {
-        id: "2",
-        name: "Neptune",
-        date: "10 de Julho",
-        is_confirmed: false
-      },
-      {
-        id: "3",
-        name: "Neptune",
-        date: "12 de Julho",
-        is_confirmed: false
-      },
-    ]
-    setLaunches(Launches)
-  }, [tripId])
+        console.log("resultados de fetch da api", response.data)
+
+      } catch (error) {
+        console.error('Erro ao carregar atividades:', error);
+      }
+    }
+
+    loadActivities();
+  }, []);
 
 
   return (
@@ -48,20 +55,19 @@ export function Guests() {
       <h2 className="font-semibold text-xl">Histórico de lançamentos</h2>
 
       <div className="space-y-5">
-        {launches.map((launch, index) => (
+        {launches.slice(0, 4).map((launch, index) => (
           <div key={launch.id} className="flex items-center justify-between gap-4">
             <div className="space-y-1.5">
-              <span className="block font-medium text-zinc-100">{launch.name ?? `Convidado ${index}`}</span>
+              <span className="block font-medium text-zinc-100">{launch.missionName ?? `Convidado ${index}`}</span>
               <span className="block text-sm text-zinc-400 truncate">
-                {launch.date}
+                {format(launch.launchDate, "d' de 'LLLL", { locale: pt })}
               </span>
             </div>
 
-            {launch.is_confirmed ? (
-              <CheckCircle2 className="text-green-400 size-5 shrink-0" />
-            ) : (
-              <X className="text-red-400 size-5 shrink-0" />
-            )}
+            {launch.status === "SUCCESS"
+              ? <CheckCircle2 className="size-5 text-lime-500  shrink-0" />
+              : <CircleX className="size-5 text-red-500  shrink-0" />
+            }
           </div>
         ))}
       </div>

@@ -1,16 +1,24 @@
 package ies301.space.entities;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import jakarta.validation.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
@@ -22,27 +30,30 @@ public class Launch {
     @NotBlank(message="Mission's name is mandotory")
     private String missionName;
     @NotNull(message="Date is mandotory")
-    private Date lauchDate;
+    private Date launchDate;
     @NotNull(message="Rocket is mandotory")
-    private int rocketId;
+    private Long rocketId;
     @NotBlank(message="Address is mandotory")
     private String address;
 
     private Status status = Status.PENDING;
 
-    @OneToMany(mappedBy = "launch")
-    private Set<Long> astronauts;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "astronauts", joinColumns = @JoinColumn(name = "launch_id"))
+    @Column(name = "astronaut_id")
+    private Set<Long> astronauts = new HashSet<>();
 
-    @OneToMany(mappedBy = "launch")
+    @JsonIgnore
+    @OneToMany(mappedBy = "launch",  fetch = FetchType.EAGER)
     private List<Alert> alerts;
 
     public Launch() {}
     
+    public Launch(String missionName, Date launchDate, Long rocketId, String address, Status status, Set<Long> astronauts) {
 
-    public Launch(String missionName, Date lauchDate, int rocketId, String address, Status status, Set<Long> astronauts) {
 
         this.missionName = missionName;
-        this.lauchDate = lauchDate;
+        this.launchDate = launchDate;
         this.rocketId = rocketId;
         this.address = address;
 
@@ -51,7 +62,7 @@ public class Launch {
         this.astronauts = astronauts;
     }
 
-    public double getId() {
+    public Long getId() {
         return id;
     }
 
@@ -79,19 +90,19 @@ public class Launch {
         this.missionName = missionName;
     }
 
-    public Date getLauchDate() {
-        return lauchDate;
+    public Date getLaunchDate() {
+        return launchDate;
     }
 
-    public void setLauchDate(Date lauchDate) {
-        this.lauchDate = lauchDate;
+    public void setLaunchDate(Date launchDate) {
+        this.launchDate = launchDate;
     }
 
-    public int getRocketId() {
+    public Long getRocketId() {
         return rocketId;
     }
 
-    public void setRocketId(int rocketId) {
+    public void setRocketId(Long rocketId) {
         this.rocketId = rocketId;
     }
 
@@ -135,10 +146,11 @@ public class Launch {
         return "{" +
             " id:'" + getId() + "'" +
             ", missionName:'" + getMissionName() + "'" +
-            ", lauchDate:'" + getLauchDate() + "'" +
+            ", launchDate:'" + getLaunchDate() + "'" +
             ", rocketId:'" + getRocketId() + "'" +
             ", address:'" + getAddress() + "'" +
             ", status:'" + getStatus() + "'" +
+            ", astronauts:" + getAstronauts() + "" +
             "}";
     }
     

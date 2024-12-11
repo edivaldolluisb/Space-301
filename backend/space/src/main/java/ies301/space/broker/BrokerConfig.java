@@ -6,24 +6,21 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class SenderConfig {
+public class BrokerConfig {
 
     @Value("launchQueue")
-    private String message;
+    private String launch;
+
+    @Value("generatorQueue")
+    private String generator;
 
     @Bean
     public Queue queue() {
-        return new Queue(message, true);
+        return new Queue(launch, true);
     }
 
-    // @Bean
-    // public Queue launchDataQueue() {
-    //     return new Queue("launch_data", true);
-    // }
-
-    // @Bean
-    // public Queue launchGenerateQueue() {
-    //     return new Queue("launch_generate", true);
-    // }
-
+    @Bean
+    public Queue generatorQueue() {
+        return new Queue(generator, true);
+    }
 }

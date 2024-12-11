@@ -2,10 +2,15 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import { History } from "./pages/LaunchHistory/History"
 import HistoryDetails from "./pages/LaunchHistory/HistoryDetails"
 import { CreateTripPage } from "./pages/create-account"
+import { TripDetailsPage } from "./pages/trip-details"
 import { AlertsPage } from "./pages/trip-details"
 import { DashboardPage } from "./pages/company"
 import { RocketDetailsPage } from "./pages/company/rocket-dashboard"
 import SinaisVitais from "./pages/SinaisVitais"
+import Dashboard from "./pages/company/dashboard"
+import SettingsPage from "./pages/SettingsPage"
+import {Users} from "./pages/settings/Users"
+import VisitorDashboard from "./pages/visitor/VisitorDashboard"
 
 
 const router = createBrowserRouter([
@@ -18,7 +23,7 @@ const router = createBrowserRouter([
     element: <AlertsPage />
   },
   {
-    path: "/sinais-vitais",
+    path: "/sinais-vitais/:launchId",
     element: <SinaisVitais />
   },
   {
@@ -26,7 +31,7 @@ const router = createBrowserRouter([
     element: <DashboardPage />
   },
   {
-    path: "/rocket/:rocketId",
+    path: "/rocket/:launchId",
     element: <RocketDetailsPage />
   },
   {
@@ -36,8 +41,22 @@ const router = createBrowserRouter([
   {
     path: "/history/details/:id",
     element: <HistoryDetails />
+  },
+  {
+    path: "/settings",
+    element: <SettingsPage />
+  },
+  {
+    path: "/settings/users",
+    element: <Users />
+  },
+  {
+    path:"/visitor",
+    element:<VisitorDashboard/>
   }
 ])
+
+
 
 export function App() {
   return <RouterProvider router={router} />

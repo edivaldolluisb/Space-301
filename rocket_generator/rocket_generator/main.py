@@ -6,7 +6,7 @@ import json
 from config import RABBITMQ_HOST, RECEIVER_QUEUE_NAME
 
 mensagem = {
-    "id_lancamento": "RAFAS",
+    "id_lancamento": "2",
     "astronauts": [
         {"astronaut_id": 1},
         {"astronaut_id": 2},
