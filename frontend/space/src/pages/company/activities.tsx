@@ -11,7 +11,7 @@ interface Launch {
   id?: number;
   missionName: string;
   launchDate: string;
-  rocketId: number | string | null;
+  rocketId?: number | string;
   address: string;
   status: string;
   astronauts: number[];

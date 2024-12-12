@@ -17,6 +17,7 @@ import { useRocketData } from './hooks/useRocketData';
 import { useLaunchInfo } from './hooks/useLaunchInfo';
 
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 
 
