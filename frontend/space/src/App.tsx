@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import { History } from "./pages/LaunchHistory/History"
 import HistoryDetails from "./pages/LaunchHistory/HistoryDetails"
-import { CreateTripPage } from "./pages/create-account"
+import { AuthPage } from "./pages/create-account"
 import { AlertsPage } from "./pages/alerts"
 import { DashboardPage } from "./pages/company"
 import { RocketDetailsPage } from "./pages/company/rocket-dashboard"
@@ -13,7 +13,7 @@ import {Users} from "./pages/settings/Users"
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <CreateTripPage />
+    element: <AuthPage />
   },
   {
     path: "/alerts",
