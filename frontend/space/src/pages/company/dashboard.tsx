@@ -1,45 +1,24 @@
-import React, { useEffect, useState } from 'react';
 import {
 	Flame,
 	MapPin
 } from 'lucide-react';
-import { Client } from '@stomp/stompjs';
-import { api } from "../../lib/axios";
 
 import { RocketInfoProps, DashboardProps, CardProps, StatusCardProps } from './types';
 
 import { iconMappings } from './constants/iconMappings';
 import { unitMappings } from './constants/unitMappings';
-import { titleMappings } from './constants/titleMappings';
+import { titleMappings, camelCaseToTitleCase } from './constants/titleMappings';
 
 import { statusMappings } from './utils/statusMappings';
+import { getStatusColor } from './utils/getStatusColor';
 import { customIconTextColors, customIconBgColors } from './constants/customIcon';
 
 import { useRocketData } from './hooks/useRocketData';
 import { useLaunchInfo } from './hooks/useLaunchInfo';
 
-import { useNavigate, useParams } from 'react-router-dom';
-
-const camelCaseToTitleCase = (str: string) =>
-	str.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
+import { useNavigate } from 'react-router-dom';
 
 
-
-// Define a cor do estado baseado no status
-const getStatusColor = (status: string) => {
-	switch (status) {
-		case 'LAUNCHED':
-			return 'bg-green-500/20 text-green-500';
-		case 'SUCCESS':
-			return 'bg-green-500/20 text-green-500';
-		case 'FAILED':
-			return 'bg-red-500/20 text-red-500';
-		case 'PENDING':
-			return 'bg-yellow-500/20 text-yellow-500';
-		default:
-			return 'bg-gray-500/20 text-gray-500';
-	}
-}
 
 // Componente Card base
 const Card: React.FC<CardProps> = ({ children, className = '' }) => (
@@ -74,7 +53,7 @@ const RocketInfo: React.FC<RocketInfoProps> = ({ rocket, launch }) => (
 				<span className={`px-2 py-1 bg-green-500/20 text-white-500 rounded text-sm ${getStatusColor(
 					launch.status
 				)}`}>
-					{launch.status.toLowerCase()}
+					{launch?.status.toLowerCase()}
 				</span>) : <span className="px-2 py-1 bg-green-500/20 text-white-500 rounded text-sm ">
 				Sem status
 			</span>}
@@ -132,7 +111,12 @@ const ErrorState: React.FC<{ message: string }> = ({ message }) => (
 );
 
 const Dashboard: React.FC<DashboardProps> = ({ launchId }) => {
-	const [error, setError] = useState<string | null>(null);
+	const navigate = useNavigate();
+
+	if (!launchId) {
+		navigate('/dashboard')
+		return null
+	}
 	// unsado os conceitos de hooks customizados que viram nas aulas teoricas
 	const { rocketData, isConnected, error: rocketDataError } = useRocketData(launchId);
 	const {

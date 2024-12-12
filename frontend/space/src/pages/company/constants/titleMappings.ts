@@ -15,3 +15,7 @@ export const titleMappings: { [key: string]: string } = {
     energia_atual: "Energia produzida",
   };
   
+
+  export  const camelCaseToTitleCase = (str: string) =>
+    str.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
+  

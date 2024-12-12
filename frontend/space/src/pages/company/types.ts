@@ -2,6 +2,9 @@ import {
 	LucideIcon,
   } from 'lucide-react';
 
+  /**
+ * Dados recebidos do WebSocket durante a missão.
+ */
 export interface WebSocketData {
 	altitude: number;
 	velocidade: number;
@@ -9,9 +12,9 @@ export interface WebSocketData {
 	aceleracao: number;
 	combustivel: number;
 	alertas: Array<{
-		parametro: string | null;
+		parametro?: string
 		status: boolean;
-		nome_alerta: string | null;
+		nome_alerta?: string
 		alerta_nome: string;
 		alerta_descricao: string;
 	}>;
@@ -45,12 +48,12 @@ export interface Launch {
 
 export interface RocketInfoProps {
 	rocket: Rocket;
-	launch: Launch | null;
+	launch?: Launch
 }
 
 
 export interface DashboardProps {
-	launchId: string | undefined;
+	launchId?: string 
 }
 
 export interface CardProps {
