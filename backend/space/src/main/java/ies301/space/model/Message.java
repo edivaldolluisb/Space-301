@@ -298,6 +298,7 @@ public class Message {
     public static class Alerta {
         private String parametro;
         private String nomeAlerta;
+        private String origem;
 
         private Boolean status;
 
@@ -349,6 +350,15 @@ public class Message {
         public void setStatus(Boolean status) {
             this.status = status;
         }
+        
+        public String getOrigem() {
+            return origem;
+        }
+    
+        public void setOrigem(String origem) {
+            this.origem = origem;
+        }
+    
 
     }
 }
