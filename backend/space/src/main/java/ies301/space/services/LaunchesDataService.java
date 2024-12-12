@@ -18,6 +18,7 @@ import java.util.Map;
 
 import java.util.List;
 import ies301.space.entities.Alert;
+import ies301.space.entities.Status;
 
 @Service
 public class LaunchesDataService {
@@ -60,10 +61,20 @@ public class LaunchesDataService {
                     "/topic/" + message.getIdLancamento() + "/astronaut-data/" + astronaut.getId(), astronaut));
             messagingTemplate.convertAndSend("/topic/" + message.getIdLancamento() + "/launch-data", message.getNave());
 
+
+            
+            if (message.getTerminado()) {
+                Long id = Long.parseLong(message.getIdLancamento());
+                Launch launch = launchRepository.findById(id).orElse(null);
+                if (launch != null) {
+                    launch.setStatus(Status.SUCCESS);
+                }
+                logger.info("Lançamento terminado: {}", message.getIdLancamento());
+            }
+
             // Processa alertas e salva dados em uma thread separada
             processAlertsAndSaveData(message);
 
-           
         } catch (Exception e) {
             logger.error("Erro ao processar mensagem: ", e.getMessage(), e);
 

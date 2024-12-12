@@ -44,7 +44,7 @@ export function RocketDetailsPage() {
               </Link>
               <Button variant="secondary" onClick={() => setIsHistorySectionOpen(!isHistorySectionOpen)}>
                 <History className="size-5" />
-                Ver hitorico completo
+                Ver histórico completo
               </Button>
             </div>
           </div>
