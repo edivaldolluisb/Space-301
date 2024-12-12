@@ -43,27 +43,42 @@ public class AlertProcessor {
                 alertas.addAll(message.getNave().getAlertas());
             }
 
-            // Cria e salva os alertas apenas se o status for true
             for (Alerta alerta : alertas) {
-                if (alerta.getStatus() != null && alerta.getStatus()) { 
-                    String alertMessage = alerta.getAlertaDescricao();
-                    if (alertMessage == null || alertMessage.isEmpty()) {
-                        continue;
-                    }
-                    logger.info("status: {}", alerta.getStatus());
-    
-                    // logger.info("Processando alerta: {}", alertMessage);
-    
+
+                List<Alert> existingAlerts = alertService.getAlertsByParametroAndLaunch(alerta.getAlertaNome(),
+                        launch.getId());
+                if (alerta.getStatus() == null) {
+                    continue;
+                }
+                if (alerta.getAlertaDescricao() == null) {
+                    continue;
+                }
+
+                if (existingAlerts.isEmpty()) {
+                    // Não há alertas com esse parametro e lançamento, criar um novo
+                    String alertMessage = alerta.getAlertaDescricao() + " - " + launch.getMissionName();
                     Alert alert = new Alert(alertMessage, launch);
                     alert.setDate(new Date());
+                    alert.setParametro(alerta.getAlertaNome());
+
                     Alert savedAlert = alertService.saveAlert(alert);
                     savedAlerts.add(savedAlert);
-    
-                    // logger.info("Alerta salvo: {}", savedAlert);
+
+                    logger.info("Novo alerta salvo: {}", savedAlert);
                 } else {
-                    logger.info("Alerta ignorado devido ao status: {}", alerta.getStatus());
+
+                    // I'm updating it
+                    Alert existingAlert = existingAlerts.get(0);
+                    if (existingAlert.getStatus() && alerta.getStatus()) {
+                        existingAlert.setStatus(false);
+                        
+                    }
+                    existingAlert.setDate(new Date()); 
+                    Alert updatedAlert = alertService.saveAlert(existingAlert);
+                    savedAlerts.add(updatedAlert);
+
+                    logger.info("Atualizado alerta existente: {}", updatedAlert);
                 }
-            
             }
 
         } catch (Exception e) {

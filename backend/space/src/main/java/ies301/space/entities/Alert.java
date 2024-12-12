@@ -21,10 +21,12 @@ public class Alert {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message="Alert's message is mandotory")
+    @NotBlank(message="Alert's message is mandatory")
     private String message;
-    @NotNull(message="Date is mandotory")
+    @NotNull(message="Date is mandatory")
     private Date date; 
+
+    private Date updatedAt;
     
     private boolean status = false;
 
@@ -65,6 +67,14 @@ public class Alert {
         this.date = date;
     }
 
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     public boolean getStatus() {
         return status;
     }
@@ -79,6 +89,14 @@ public class Alert {
 
     public void setLaunch(Launch launch) {
         this.launch = launch;
+    }
+
+    public String getParametro() {
+        return parametro;
+    }
+
+    public void setParametro(String parametro) {
+        this.parametro = parametro;
     }
 
     @Override

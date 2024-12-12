@@ -1,11 +1,5 @@
-import { useEffect, useState } from 'react';
-// import Header from '../components/Header';
-// import LaunchItem from '../components/LauchItem'
-
-import { Plus } from "lucide-react";
 import { ListLaunchHistory } from "./activities";
 import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
-import { apiService } from "../../lib/axios";
 
 
 export function History() {
