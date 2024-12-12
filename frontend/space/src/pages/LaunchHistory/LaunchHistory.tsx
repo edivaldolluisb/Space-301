@@ -1,4 +1,4 @@
-import { ListLaunchHistory } from "./activities";
+import { ListLaunchHistory } from "./ListLaunch";
 import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
 
 

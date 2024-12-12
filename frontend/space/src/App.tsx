@@ -1,6 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import { History } from "./pages/LaunchHistory/History"
-import HistoryDetails from "./pages/LaunchHistory/HistoryDetails"
+import { History } from "./pages/LaunchHistory/LaunchHistory"
 import { AuthPage } from "./pages/create-account"
 import { AlertsPage } from "./pages/alerts"
 import { DashboardPage } from "./pages/company"
@@ -34,10 +33,6 @@ const router = createBrowserRouter([
   {
     path: "/history",
     element: <History />
-  },
-  {
-    path: "/history/details/:id",
-    element: <HistoryDetails />
   },
   {
     path: "/settings",
