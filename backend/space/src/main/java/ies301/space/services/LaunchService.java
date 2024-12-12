@@ -91,13 +91,7 @@ public class LaunchService {
         }
     }
 
-
-    // public List<Map<String, Object>> getAveragedData(Long launchId, String entity, Long entityId, String field, String interval) {
-    //     return influxDBService.getAveragedData(launchId, entity, entityId, field, interval);
-    // }
     
-    //TODO: --
-    //FIXME: Refactor later
     public List<Launch> getCompletedLauches() {
         List<Launch> successLaunches = launchRepository.findByStatus(Status.SUCCESS);
         successLaunches.addAll(launchRepository.findByStatus(Status.FAILED));

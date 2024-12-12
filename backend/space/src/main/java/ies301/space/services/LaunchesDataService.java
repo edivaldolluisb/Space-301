@@ -48,6 +48,17 @@ public class LaunchesDataService {
             // Log da mensagem recebida
             // logger.info("Mensagem recebida: " + messageJson);
             Message message = objectMapper.readValue(messageJson, Message.class);
+            
+            
+            if (message.getTerminado()) {
+                Long id = Long.parseLong(message.getIdLancamento());
+                Launch launch = launchRepository.findById(id).orElse(null);
+                if (launch != null) {
+                    launch.setStatus(Status.SUCCESS);
+                    launchRepository.save(launch);
+                }
+                logger.info("Lançamento terminado: {}", message.getIdLancamento());
+            }
 
             // Valida os dados recebidos
             if (message.getTripulantes() == null || message.getNave() == null) {
@@ -62,15 +73,6 @@ public class LaunchesDataService {
             messagingTemplate.convertAndSend("/topic/" + message.getIdLancamento() + "/launch-data", message.getNave());
 
 
-            
-            if (message.getTerminado()) {
-                Long id = Long.parseLong(message.getIdLancamento());
-                Launch launch = launchRepository.findById(id).orElse(null);
-                if (launch != null) {
-                    launch.setStatus(Status.SUCCESS);
-                }
-                logger.info("Lançamento terminado: {}", message.getIdLancamento());
-            }
 
             // Processa alertas e salva dados em uma thread separada
             processAlertsAndSaveData(message);

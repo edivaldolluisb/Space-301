@@ -7,9 +7,14 @@ import { RocketDetailsPage } from "./pages/company/rocket-dashboard"
 import SinaisVitais from "./pages/SinaisVitais"
 import SettingsPage from "./pages/settings"
 import { Users } from "./pages/settings/Users"
+import { NotFound } from "./pages/notfound"
 
 
 const router = createBrowserRouter([
+  {
+    path: "*",
+    element: <NotFound />
+  },
   {
     path: "/",
     element: <AuthPage />
