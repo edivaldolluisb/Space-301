@@ -1,8 +1,8 @@
-import { DestinationAndDateHeader } from "../components/destination-and-date-header";
+import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
 import { Plus, X, Loader2, User, AtSign, KeyRound, MapPin, Eye, ClipboardCopy, RefreshCw, EyeOff } from "lucide-react";
-import { Button } from "../components/button";
+import { Button } from "../../components/button";
 import { useState, useEffect } from "react";
-import { api } from "../lib/axios";
+import { api } from "../../lib/axios";
 import { Link } from "react-router-dom";
 
 
@@ -51,8 +51,8 @@ const SettingsPage = () => {
       setFormErrors(errors);
       return;
     }
-    
-    const updatedData = { name: formData.name, email: formData.email, password: formData.password};
+
+    const updatedData = { name: formData.name, email: formData.email, password: formData.password };
     try {
       if (!userId) {
         console.error("ID do utilizador não encontrado.");
@@ -279,9 +279,9 @@ const SettingsPage = () => {
               </div>
 
               <Link to={"/settings/users"} className="">
-              <Button variant="secondary">
-                Ver funcionários
-              </Button>
+                <Button variant="secondary">
+                  Ver funcionários
+                </Button>
               </Link>
             </div>
 

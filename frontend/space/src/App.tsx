@@ -5,8 +5,8 @@ import { AlertsPage } from "./pages/alerts"
 import { DashboardPage } from "./pages/company"
 import { RocketDetailsPage } from "./pages/company/rocket-dashboard"
 import SinaisVitais from "./pages/SinaisVitais"
-import SettingsPage from "./pages/SettingsPage"
-import {Users} from "./pages/settings/Users"
+import SettingsPage from "./pages/settings"
+import { Users } from "./pages/settings/Users"
 
 
 const router = createBrowserRouter([

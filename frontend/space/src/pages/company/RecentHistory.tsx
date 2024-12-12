@@ -30,7 +30,7 @@ interface Launch {
   alerts: Alert[];
 }
 
-export function Guests() {
+export function RecentHistory() {
   const [launches, setLaunches] = useState<Launch[]>([])
 
   useEffect(() => {

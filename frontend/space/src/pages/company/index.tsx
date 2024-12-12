@@ -1,9 +1,9 @@
 import { Plus } from "lucide-react";
 import { FormEvent, useState, } from "react";
-import { CreateActivityModal } from "./create-activity-modal";
-import { ImportantLinks } from "./important-links";
-import { Guests } from "./guests";
-import { Activities } from "./activities";
+import { CreateLaunchComponent } from "./CreateLaunchComponent";
+import { RecentAlerts } from "./RecentAlerts";
+import { RecentHistory } from "./RecentHistory";
+import { ListLaunches } from "./ListLaunches";
 import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
 
 import { api } from "../../lib/axios";
@@ -18,7 +18,7 @@ interface Launch {
   id?: number;
   missionName: string;
   launchDate: string;
-  rocketId: number | string | null;
+  rocketId?: number | string;
   address: string;
   status: string;
   astronauts: number[];
@@ -130,20 +130,20 @@ export function DashboardPage() {
             </button>
           </div>
 
-          <Activities  launches={launches} />
+          <ListLaunches  launches={launches} />
         </div>
 
         <div className="w-80 space-y-6">
-          <ImportantLinks />
+          <RecentAlerts />
 
           <div className="w-full h-px bg-zinc-800" />
 
-          <Guests />
+          <RecentHistory />
         </div>
       </main>
 
       {isCreateActivityModalOpen && (
-        <CreateActivityModal 
+        <CreateLaunchComponent 
           closeCreateLaunchModal={closeCreateLaunchModal}
           setMissionName={setMissionName}
           setLaunchDate={setLaunchDate}

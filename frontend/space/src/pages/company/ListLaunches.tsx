@@ -17,7 +17,7 @@ interface Launch {
   astronauts: number[];
 }
 
-export function Activities({ launches }: { launches: Launch[] }) {
+export function ListLaunches({ launches }: { launches: Launch[] }) {
 
   const [organizedLaunches, setOrganizedLaunches] = useState<{ [year: string]: { [month: string]: Launch[] } }>({})
   const [error, setError] = useState<string | null>(null);
