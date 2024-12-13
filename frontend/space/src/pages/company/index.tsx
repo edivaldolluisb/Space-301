@@ -58,6 +58,7 @@ export function DashboardPage() {
 
     setError(null);
     setIsLoading(true);
+    setStatus('PENDING');
 
     // check if date is valid
     const date = new Date(launchDate);

@@ -17,7 +17,6 @@ import { useRocketData } from './hooks/useRocketData';
 import { useLaunchInfo } from './hooks/useLaunchInfo';
 
 import { useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
 
 
 
@@ -38,12 +37,20 @@ const RocketInfo: React.FC<RocketInfoProps> = ({ rocket, launch }) => (
 				className="w-full h-full object-cover"
 			/>
 		</div>
-		<h2 className="text-xl font-bold text-white mb-2">{rocket.name}</h2>
-		<div className="space-y-1 text-gray-400">
-			<p>Comprimento: {rocket.height} m</p>
-			<p>Diâmetro: {rocket.diameter} m</p>
-			<p>Massa: {rocket.weight} kg</p>
-		</div>
+		{rocket ? (
+			<>
+				<h2 className="text-xl font-bold text-white mb-2">{rocket.name}</h2>
+				<div className="space-y-1 text-gray-400">
+					<p>Comprimento: {rocket.height} m</p>
+					<p>Diâmetro: {rocket.diameter} m</p>
+					<p>Massa: {rocket.weight} kg</p>
+				</div></>
+		) : (
+			<h1 className="text-zinc-500 text-sm">
+				Carregando informações do foguete...
+			</h1>
+		)}
+
 
 		<div className="flex justify-between mt-3 items-center">
 			<div className='flex'>
@@ -119,7 +126,9 @@ const Dashboard: React.FC<DashboardProps> = ({ launchId }) => {
 		return null
 	}
 	// unsado os conceitos de hooks customizados que viram nas aulas teoricas
-	const { rocketData, isConnected, error: rocketDataError } = useRocketData(launchId);
+	const { rocketData, 
+		// isConnected, 
+		error: rocketDataError } = useRocketData(launchId);
 	const {
 		launch,
 		rocket,

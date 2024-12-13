@@ -1,7 +1,7 @@
 "use client"
 
 import { TrendingUp, Gauge, Thermometer } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, Line, LineChart, XAxis, YAxis, ReferenceLine, LabelList } from "recharts"
+import { Bar, BarChart, CartesianGrid, Line, LineChart, XAxis, YAxis, LabelList } from "recharts"
 
 import {
 	Card,
@@ -66,7 +66,7 @@ export function SpeedGraph({ launchId }: { launchId: string }) {
 	useEffect(() => {
 		const fetchSpeedData = async () => {
 			try {
-				// localhost:8080/api/v1/launches/1/nave/null/velocidade
+				
 				const response = await api.get(`/launches/${launchId}/nave/null/velocidade`);
 				const formattedData = response.data.map((item: ApiResponseData) => ({
 					day: `${new Date(item._time).getHours()}:${new Date(item._time).getMinutes()}`,

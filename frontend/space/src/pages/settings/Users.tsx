@@ -1,4 +1,4 @@
-import { Plus, Siren, User, Search } from "lucide-react";
+import { Plus, User, Search } from "lucide-react";
 import { FormEvent, useState, useEffect } from "react";
 import { CreateUserModal } from "./CreateUserModal";
 import { Activities } from "./ListUsers";
