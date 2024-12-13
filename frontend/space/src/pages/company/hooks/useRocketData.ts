@@ -4,7 +4,7 @@ import { WebSocketData } from '../types';
 
 export const useRocketData = (launchId: string) => {
   const [rocketData, setRocketData] = useState<WebSocketData | null>(null);
-  const [isConnected, setIsConnected] = useState(false);
+  const [isConnected, setIsConnected] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -15,6 +15,7 @@ export const useRocketData = (launchId: string) => {
       reconnectDelay: 5000,
       onConnect: () => {
         console.log(`Conectado ao WebSocket: /topic/${launchId}/launch-data`);
+        console.log(`connected: ${isConnected}`);
         setIsConnected(true);
         
         const subscription = client.subscribe(
@@ -60,7 +61,7 @@ export const useRocketData = (launchId: string) => {
 
   return { 
     rocketData, 
-    isConnected, 
+    // isConnected, 
     error 
   };
 };

@@ -12,7 +12,7 @@ export interface WebSocketData {
 	aceleracao: number;
 	combustivel: number;
 	alertas: Array<{
-		parametro?: string
+		parametro?: string | null
 		status: boolean;
 		nome_alerta?: string
 		alerta_nome: string;
@@ -47,8 +47,8 @@ export interface Launch {
 
 
 export interface RocketInfoProps {
-	rocket: Rocket;
-	launch?: Launch
+	rocket?: Rocket | null;
+	launch?: Launch | null;
 }
 
 

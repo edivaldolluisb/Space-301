@@ -5,7 +5,7 @@ import { Rocket, Launch } from '../types';
 export const useLaunchInfo = (launchId: string) => {
   const [launch, setLaunch] = useState<Launch | null>(null);
   const [rocket, setRocket] = useState<Rocket | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
