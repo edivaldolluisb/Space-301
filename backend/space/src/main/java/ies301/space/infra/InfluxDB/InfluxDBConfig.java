@@ -1,8 +1,8 @@
 package ies301.space.infra.InfluxDB;
 
-import org.influxdb.InfluxDB;
-import org.influxdb.InfluxDBFactory;
-import org.influxdb.dto.Pong;
+// import org.influxdb.InfluxDB;
+// import org.influxdb.InfluxDBFactory;
+// import org.influxdb.dto.Pong;
 
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
@@ -19,16 +19,16 @@ public class InfluxDBConfig {
     private static final Logger LOG = LoggerFactory.getLogger(InfluxDBConfig.class);
 
 
-    @Value("${spring.influx.url:http://localhost:8086}")
+    @Value("${spring.influx.url}")
     private String url;
 
-    @Value("${spring.influx.token:MyInitialAdminToken0==}")
+    @Value("${spring.influx.token}")
     private String token;
 
-    @Value("${spring.influx.org:docs}")
+    @Value("${spring.influx.org}")
     private String org;
 
-    @Value("${spring.influx.bucket:home}")
+    @Value("${spring.influx.bucket}")
     private String bucket;
 
     @Bean
