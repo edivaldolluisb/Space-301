@@ -113,7 +113,7 @@ const LoadingState: React.FC = () => (
 );
 
 const ErrorState: React.FC<{ message: string }> = ({ message }) => (
-	<div className="flex justify-center items-center h-full bg-red-50 p-4">
+	<div className="flex justify-center items-center h-full  p-4">
 		<span className="text-red-500">{message}</span>
 	</div>
 );
