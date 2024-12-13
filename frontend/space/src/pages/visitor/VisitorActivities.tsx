@@ -1,4 +1,4 @@
-import { CircleDashed, Rocket } from "lucide-react";
+import { CircleCheck, CircleX, CircleFadingArrowUp, CircleDashed, Rocket } from "lucide-react";
 import { api } from "../../lib/axios";
 import { useState, useEffect } from "react";
 // import { useParams } from "react-router-dom";
@@ -11,13 +11,13 @@ interface Launch {
   id?: number;
   missionName: string;
   launchDate: string;
-  rocketId?: number | string;
+  rocketId: number | string | null;
   address: string;
   status: string;
   astronauts: number[];
 }
 
-export function ListLaunches({ launches }: { launches: Launch[] }) {
+export function VisitorActivities() {
 
   const [organizedLaunches, setOrganizedLaunches] = useState<{ [year: string]: { [month: string]: Launch[] } }>({})
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +27,7 @@ export function ListLaunches({ launches }: { launches: Launch[] }) {
 
   const fetchLancamentos = async () => {
     try {
-      const response = await api.get('/launches/active');
+      const response = await api.get('/visitor/launches/active');
       return response.data
 
     } catch (error) {
@@ -73,7 +73,7 @@ export function ListLaunches({ launches }: { launches: Launch[] }) {
     };
 
     fetchData();
-  }, [launches]);
+  }, []);
 
   return (
     <>

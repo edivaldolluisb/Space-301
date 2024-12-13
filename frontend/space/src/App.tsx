@@ -8,6 +8,7 @@ import SinaisVitais from "./pages/SinaisVitais"
 import SettingsPage from "./pages/settings"
 import { Users } from "./pages/settings/Users"
 import { NotFound } from "./pages/notfound"
+import VisitorDashboard from "./pages/visitor/VisitorDashboard"
 
 
 const router = createBrowserRouter([
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
     path: "/settings/users",
     element: <Users />
   },
+  {
+    path:"/visitor",
+    element:<VisitorDashboard/>
+  }
 ])
 
 
