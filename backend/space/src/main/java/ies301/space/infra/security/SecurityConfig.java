@@ -48,10 +48,8 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs.yaml", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/space-websocket").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/user/{id}").authenticated()
+                        .requestMatchers("/api/v1/user/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);

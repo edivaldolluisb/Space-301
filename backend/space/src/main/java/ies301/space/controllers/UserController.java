@@ -55,6 +55,7 @@ public class UserController {
         if (user.getRole() == null) {
             user.setRole(UserRole.USER);
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         UserResponseDTO createdUser = userService.saveUser(user);
         return ResponseEntity.ok(createdUser);
     }
