@@ -21,7 +21,7 @@ public class UserService {
 
     public List<UserResponseDTO> findAllUsers() {
         return userRepository.findAll().stream()
-                .map(user -> new UserResponseDTO(user.getId(), user.getName(), user.getEmail()))
+                .map(user -> new UserResponseDTO(user.getId(), user.getName(), user.getEmail(), user.getRole()))
                 .collect(Collectors.toList());
     }
 
@@ -31,12 +31,12 @@ public class UserService {
             return null;
         }
         User user = userOptional.get();
-        return new UserResponseDTO(user.getId(), user.getName(), user.getEmail());
+        return new UserResponseDTO(user.getId(), user.getName(), user.getEmail(), user.getRole());
     }
 
     public UserResponseDTO saveUser(User user) {
         User savedUser = userRepository.save(user);
-        return new UserResponseDTO(savedUser.getId(), savedUser.getName(), savedUser.getEmail());
+        return new UserResponseDTO(savedUser.getId(), savedUser.getName(), savedUser.getEmail(), user.getRole());
     }
 
     public UserResponseDTO updateUser(String id, User updatedUser) {
@@ -54,9 +54,12 @@ public class UserService {
         if (updatedUser.getPassword() != null) {
             existingUser.setPassword(updatedUser.getPassword());
         }
+        if (updatedUser.getRole() != null) {
+            existingUser.setRole(updatedUser.getRole());
+        }
 
         User savedUser = userRepository.save(existingUser);
-        return new UserResponseDTO(savedUser.getId(), savedUser.getName(), savedUser.getEmail());
+        return new UserResponseDTO(savedUser.getId(), savedUser.getName(), savedUser.getEmail(), savedUser.getRole());
     }
 
     public boolean deleteUser(String id) {

@@ -1,4 +1,4 @@
-import { CircleCheck, CircleX, CircleFadingArrowUp, CircleDashed, Rocket } from "lucide-react";
+import { CircleDashed, Rocket } from "lucide-react";
 import { api } from "../../lib/axios";
 import { useState, useEffect } from "react";
 // import { useParams } from "react-router-dom";
