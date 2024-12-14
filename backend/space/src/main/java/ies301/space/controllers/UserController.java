@@ -17,6 +17,8 @@ import ies301.space.services.UserService;
 import java.util.List;
 import ies301.space.dto.UserResponseDTO;
 
+import ies301.space.entities.user.UserRole;
+
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -50,6 +52,9 @@ public class UserController {
     
     @PostMapping
     public ResponseEntity<UserResponseDTO> createUser(@RequestBody User user) {
+        if (user.getRole() == null) {
+            user.setRole(UserRole.USER);
+        }
         UserResponseDTO createdUser = userService.saveUser(user);
         return ResponseEntity.ok(createdUser);
     }
@@ -63,6 +68,10 @@ public class UserController {
         if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
             
             updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        }
+        
+        if (updatedUser.getRole() == null) {
+            updatedUser.setRole(UserRole.USER);
         }
         
         UserResponseDTO user = userService.updateUser(id, updatedUser);
