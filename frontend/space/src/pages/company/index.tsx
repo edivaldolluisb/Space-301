@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react";
+import { CircleCheckBig, Plus } from "lucide-react";
 import { FormEvent, useState, } from "react";
 import { CreateLaunchComponent } from "./CreateLaunchComponent";
 import { RecentAlerts } from "./RecentAlerts";
@@ -8,6 +8,8 @@ import { DestinationAndDateHeader } from "../../components/destination-and-date-
 
 import { api } from "../../lib/axios";
 
+import { useToast } from "@/components/hooks/use-toast"
+import { Toaster } from "@/components/ui/toaster"
 
 
 interface Astronaut {
@@ -37,6 +39,8 @@ export function DashboardPage() {
   const [launches, setLaunches] = useState<Launch[]>([])
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const { toast } = useToast()
 
   function openCreateActivityModal() {
     setIsCreateActivityModalOpen(true)
@@ -103,7 +107,13 @@ export function DashboardPage() {
       const response = await api.post('/launches', NewlaunchData);
 
       const newLaunch = response.data;
-      console.log('Lançamento registrado com sucesso:', newLaunch);
+      console.log('Lançamento registrado com sucesso:', newLaunch);        
+      toast({
+        title: "Sucesso.",
+        description: "Lançamento registrado com sucesso.",
+        action:<CircleCheckBig className="size-5 text-lime-300" />,
+        
+      });
 
       setIsLoading(false);
       closeCreateLaunchModal();
@@ -111,7 +121,11 @@ export function DashboardPage() {
       // Aqui você pode atualizar a lista de lançamentos no estado, se necessário.
     } catch (error) {
       console.error('Erro ao registrar lançamento:', error);
-      alert('Falha ao registrar o lançamento. Verifique os dados e tente novamente.');
+      toast({
+        title: "Erro:",
+        description: "Erro ao registrar lançamento",
+        variant: "destructive",
+      });
     }
   }
   
@@ -157,6 +171,7 @@ export function DashboardPage() {
 
         />
       )}
+      <Toaster />
     </div>
   )
 }

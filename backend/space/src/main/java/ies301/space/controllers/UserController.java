@@ -71,9 +71,9 @@ public class UserController {
             updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
         }
         
-        if (updatedUser.getRole() == null) {
-            updatedUser.setRole(UserRole.USER);
-        }
+        // if (updatedUser.getRole() == null) {
+        //     updatedUser.setRole(UserRole.USER);
+        // }
         
         UserResponseDTO user = userService.updateUser(id, updatedUser);
         if (user == null) {

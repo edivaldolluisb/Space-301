@@ -71,7 +71,9 @@ export function AuthPage() {
       await auth.register(newUser);
       navigate("/dashboard");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao registrar usuário");
+      // setError(err instanceof Error ? err.message : "Erro ao registrar utilizador");
+      setError("Erro ao registrar utilizador");
+      console.error(err);
     } finally {
       setIsLoading(false);
     }
@@ -97,7 +99,8 @@ export function AuthPage() {
       await auth.login(credentials);
       navigate("/dashboard");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao fazer login");
+      setError("Erro ao fazer login");
+      console.error(err);
     } finally {
       setIsLoading(false);
     }
