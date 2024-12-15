@@ -241,7 +241,7 @@ const Dashboard: React.FC<DashboardProps> = ({ launchId }) => {
 
   useEffect(() => {
     const client = new Client({
-      brokerURL: 'ws://localhost:8080/space-websocket', // URL do WebSocket
+      brokerURL: `${import.meta.env.VITE_BROKER_URL}`,
       reconnectDelay: 5000, // Tenta reconectar após falhas
       onConnect: () => {
         console.log(`Conectado ao WebSocket: /topic/${launchId}/launch-data`);

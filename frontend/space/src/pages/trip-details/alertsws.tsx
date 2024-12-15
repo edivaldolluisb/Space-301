@@ -6,7 +6,7 @@ const AlertsWs = () => {
 
     useEffect(() => {
         const client = new Client({
-            brokerURL: "ws://localhost:8080/space-websocket",
+            brokerURL: `${import.meta.env.VITE_BROKER_URL}`,
             onConnect: () => {
                 console.log("Connected to WebSocket");
                 client.subscribe("/topic/alerts", (message) => {

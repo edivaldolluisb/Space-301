@@ -1,8 +1,8 @@
 import axios, { AxiosInstance } from 'axios';
 
 // Constantes
-const API_BASE_AUTH_URL = 'http://localhost:8080/auth';
-const API_BASE_URL = 'http://localhost:8080/api/v1';
+const API_BASE_AUTH_URL = `${import.meta.env.VITE_API_BASE_AUTH_URL}`;
+const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL2}`;
 
 // Interfaces
 interface Credentials {

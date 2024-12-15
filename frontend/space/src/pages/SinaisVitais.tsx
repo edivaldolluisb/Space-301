@@ -61,7 +61,7 @@ export default function SinaisVitais() {
         }
         setCurrentAstronaut(getAstro());
         const client = new Client({
-            brokerURL: 'ws://localhost:8080/space-websocket',
+            brokerURL: `${import.meta.env.VITE_BROKER_URL}`,
             reconnectDelay: 5000,
             onConnect: () => {
                 console.log(`Conectado ao WebSocket: /topic/${launchId}/astronaut-data/${currentAstronautId}`);
