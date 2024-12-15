@@ -22,7 +22,7 @@ interface GroupedActivities {
 	false: Activity[];
 }
 
-export function ImportantLinks() {
+export function RecentAlerts() {
 
 	const [groupedActivities, setGroupedActivities] = useState<GroupedActivities>({
 		true: [],

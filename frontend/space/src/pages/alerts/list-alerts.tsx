@@ -51,7 +51,7 @@ interface GroupedActivities {
 	false: Activity[];
 }
 
-export function Activities() {
+export function ListAlerts() {
 	// const [activities, setActivities] = useState<Activity[]>([]);
 	const [groupedActivities, setGroupedActivities] = useState<GroupedActivities>({
 		true: [],

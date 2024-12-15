@@ -1,22 +1,24 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import { History } from "./pages/LaunchHistory/History"
-import HistoryDetails from "./pages/LaunchHistory/HistoryDetails"
-import { CreateTripPage } from "./pages/create-account"
-import { TripDetailsPage } from "./pages/trip-details"
-import { AlertsPage } from "./pages/trip-details"
+import { History } from "./pages/LaunchHistory/LaunchHistory"
+import { AuthPage } from "./pages/create-account"
+import { AlertsPage } from "./pages/alerts"
 import { DashboardPage } from "./pages/company"
 import { RocketDetailsPage } from "./pages/company/rocket-dashboard"
 import SinaisVitais from "./pages/SinaisVitais"
-import Dashboard from "./pages/company/dashboard"
-import SettingsPage from "./pages/SettingsPage"
-import {Users} from "./pages/settings/Users"
+import SettingsPage from "./pages/settings"
+import { Users } from "./pages/settings/Users"
+import { NotFound } from "./pages/notfound"
 import VisitorDashboard from "./pages/visitor/VisitorDashboard"
 
 
 const router = createBrowserRouter([
   {
+    path: "*",
+    element: <NotFound />
+  },
+  {
     path: "/",
-    element: <CreateTripPage />
+    element: <AuthPage />
   },
   {
     path: "/alerts",
@@ -37,10 +39,6 @@ const router = createBrowserRouter([
   {
     path: "/history",
     element: <History />
-  },
-  {
-    path: "/history/details/:id",
-    element: <HistoryDetails />
   },
   {
     path: "/settings",

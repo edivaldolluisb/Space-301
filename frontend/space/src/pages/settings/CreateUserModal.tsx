@@ -1,4 +1,4 @@
-import { Calendar, X, Loader2, User, MapPin, AtSign, KeyRound } from "lucide-react";
+import { X, Loader2, User, AtSign, KeyRound } from "lucide-react";
 import { Button } from "../../components/button";
 import { FormEvent, useState } from "react";
 

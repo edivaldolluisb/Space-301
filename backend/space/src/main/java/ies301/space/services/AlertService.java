@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ies301.space.entities.Alert;
+import ies301.space.entities.Launch;
 import ies301.space.repositories.AlertRepository;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -49,6 +50,11 @@ public class AlertService {
     public List<Alert> getAlertsByLaunchId(Long launch_id) {
         return alertRepository.findAlertsByLaunchId(launch_id);
     }
+
+    public List<Alert> getAlertsByParametroAndLaunch(String parametro, Long launchId) {
+        return alertRepository.findAlertsByParametroAndLaunch(parametro, launchId);
+    }
+    
 
 
     public Alert updateAlertStatus(Long alertId, boolean newStatus) {

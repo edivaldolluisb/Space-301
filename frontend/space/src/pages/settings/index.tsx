@@ -1,8 +1,8 @@
-import { DestinationAndDateHeader } from "../components/destination-and-date-header";
-import { Plus, X, Loader2, User, AtSign, KeyRound, MapPin, Eye, ClipboardCopy, RefreshCw, EyeOff } from "lucide-react";
-import { Button } from "../components/button";
+import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
+import { User, AtSign, KeyRound, MapPin, Eye, ClipboardCopy, RefreshCw, EyeOff } from "lucide-react";
+import { Button } from "../../components/button";
 import { useState, useEffect } from "react";
-import { api } from "../lib/axios";
+import { api } from "../../lib/axios";
 import { Link } from "react-router-dom";
 
 
@@ -49,10 +49,11 @@ const SettingsPage = () => {
     const errors = validateForm();
     if (Object.keys(errors).length > 2) {
       setFormErrors(errors);
+      console.log(formErrors)
       return;
     }
-    
-    const updatedData = { name: formData.name, email: formData.email, password: formData.password};
+
+    const updatedData = { name: formData.name, email: formData.email, password: formData.password };
     try {
       if (!userId) {
         console.error("ID do utilizador não encontrado.");
@@ -63,6 +64,7 @@ const SettingsPage = () => {
       if (response && response.data) {
         console.log("Usuário atualizado com sucesso:", response.data);
         const userData = response.data;
+        console.log(userData)
       }
 
     } catch (err) {
@@ -127,6 +129,7 @@ const SettingsPage = () => {
       });
     } catch (err) {
       setError('Erro ao carregar os dados do utilizador');
+      console.log(error)
       console.error(err);
     } finally {
       // setIsLoading(false);
@@ -279,9 +282,9 @@ const SettingsPage = () => {
               </div>
 
               <Link to={"/settings/users"} className="">
-              <Button variant="secondary">
-                Ver funcionários
-              </Button>
+                <Button variant="secondary">
+                  Ver funcionários
+                </Button>
               </Link>
             </div>
 

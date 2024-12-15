@@ -1,7 +1,7 @@
 "use client"
 
 import { TrendingUp, Gauge, Thermometer } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, Line, LineChart, XAxis, YAxis, ReferenceLine, LabelList } from "recharts"
+import { Bar, BarChart, CartesianGrid, Line, LineChart, XAxis, YAxis, LabelList } from "recharts"
 
 import {
 	Card,
@@ -65,8 +65,7 @@ export function SpeedGraph({ launchId }: { launchId: string }) {
 
 	useEffect(() => {
 		const fetchSpeedData = async () => {
-			try {
-				// localhost:8080/api/v1/launches/1/nave/null/velocidade #TOUPDATE
+			try {				
 				const response = await api.get(`/launches/${launchId}/nave/null/velocidade`);
 				const formattedData = response.data.map((item: ApiResponseData) => ({
 					day: `${new Date(item._time).getHours()}:${new Date(item._time).getMinutes()}`,
@@ -249,7 +248,7 @@ export function TemperatureGraph({ launchId }: { launchId: string }) {
 		<Card>
 			<CardHeader>
 				<CardTitle>Temperatura Interna</CardTitle>
-				<CardDescription>{`Máxima: ${maxTemp?.toFixed(2)}°`}  </CardDescription>
+				<CardDescription>{`Máxima: ${maxTemp?.toFixed(2)}K`}  </CardDescription>
 				{/* {formatDate(startTempDate)} - {formatDate(endTempDate)} */}
 			</CardHeader>
 			<CardContent>
@@ -274,7 +273,7 @@ export function TemperatureGraph({ launchId }: { launchId: string }) {
 			</CardContent>
 			<CardFooter className="flex-col items-start gap-2 text-sm">
 				<div className="flex gap-2 font-medium leading-none">
-					{`Temperatura Média: ${averageTemp?.toFixed(2)}° | Temperatura Máxima: ${maxTemp?.toFixed(2)}°`} <Thermometer className="h-4 w-4" />
+					{`Temperatura Média: ${averageTemp?.toFixed(2)}K | Temperatura Máxima: ${maxTemp?.toFixed(2)}K`} <Thermometer className="h-4 w-4" />
 				</div>
 				<div className="leading-none text-muted-foreground">
 					Showing total temperatures for the period
@@ -613,7 +612,7 @@ export function ExternalTemperatureGraph({ launchId }: { launchId: string }) {
       <CardHeader>
         <CardTitle>Temperatura Externa</CardTitle>
         <CardDescription>
-          {`Média: ${averageExternalTemperature?.toFixed(2)}° | Máxima: ${maxExternalTemperature?.toFixed(2)}°`}
+          {`Média: ${averageExternalTemperature?.toFixed(2)}K | Máxima: ${maxExternalTemperature?.toFixed(2)}K`}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -635,7 +634,7 @@ export function ExternalTemperatureGraph({ launchId }: { launchId: string }) {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-		A máxima do lançamento foi: ${maxExternalTemperature?.toFixed(2)} <TrendingUp className="h-4 w-4" />
+		A temperatura externa máxima do lançamento foi:{maxExternalTemperature?.toFixed(2)} <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
           Apresentando todos dos dados da temperatura externa

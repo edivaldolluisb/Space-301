@@ -2,8 +2,8 @@ import { X, AtSign, KeyRound, Loader2 } from "lucide-react";
 import { FormEvent } from "react";
 import { Button } from "../../components/button";
 
-interface LoginModalProps {
-  closeConfirmTripModal: () => void;
+interface LoginComponentProps {
+  closeLoginComponent: () => void;
   createTrip: (event: FormEvent<HTMLFormElement>) => Promise<void>;
   setCompanyEmail: (email: string) => void;
   setCompanyPassword: (password: string) => void;
@@ -11,14 +11,14 @@ interface LoginModalProps {
   isLoading: boolean;
 }
 
-export function LoginModal({
-  closeConfirmTripModal,
+export function LoginComponent({
+  closeLoginComponent,
   createTrip,
   setCompanyEmail,
   setCompanyPassword,
   error,
   isLoading,
-}: LoginModalProps) {
+}: LoginComponentProps) {
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
       <div className="w-[640px] rounded-xl py-5 px-6 shadow-shape bg-zinc-900 space-y-5">
@@ -26,7 +26,7 @@ export function LoginModal({
           <div className="flex items-center justify-between">
             <h2 className="font-lg font-semibold">Entrar</h2>
             <button 
-              onClick={closeConfirmTripModal}
+              onClick={closeLoginComponent}
               disabled={isLoading}
               className="hover:bg-zinc-800 rounded-md p-1 transition-colors"
             >

@@ -1,13 +1,10 @@
 import { Plus } from "lucide-react";
-import { useState, useEffect } from "react";
-import { Activities } from "./activities";
+import { ListAlerts } from "./list-alerts";
 import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
 import { apiService } from "../../lib/axios";
 
-import AlertsWs from "./alertsws"
 
 export function AlertsPage() {
-	const [isCreateActivityModalOpen, setIsCreateActivityModalOpen] = useState(false)
 
 	function markAllAsSeen() {
 		updateAlerts();
@@ -37,7 +34,7 @@ export function AlertsPage() {
 						</button>
 					</div>
 
-					<Activities />
+					<ListAlerts />
 				</div>
 
 			</main>

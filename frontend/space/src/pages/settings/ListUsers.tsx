@@ -1,7 +1,5 @@
-import { CircleCheck, UserRound, Eye, BookUser } from "lucide-react";
+import { UserRound, BookUser } from "lucide-react";
 import { useState, useEffect } from "react";
-import { format } from "date-fns";
-import { pt } from "date-fns/locale";
 import { Button } from "../../components/button";
 
 
