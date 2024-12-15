@@ -9,8 +9,11 @@ public class DotenvConfig {
 
     @Bean
     public Dotenv dotenv() {
-        return Dotenv.configure()
-            .directory(System.getProperty("user.dir"))
+        System.out.println("Tentando carregar o arquivo .env em /app");
+        Dotenv dotenv = Dotenv.configure()
+            .filename(".env")
+            .directory("/app")
             .load();
+        return dotenv;
     }
 }
