@@ -37,7 +37,7 @@ interface Rocket {
 	name: string;
 }
 
-export function CreateActivityModal({
+export function CreateLaunchComponent({
 	closeCreateLaunchModal,
 	createLaunch,
 	setMissionName,

@@ -2,8 +2,8 @@ import { User, X, AtSign, Loader2, KeyRound } from "lucide-react";
 import { FormEvent } from "react";
 import { Button } from "../../components/button";
 
-interface ConfirmTripModalProps {
-  closeConfirmTripModal: () => void
+interface RegisterComponentProps {
+  closeRegisterComponent: () => void
   createTrip: (event: FormEvent<HTMLFormElement>) => void
   setCompanyName: (name: string) => void;
   setCompanyEmail: (email: string) => void;
@@ -12,15 +12,15 @@ interface ConfirmTripModalProps {
   isLoading: boolean;
 }
 
-export function ConfirmTripModal({
-  closeConfirmTripModal,
+export function RegisterComponent({
+  closeRegisterComponent,
   createTrip,
   setCompanyName,
   setCompanyEmail,
   setCompanyPassword,
   error,
   isLoading,
-}: ConfirmTripModalProps) {
+}: RegisterComponentProps) {
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
       <div className="w-[640px] rounded-xl py-5 px-6 shadow-shape bg-zinc-900 space-y-5">
@@ -28,7 +28,7 @@ export function ConfirmTripModal({
           <div className="flex items-center justify-between">
             <h2 className="font-lg font-semibold">Registar conta</h2>
             <button>
-              <X className="size-5 text-zinc-400" onClick={closeConfirmTripModal} />
+              <X className="size-5 text-zinc-400" onClick={closeRegisterComponent} />
             </button>
           </div>
 

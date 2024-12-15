@@ -1,4 +1,4 @@
-import { Plus, Users, History } from "lucide-react";
+import { Users, History } from "lucide-react";
 import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
 import { Button } from "../../components/button";
 import Dashboard from "./dashboard";
@@ -44,7 +44,7 @@ export function RocketDetailsPage() {
               </Link>
               <Button variant="secondary" onClick={() => setIsHistorySectionOpen(!isHistorySectionOpen)}>
                 <History className="size-5" />
-                Ver hitorico completo
+                Ver histórico completo
               </Button>
             </div>
           </div>
