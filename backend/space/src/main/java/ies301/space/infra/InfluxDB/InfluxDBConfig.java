@@ -21,7 +21,6 @@ public class InfluxDBConfig {
     private static final String BUCKET = "home";
     private static final String ORG = "docs";
     private static final String URL = "http://localhost:8086";
-
     @Bean
     public InfluxDBClient influxDBClient() {
         return InfluxDBClientFactory.create(URL, TOKEN.toCharArray(), ORG, BUCKET);
