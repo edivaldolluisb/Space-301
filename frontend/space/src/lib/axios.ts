@@ -18,6 +18,7 @@ interface AuthResponse {
   token: string;
   id: number | string;
   user: User;
+  role?: string; // ADMIN, USER, VISITOR
 }
 
 interface Alert {
@@ -73,17 +74,28 @@ export const auth = {
     if (response.data.token) {
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('userId', response.data.id.toString());
+      localStorage.setItem('role', response.data.role || 'VISITOR');
     }
     return response.data;
   },
 
   logout(): void {
     localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('role');
   },
 
   getToken(): string | null {
     return localStorage.getItem('token');
-  }
+  },
+
+  getUSerRole(): string | null {
+    return localStorage.getItem('role');
+  },
+
+  getUserId(): string | null {
+    return localStorage.getItem('userId');
+  },
 };
 
 // Funções de API

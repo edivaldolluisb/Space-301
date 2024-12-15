@@ -80,6 +80,7 @@ export function Users() {
         }
     };
 
+    // eu poderia utilizar useMemo aqui, mas no momento não é necessário
     const filteredUsers = usersList.filter(user =>
         user.name.toLowerCase().includes(userSearchName.toLowerCase())
     );
