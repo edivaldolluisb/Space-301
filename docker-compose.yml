@@ -52,6 +52,8 @@ services:
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+    volumes:
+      - .env:/app/.env
     depends_on:
       - postgres
       - rabbitmq
@@ -62,6 +64,8 @@ services:
     container_name: meu_react_app
     ports:
       - "${FRONTEND_PORT}"
+    volumes:
+    - .env:/app/.env
     stdin_open: true
     tty: true
     depends_on:

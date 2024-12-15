@@ -65,8 +65,7 @@ export function SpeedGraph({ launchId }: { launchId: string }) {
 
 	useEffect(() => {
 		const fetchSpeedData = async () => {
-			try {
-				
+			try {				
 				const response = await api.get(`/launches/${launchId}/nave/null/velocidade`);
 				const formattedData = response.data.map((item: ApiResponseData) => ({
 					day: `${new Date(item._time).getHours()}:${new Date(item._time).getMinutes()}`,
