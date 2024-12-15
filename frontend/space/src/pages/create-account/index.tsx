@@ -3,7 +3,7 @@ import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/button";
 import { auth } from "../../lib/axios";
-import { LoginComponent } from "./Login";
+import { LoginComponent } from "./login";
 import { RegisterComponent } from "./RegisterUser";
 import { Link } from "react-router-dom";
 

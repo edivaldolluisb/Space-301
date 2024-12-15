@@ -3,7 +3,8 @@ import axios, { AxiosInstance } from 'axios';
 // Constantes
 const API_BASE_AUTH_URL = `${import.meta.env.VITE_API_BASE_AUTH_URL}`;
 const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL2}`;
-
+console.log(import.meta.env);
+console.log(API_BASE_AUTH_URL)
 // Interfaces
 interface Credentials {
   email: string;

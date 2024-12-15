@@ -1,7 +1,7 @@
 import {
 	LucideIcon,
   } from 'lucide-react';
-
+import React from 'react';
   /**
  * Dados recebidos do WebSocket durante a missão.
  */
