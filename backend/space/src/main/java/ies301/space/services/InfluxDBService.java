@@ -152,6 +152,8 @@ public class InfluxDBService {
                               r.lancamentoId == "%s" and 
                               r.id == "%s" and 
                               r._field == "%s")
+                        |> aggregateWindow(every: 2m, fn: mean, createEmpty: false)
+                        |> yield(name: "mean")
                         """,
                 "home", lancamentoId, tripulanteId, field);
 
