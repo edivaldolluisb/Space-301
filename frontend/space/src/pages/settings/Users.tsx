@@ -92,41 +92,41 @@ export function Users() {
         setIsLoading(true);
 
         const newUser = {
-            name: user.name, 
-            email: user.email, 
-            password: user.password, 
+            name: user.name,
+            email: user.email,
+            password: user.password,
             // role: user.role
         }
-        
+
         console.log("Utilizador a ser criado:", newUser);
-      
+
         try {
-          const response = await api.post("/user", user);
-      
-          const UserResponse = response.data;
-          console.log("Utilizador registado com sucesso:", UserResponse);
-      
-          setUsersList([...usersList, UserResponse]);
-          setIsLoading(false);
-          closeCreateUserModal();
-          toast({
-            title: "Operação realizada com sucesso",
-            description: `Utilizador ${UserResponse.name} registado com sucesso`,
-            action:<CircleCheckBig className="size-5 text-lime-300" />,
-            
-          });
+            const response = await api.post("/user", user);
+
+            const UserResponse = response.data;
+            console.log("Utilizador registado com sucesso:", UserResponse);
+
+            setUsersList([...usersList, UserResponse]);
+            setIsLoading(false);
+            closeCreateUserModal();
+            toast({
+                title: "Operação realizada com sucesso",
+                description: `Utilizador ${UserResponse.name} registado com sucesso`,
+                action: <CircleCheckBig className="size-5 text-lime-300" />,
+
+            });
         } catch (error) {
-          console.error("Erro ao registrar utilizador:", error);
-          setError("Erro ao registrar utilizador");
-          setIsLoading(false);
-          toast({
-            variant: "destructive",
-            title: "Erro ao registrar utilizador:",
-            description: "Reveja os dados do formulário, ou veja se tem permissões suficientes",
-          })
+            console.error("Erro ao registrar utilizador:", error);
+            setError("Erro ao registrar utilizador");
+            setIsLoading(false);
+            toast({
+                variant: "destructive",
+                title: "Erro ao registrar utilizador:",
+                description: "Reveja os dados do formulário, ou veja se tem permissões suficientes",
+            })
         }
-      };
-      
+    };
+
 
 
     return (
@@ -189,14 +189,14 @@ export function Users() {
 
             {isCreateUserModalOpen && (
                 <CreateUserModal
-                closeCreateUserModal={closeCreateUserModal}
+                    closeCreateUserModal={closeCreateUserModal}
                     createUser={createUser}
                     error={error}
                     isLoading={isLoading}
 
                 />
             )}
-      <Toaster />
+            <Toaster />
         </div>
     )
 }

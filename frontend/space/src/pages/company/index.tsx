@@ -74,8 +74,8 @@ export function DashboardPage() {
       return;
     }
 
-    // check if at least one astronaut is selected
-    if (astronauts.length < 4) {
+    // select only 4 astronauts
+    if (astronauts.length !== 4) {
       setError('Selecione 4 astronautas');
       setIsLoading(false);
       return;
