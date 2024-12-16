@@ -1,5 +1,6 @@
 "use client"
 
+// @ts-expect-error import ainda não utilizado
 import React from "react"
 
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
@@ -30,11 +31,11 @@ import {
 
 import { api } from "../../../lib/axios";
 
-// interface ApiResponseData {
-// 	_value: number;
-// 	_field: string;
-// 	_time: string;
-// }
+interface ApiResponseData {
+	_value: number;
+	_field: string;
+	_time: string;
+}
 
 // internal and external temperature graph
 
@@ -85,8 +86,7 @@ export function InternalExternalGraph({ launchId }: { launchId: string }) {
                 const internalTempData = internalTempResponse.data
                 const externalTempData = externalTempResponse.data
 
-                
-				const formattedData = internalTempData.map((item: any, index: number) => ({
+                const formattedData = internalTempData.map((item: ApiResponseData, index: number) => ({ 
 					date: item._time, 
 					temperaturaInterna: item._value,  
 					temperaturaExterna: externalTempData[index]?._value || 0, 
@@ -110,6 +110,7 @@ export function InternalExternalGraph({ launchId }: { launchId: string }) {
     const filteredData = useMemo(() => {
         const now = new Date();
         const timeDiff = { "5m": 5 * 60 * 1000, "10m": 10 * 60 * 1000, "20m": 20 * 60 * 1000 };
+        // @ts-expect-error timeDiff[timeRange] não é um valor válido # TODO colocar o tipo de dados 
         return data.filter(item => now.getTime() - new Date(item.date).getTime() <= (timeDiff[timeRange] || 20 * 60 * 1000));
     }, [data, timeRange]);
     
