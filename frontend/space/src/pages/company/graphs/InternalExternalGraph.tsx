@@ -139,7 +139,7 @@ export function InternalExternalGraph({ launchId }: { launchId: string }) {
                 <div className="grid flex-1 gap-1 text-center sm:text-left">
                     <CardTitle>Temperatura interna e externa</CardTitle>
                     <CardDescription>
-                        Apresentando os dados da temperatura inter e externa do foguete
+                        Apresentando os dados da temperatura interna e externa do foguete
                     </CardDescription>
                 </div>
                 <Select value={timeRange} onValueChange={setTimeRange}>

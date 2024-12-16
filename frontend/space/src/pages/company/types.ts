@@ -1,10 +1,10 @@
 import {
 	LucideIcon,
-  } from 'lucide-react';
+} from 'lucide-react';
 import React from 'react';
-  /**
- * Dados recebidos do WebSocket durante a missão.
- */
+/**
+* Dados recebidos do WebSocket durante a missão.
+*/
 export interface WebSocketData {
 	altitude: number;
 	velocidade: number;
@@ -44,7 +44,9 @@ export interface Launch {
 	astronauts: number[];
 };
 
-
+export interface OrganizedLaunches {
+	[year: string]: { [month: string]: Launch[] };
+}
 
 export interface RocketInfoProps {
 	rocket?: Rocket | null;
@@ -53,7 +55,7 @@ export interface RocketInfoProps {
 
 
 export interface DashboardProps {
-	launchId?: string 
+	launchId?: string
 }
 
 export interface CardProps {

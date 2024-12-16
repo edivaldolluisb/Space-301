@@ -10,23 +10,13 @@ import { Users } from "./pages/settings/Users"
 import { NotFound } from "./pages/notfound"
 import VisitorDashboard from "./pages/visitor/VisitorDashboard"
 
+import { ProtectedRoute } from './components/ProtectedRoute';
+
 
 const router = createBrowserRouter([
   {
-    path: "*",
-    element: <NotFound />
-  },
-  {
     path: "/",
     element: <AuthPage />
-  },
-  {
-    path: "/alerts",
-    element: <AlertsPage />
-  },
-  {
-    path: "/sinais-vitais/:launchId",
-    element: <SinaisVitais />
   },
   {
     path: "/dashboard",
@@ -37,20 +27,43 @@ const router = createBrowserRouter([
     element: <RocketDetailsPage />
   },
   {
-    path: "/history",
-    element: <History />
+    path: "/visitor",
+    element: <VisitorDashboard />
   },
   {
-    path: "/settings",
-    element: <SettingsPage />
+    path: "*",
+    element: <NotFound />
   },
   {
-    path: "/settings/users",
-    element: <Users />
-  },
-  {
-    path:"/visitor",
-    element:<VisitorDashboard/>
+
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: "/alerts",
+        element: <AlertsPage />
+      },
+      {
+        path: "/sinais-vitais/:launchId",
+        element: <SinaisVitais />
+      },
+      {
+        path: "/history",
+        element: <History />
+      },
+      {
+        path: "/settings",
+        element: <SettingsPage />
+      },
+      {
+        element: <ProtectedRoute allowedRoles={['ADMIN']} />,
+        children: [
+          {
+            path: "/settings/users",
+            element: <Users />
+          }
+        ]
+      }
+    ]
   }
 ])
 

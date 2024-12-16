@@ -3,8 +3,8 @@ import axios, { AxiosInstance } from 'axios';
 // Constantes
 const API_BASE_AUTH_URL = `${import.meta.env.VITE_API_BASE_AUTH_URL}`;
 const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL2}`;
-console.log(import.meta.env);
-console.log(API_BASE_AUTH_URL)
+// console.log(import.meta.env);
+// console.log(API_BASE_AUTH_URL)
 // Interfaces
 interface Credentials {
   email: string;
@@ -91,11 +91,20 @@ export const auth = {
   },
 
   getUSerRole(): string | null {
-    return localStorage.getItem('role');
+    return localStorage.getItem('role') || 'VISITOR';
   },
 
   getUserId(): string | null {
     return localStorage.getItem('userId');
+  },
+
+  isAuthenticated(): { authenticated: boolean; role: string } {
+    const token = localStorage.getItem('token');
+    const role = localStorage.getItem('role');
+    return {
+      authenticated: !!token,
+      role: role || 'VISITOR', 
+    };
   },
 };
 

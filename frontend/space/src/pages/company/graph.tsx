@@ -28,11 +28,12 @@ interface ApiResponseData {
 }
 
 
-interface SpeedData {
+
+interface GraphData {
 	day: string;
+	value: number;
 	time: string;
-	speed: number;
-}
+  }
 
 
 // Função para formatar a data
@@ -55,7 +56,7 @@ const speedConfig = {
 } satisfies ChartConfig
 
 export function SpeedGraph({ launchId }: { launchId: string }) {
-	const [speedData, setSpeedData] = useState<SpeedData[]>([]);
+	const [speedData, setSpeedData] = useState<GraphData[]>([]);
 	const [averageSpeed, setAverageSpeed] = useState<number | null>(null);
 	const [maxSpeed, setMaxSpeed] = useState<number | null>(null);
 	const [startDate, setStartDate] = useState<Date>(new Date());
@@ -76,9 +77,9 @@ export function SpeedGraph({ launchId }: { launchId: string }) {
 
 				console.log("Speed data:", response.data)
 				// Calcular média e máximo
-				const totalSpeed = formattedData.reduce((sum: number, item: SpeedData) => sum + item.speed, 0);
+				const totalSpeed = formattedData.reduce((sum: number, item: GraphData) => sum + item.value, 0);
 				const avgSpeed = totalSpeed / formattedData.length;
-				const maxSpeed = Math.max(...formattedData.map((item: SpeedData) => item.speed));
+				const maxSpeed = Math.max(...formattedData.map((item: GraphData) => item.value));
 
 				setAverageSpeed(avgSpeed);
 				setMaxSpeed(maxSpeed);
