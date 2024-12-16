@@ -19,10 +19,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.beans.factory.annotation.Value;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    @Value("${frontend.end}")
+    private String frontend_host;
 
     @Autowired
     private CustomUserDetailsService userDetailsService;
@@ -37,7 +41,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(request -> {
             CorsConfiguration config = new CorsConfiguration();
-            config.setAllowedOrigins(List.of("http://localhost:3000"));
+            config.setAllowedOrigins(List.of(frontend_host));
             config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
             config.setAllowedHeaders(List.of("*"));
             config.setAllowCredentials(true);
@@ -74,7 +78,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of(frontend_host));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true); // Permite envio de cookies/tokens

@@ -25,7 +25,7 @@ mensagem = {
 #     ]
 # }
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(host="localhost"))
+connection = pika.BlockingConnection(pika.ConnectionParameters(host="backend")) #TOUPDATE
 channel = connection.channel()
 channel.queue_declare(queue=RECEIVER_QUEUE_NAME, durable=True)
 

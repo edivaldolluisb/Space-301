@@ -1,11 +1,9 @@
-import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
-import { CircleCheckBig, User, AtSign, KeyRound, Eye, ClipboardCopy, RefreshCw, EyeOff } from "lucide-react";
-import { Button } from "../../components/button";
+import { DestinationAndDateHeader } from "../components/destination-and-date-header";
+import { User, AtSign, KeyRound, MapPin, Eye, ClipboardCopy, RefreshCw, EyeOff } from "lucide-react";
+import { Button } from "../components/button";
 import React, { useState, useEffect } from "react";
-import { api } from "../../lib/axios";
+import { api } from "../lib/axios";
 import { Link } from "react-router-dom";
-import { useToast } from "@/components/hooks/use-toast"
-import { Toaster } from "@/components/ui/toaster"
 
 
 
@@ -21,17 +19,12 @@ const SettingsPage = () => {
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const userId = localStorage.getItem('userId');
 
-  const { toast } = useToast()
-
   const generateRandomKey = () => {
-    const randomKey = Math.random().toString(36).substring(2, 14).padEnd(13, "0");
+    const randomKey = Math.random().toString(36).slice(-12);
+    console.log("Nova chave gerada:", randomKey);
     setFormData((prev) => ({ ...prev, password: randomKey }));
-    toast({
-      description: `Nova chave gerada`,
-    })
   };
 
   const [formData, setFormData] = useState({
@@ -40,65 +33,39 @@ const SettingsPage = () => {
     address: "",
     password: "",
   });
-  const [formErrors, setFormErrors] = useState<FormErrors>({});
 
   const validateForm = () => {
     const errors: FormErrors = {};
     if (!formData.name) errors.name = "Nome é obrigatório.";
     if (!formData.email.includes("@")) errors.email = "E-mail inválido.";
-    // if (!formData.address) errors.address = "Endereço é obrigatório.";
+    if (!formData.address) errors.address = "Endereço é obrigatório.";
     return errors;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const errors = validateForm();
-    if (Object.keys(errors).length > 0) {
-      setFormErrors(errors);
-      console.log(formErrors)
-      toast({
-        title: "Dados inválidos",
-        description: `${formErrors.name} ${formErrors.email} ${formErrors.address}`,
-      })
-
+    if (Object.keys(errors).length > 2) {
       return;
     }
-
-    const updatedData = { name: formData.name, email: formData.email, password: formData.password };
+    
+    const updatedData = { name: formData.name, email: formData.email, password: formData.password};
     try {
       if (!userId) {
         console.error("ID do utilizador não encontrado.");
-        toast({
-          title: "ID do utilizador não encontrado.",
-          description: "Faça o login novamente, ou tente mais tarde.",
-        });
         return;
       }
       const response = await updateUser(userId, updatedData);
 
       if (response && response.data) {
         console.log("Usuário atualizado com sucesso:", response.data);
-        const userData = response.data;
-        console.log(userData)
-        toast({
-          title: "Dados atualizados com sucesso.",
-          description: "Os dados foram atualizados com sucesso.",
-          action:<CircleCheckBig className="size-5 text-lime-300" />,
-          
-        });
       }
 
     } catch (err) {
       console.error("Erro ao enviar os dados:", err);
-      toast({
-        variant: "destructive",
-        title: "Erro ao enviar os dados:",
-        description: "Reveja os dados do formulário, ou veja se tem permissões suficientes",
-      })
     }
 
     console.log("Formulário enviado:", updatedData);
-    setFormErrors({});
   };
 
   const updateUser = async (userId: string, updatedData: { name: string; email: string }) => {
@@ -121,9 +88,7 @@ const SettingsPage = () => {
     console.log("Copiando senha para a área de transferência...");
     if (!formData.password) {
       console.log("Nenhuma senha disponível para copiar.");
-      toast({
-        description: "Nenhuma senha disponível para copiar..",
-      });
+      // alert("Nenhuma senha disponível para copiar.");
       return;
     }
 
@@ -131,16 +96,11 @@ const SettingsPage = () => {
       .writeText(formData.password)
       .then(() => {
         console.log("Senha copiada:", formData.password);
-        toast({
-          description: "Senha copiada para a área de transferência",
-        })
+        // alert("Senha copiada com sucesso!");
       })
       .catch(() => {
         console.error("Erro ao copiar a senha.");
-        toast({
-          description: "Erro ao copiar a senha. Tente novamente.",
-          variant: "destructive",
-        });
+        // alert("Erro ao copiar a senha.");
       });
   };
 
@@ -161,12 +121,6 @@ const SettingsPage = () => {
         password: "",
       });
     } catch (err) {
-      setError('Erro ao carregar os dados do utilizador');
-      toast({
-        title: "Erro ao carregar os dados do utilizador",
-        description: "Tente novamente!",
-      })
-      console.log(error)
       console.error(err);
     } finally {
       // setIsLoading(false);
@@ -229,6 +183,23 @@ const SettingsPage = () => {
                   onChange={(e) =>
                     setFormData((prev) => ({ ...prev, email: e.target.value }))
                   }
+                />
+              </div>
+              <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2 focus-within:ring-2 focus-within:ring-violet-500/20 transition-all">
+                <MapPin className="text-zinc-400 size-5" />
+                <input
+                  type="text"
+                  name="address"
+                  placeholder="Endereço da empresa"
+                  className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
+                  disabled={isLoading}
+                  required
+                  minLength={6}
+                  value={formData.address}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, address: e.target.value }))
+                  }
+
                 />
               </div>
 
@@ -302,9 +273,9 @@ const SettingsPage = () => {
               </div>
 
               <Link to={"/settings/users"} className="">
-                <Button variant="secondary">
-                  Ver funcionários
-                </Button>
+              <Button variant="secondary">
+                Ver funcionários
+              </Button>
               </Link>
             </div>
 
@@ -312,7 +283,6 @@ const SettingsPage = () => {
 
         </div>
       </main>
-      <Toaster />
 
     </div>
   )

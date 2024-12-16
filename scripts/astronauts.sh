@@ -12,7 +12,7 @@ if [[ "$RESPONSE" == "[]" ]]; then
         "height": 1.65,
         "age": 39,
         "weight": 60,
-        "photo": "/public/Amelia_Earhart.webp"
+        "photo": "/Amelia_Earhart.webp"
     }'
 
     curl -X POST http://localhost:8080/api/v1/astronauts -H "Content-Type: application/json" -d '{
@@ -21,7 +21,7 @@ if [[ "$RESPONSE" == "[]" ]]; then
         "height": 1.80,
         "age": 39,
         "weight": 75,
-        "photo": "/public/Neil_Armstrong.webp"
+        "photo": "/Neil_Armstrong.webp"
     }'
 
     curl -X POST http://localhost:8080/api/v1/astronauts -H "Content-Type: application/json" -d '{
@@ -30,7 +30,7 @@ if [[ "$RESPONSE" == "[]" ]]; then
         "height": 1.60,
         "age": 50,
         "weight": 62,
-        "photo": "/public/Katherine_Johnson.webp"
+        "photo": "/Katherine_Johnson.webp"
     }'
 
     curl -X POST http://localhost:8080/api/v1/astronauts -H "Content-Type: application/json" -d '{
@@ -39,7 +39,7 @@ if [[ "$RESPONSE" == "[]" ]]; then
         "height": 1.75,
         "age": 40,
         "weight": 78,
-        "photo": "/public/Buzz_Aldrin.webp"
+        "photo": "/Buzz_Aldrin.webp"
     }'
 
     curl -X POST http://localhost:8080/api/v1/astronauts -H "Content-Type: application/json" -d '{
@@ -48,7 +48,7 @@ if [[ "$RESPONSE" == "[]" ]]; then
         "height": 1.68,
         "age": 57,
         "weight": 55,
-        "photo": "/public/Amelia_Earhart.webp"
+        "photo": "/Amelia_Earhart.webp"
     }'
 
     curl -X POST http://localhost:8080/api/v1/astronauts -H "Content-Type: application/json" -d '{
@@ -57,7 +57,7 @@ if [[ "$RESPONSE" == "[]" ]]; then
         "height": 1.62,
         "age": 34,
         "weight": 70,
-        "photo": "/public/Neil_Armstrong.webp"
+        "photo": "/Neil_Armstrong.webp"
     }'
 
     curl -X POST http://localhost:8080/api/v1/astronauts -H "Content-Type: application/json" -d '{
@@ -66,7 +66,7 @@ if [[ "$RESPONSE" == "[]" ]]; then
         "height": 1.68,
         "age": 45,
         "weight": 65,
-        "photo": "/public/Katherine_Johnson.webp"
+        "photo": "/Katherine_Johnson.webp"
     }'
 
     curl -X POST http://localhost:8080/api/v1/astronauts -H "Content-Type: application/json" -d '{
@@ -75,7 +75,7 @@ if [[ "$RESPONSE" == "[]" ]]; then
         "height": 1.75,
         "age": 80,
         "weight": 85,
-        "photo": "/public/Buzz_Aldrin.webp"
+        "photo": "/Buzz_Aldrin.webp"
     }'
 
     curl -X POST http://localhost:8080/api/v1/astronauts -H "Content-Type: application/json" -d '{
@@ -84,7 +84,7 @@ if [[ "$RESPONSE" == "[]" ]]; then
         "height": 1.63,
         "age": 58,
         "weight": 62,
-        "photo": "/public/Amelia_Earhart.webp"
+        "photo": "/Amelia_Earhart.webp"
     }'
 
     curl -X POST http://localhost:8080/api/v1/astronauts -H "Content-Type: application/json" -d '{
@@ -93,7 +93,7 @@ if [[ "$RESPONSE" == "[]" ]]; then
         "height": 1.73,
         "age": 74,
         "weight": 77,
-        "photo": "/public/Neil_Armstrong.webp"
+        "photo": "/Neil_Armstrong.webp"
     }'
 
     echo "Dados inseridos com sucesso!"
