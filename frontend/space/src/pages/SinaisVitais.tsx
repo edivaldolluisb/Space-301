@@ -215,4 +215,3 @@ const transformarDados = (data:WebSocketData) =>{
         },
     ];
 };
-
