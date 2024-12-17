@@ -3,8 +3,8 @@ import axios, { AxiosInstance } from 'axios';
 // Constantes
 const API_BASE_AUTH_URL = `${import.meta.env.VITE_API_BASE_AUTH_URL}`;
 const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL2}`;
-console.log(import.meta.env);
-console.log(API_BASE_AUTH_URL)
+// console.log(import.meta.env);
+// console.log(API_BASE_AUTH_URL)
 // Interfaces
 interface Credentials {
   email: string;
@@ -19,6 +19,7 @@ interface AuthResponse {
   token: string;
   id: number | string;
   user: User;
+  role?: string; // ADMIN, USER, VISITOR
 }
 
 interface Alert {
@@ -74,17 +75,37 @@ export const auth = {
     if (response.data.token) {
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('userId', response.data.id.toString());
+      localStorage.setItem('role', response.data.role || 'VISITOR');
     }
     return response.data;
   },
 
   logout(): void {
     localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('role');
   },
 
   getToken(): string | null {
     return localStorage.getItem('token');
-  }
+  },
+
+  getUSerRole(): string | null {
+    return localStorage.getItem('role') || 'VISITOR';
+  },
+
+  getUserId(): string | null {
+    return localStorage.getItem('userId');
+  },
+
+  isAuthenticated(): { authenticated: boolean; role: string } {
+    const token = localStorage.getItem('token');
+    const role = localStorage.getItem('role');
+    return {
+      authenticated: !!token,
+      role: role || 'VISITOR', 
+    };
+  },
 };
 
 // Funções de API

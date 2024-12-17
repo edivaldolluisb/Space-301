@@ -31,7 +31,7 @@ export function CreateUserModal({
 		name: "",
 		email: "",
 		password: "",
-		role: "user", // Valor padrão
+		role: "USER", // Valor padrão
 	});
 
 

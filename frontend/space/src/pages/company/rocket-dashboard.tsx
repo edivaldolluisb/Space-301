@@ -3,6 +3,7 @@ import { DestinationAndDateHeader } from "../../components/destination-and-date-
 import { Button } from "../../components/button";
 import Dashboard from "./dashboard";
 import { SpeedGraph, TemperatureGraph, AltitudeGraph, PressureGraph, OxygenGraph, ExternalTemperatureGraph } from "./graph";
+import { InternalExternalGraph } from "./graphs/InternalExternalGraph"
 
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -52,6 +53,7 @@ export function RocketDetailsPage() {
           {/* <Activities /> */}
           <Dashboard launchId={launchId} />
           <AltitudeGraph launchId={launchId} />
+          <InternalExternalGraph launchId={launchId} />
 
           {/* show the others graphs if history is clicked */}
           {isHistorySectionOpen && (

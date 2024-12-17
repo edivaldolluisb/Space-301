@@ -171,26 +171,4 @@ public class LaunchController {
         }
     }
 
-    // @GetMapping("/launches/{launchId}/{entity}/{entityId}/{field}/average")
-    // public ResponseEntity<?> getAveragedData(
-    //         @PathVariable Long launchId,
-    //         @PathVariable String entity,
-    //         @PathVariable(required = false) String entityId, 
-    //         @PathVariable String field,
-    //         @RequestParam(defaultValue = "1m") String interval) { 
-
-    //     Long parsedEntityId = "null".equals(entityId) ? null : Long.valueOf(entityId); 
-
-    //     try {
-    //         List<Map<String, Object>> averagedData = launchService.getAveragedData(launchId, entity, parsedEntityId,
-    //                 field, interval);
-    //         return ResponseEntity.ok(averagedData);
-    //     } catch (IllegalArgumentException e) {
-    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-    //     } catch (Exception e) {
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-    //                 .body("Error fetching averaged data: " + e.getMessage());
-    //     }
-    // }
-
 }
