@@ -1,4 +1,4 @@
-import { HeartPulse, Gauge, Thermometer, User, Donut, Wind, Leaf } from 'lucide-react';
+import { HeartPulse, Gauge, Thermometer, Donut, Wind, Leaf } from 'lucide-react';
 
 export const getIcon = (name: string): JSX.Element => {
     if (name === 'Batimento Cardíaco') {
