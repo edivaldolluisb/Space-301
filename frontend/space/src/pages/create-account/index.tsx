@@ -3,8 +3,8 @@ import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/button";
 import { auth } from "../../lib/axios";
-import { LoginModal } from "./login";
-import { ConfirmTripModal } from "./confirm-trip-modal";
+import { LoginComponent } from "./login";
+import { RegisterComponent } from "./RegisterUser";
 import { Link } from "react-router-dom";
 
 
@@ -19,10 +19,10 @@ interface LoginCredentials {
   password: string;
 }
 
-export function CreateTripPage() {
+export function AuthPage() {
   const navigate = useNavigate();
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isConfirmTripModalOpen, setIsConfirmTripModalOpen] = useState(false);
+  const [isLoginComponentOpen, setIsLoginComponentOpen] = useState(false);
+  const [isRegisterComponentOpen, setIsRegisterComponentOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,23 +30,23 @@ export function CreateTripPage() {
   const [companyEmail, setCompanyEmail] = useState("");
   const [companyPassword, setCompanyPassword] = useState("");
 
-  function openLoginModal() {
-    setIsLoginModalOpen(true);
+  function openLoginComponent() {
+    setIsLoginComponentOpen(true);
     setError(null);
   }
 
-  function closeLoginModal() {
-    setIsLoginModalOpen(false);
+  function closeLoginComponent() {
+    setIsLoginComponentOpen(false);
     setError(null);
   }
 
-  function openConfirmTripModal() {
-    setIsConfirmTripModalOpen(true);
+  function openRegisterComponent() {
+    setIsRegisterComponentOpen(true);
     setError(null);
   }
 
-  function closeConfirmTripModal() {
-    setIsConfirmTripModalOpen(false);
+  function closeRegisterComponent() {
+    setIsRegisterComponentOpen(false);
     setError(null);
   }
 
@@ -71,7 +71,9 @@ export function CreateTripPage() {
       await auth.register(newUser);
       navigate("/dashboard");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao registrar usuário");
+      // setError(err instanceof Error ? err.message : "Erro ao registrar utilizador");
+      setError("Erro ao registrar utilizador");
+      console.error(err);
     } finally {
       setIsLoading(false);
     }
@@ -97,7 +99,8 @@ export function CreateTripPage() {
       await auth.login(credentials);
       navigate("/dashboard");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao fazer login");
+      setError("Erro ao fazer login");
+      console.error(err);
     } finally {
       setIsLoading(false);
     }
@@ -121,13 +124,13 @@ export function CreateTripPage() {
 
         <div className="grid grid-cols-2 gap-4">
           <Button 
-            onClick={openLoginModal} 
+            onClick={openLoginComponent} 
             disabled={isLoading}
           >
             {isLoading ? "Carregando..." : "Entrar"}
           </Button>
           <Button 
-            onClick={openConfirmTripModal} 
+            onClick={openRegisterComponent} 
             variant="secondary" 
             disabled={isLoading}
           >
@@ -149,9 +152,9 @@ export function CreateTripPage() {
         </p>
       </div>
 
-      {isLoginModalOpen && (
-        <LoginModal
-          closeConfirmTripModal={closeLoginModal}
+      {isLoginComponentOpen && (
+        <LoginComponent
+          closeLoginComponent={closeLoginComponent}
           createTrip={loginTrip}
           setCompanyEmail={setCompanyEmail}
           setCompanyPassword={setCompanyPassword}
@@ -160,9 +163,9 @@ export function CreateTripPage() {
         />
       )}
 
-      {isConfirmTripModalOpen && (
-        <ConfirmTripModal
-          closeConfirmTripModal={closeConfirmTripModal}
+      {isRegisterComponentOpen && (
+        <RegisterComponent
+          closeRegisterComponent={closeRegisterComponent}
           createTrip={createTrip}
           setCompanyName={setCompanyName}
           setCompanyEmail={setCompanyEmail}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ParametroVital from '../components/ParametroVital';
 import Profile from '../components/Profile';
 import '../styles/sinaisvitais.css';
@@ -9,26 +9,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from "../components/button";
 import { Undo2 } from 'lucide-react';
 
-type Alerta = {
-    parametro: string;
-    nome_alerta: string;
-};
-
-type Tripulante = {
-    id: number;
-    pa_sistolica: number;
-    pa_diastolica: number;
-    oxigenio_sangue: number;
-    bpm: number;
-    respiracao: number;
-    alertas: Alerta[];
-};
 
 export default function SinaisVitais() {
-    const [astronauts, setAstronauts] = useState([]);
-    const [currentAstronautId, setCurrentAstronautId] = useState();
+    const [astronauts, setAstronauts] = useState<Astronaut[]>([])
+    const [currentAstronautId, setCurrentAstronautId] = useState<number | undefined>(undefined);
     const [currentAstronaut, setCurrentAstronaut] = useState<Astronaut>();
-    const [parametros, setParametros] = useState([]);
+    const [parametros, setParametros] = useState<(VitalParameter)[]>([]);
     const [error, setError] = useState<string | null>(null);
     const { launchId } = useParams();
     const navigate = useNavigate();
@@ -39,7 +25,7 @@ export default function SinaisVitais() {
                 const response = await api.get(`/launches/${launchId}/astronauts`);
                 console.log('resp - astronautas: ', response.data);
                 const data = response.data;
-                const astros = data.map((astro) => { return { ...astro } });
+                const astros = data.map((astro:Astronaut) => { return { ...astro } });
                 setAstronauts(astros);
                 setCurrentAstronaut(astros[0]);
                 setCurrentAstronautId(astros[0].id);
@@ -53,7 +39,7 @@ export default function SinaisVitais() {
 
     useEffect(() => {
         const getAstro = () => {
-            for (let astro of astronauts) {
+            for (const astro of astronauts) {
                 if (astro.id === currentAstronautId) {
                     return astro
                 }
@@ -61,7 +47,7 @@ export default function SinaisVitais() {
         }
         setCurrentAstronaut(getAstro());
         const client = new Client({
-            brokerURL: 'ws://localhost:8080/space-websocket',
+            brokerURL: `${import.meta.env.VITE_BROKER_URL}`,
             reconnectDelay: 5000,
             onConnect: () => {
                 console.log(`Conectado ao WebSocket: /topic/${launchId}/astronaut-data/${currentAstronautId}`);
@@ -160,9 +146,9 @@ export default function SinaisVitais() {
 
 interface VitalParameter {
     name: string;
-    valor: number | null;
-    pa_diastolica: number | null;
-    pa_sistolica: number | null;
+    valor?: number;
+    pa_diastolica?: number;
+    pa_sistolica?: number;
     unidade: string;
     status: string;
 }
@@ -175,7 +161,7 @@ interface Astronaut {
     photo: '../../public/Neil_Armstrong.webp',
     height: number;
     weight: number;
-    bmi: Number;
+    bmi: number;
     heartRate: number;
     pa_diastolica: number;
     pa_sistolica: number;
@@ -184,36 +170,46 @@ interface Astronaut {
     parametros?: VitalParameter[];
 }
 
-const transformarDados = (data) => {
+interface WebSocketData {
+    bpm: number;
+    temperature: number;
+    respiracao: number;
+    oxigenio_sangue: number;
+    pa_sistolica: number;
+    pa_diastolica: number;
+}
+
+
+const transformarDados = (data:WebSocketData) =>{
     return [
         {
             name: "Batimento Cardíaco",
-            valor: data.bpm,
+            valor: data.bpm ?? 0,
             unidade: "bpm",
             status: data.bpm > 100 ? "alto" : "normal"
         },
         {
             name: "Temperatura Corporal",
-            valor: data.temperature,
+            valor: data.temperature ?? 0,
             unidade: "°C",
             status: data.temperature > 37.5 ? "alto" : "normal"
         },
         {
             name: "Respiração",
-            valor: data.respiracao,
+            valor: data.respiracao ?? 0,
             unidade: "rpm",
             status: data.respiracao > 25 ? "alto" : "normal"
         },
         {
             name: "Oxigênio no Sangue",
-            valor: data.oxigenio_sangue,
+            valor: data.oxigenio_sangue ?? 0,
             unidade: "%",
             status: data.oxigenio_sangue < 90 ? "baixo" : "normal"
         },
         {
             name: "Pressão Sanguínea",
-            pa_sistolica: data.pa_sistolica,
-            pa_diastolica: data.pa_diastolica,
+            pa_sistolica: data.pa_sistolica ?? 0,
+            pa_diastolica: data.pa_diastolica ?? 0,
             unidade: "mmHg",
             status: data.pa_sistolica > 120 ? "alto" : "normal"
         },

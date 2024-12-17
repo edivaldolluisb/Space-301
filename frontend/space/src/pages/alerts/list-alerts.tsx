@@ -51,7 +51,7 @@ interface GroupedActivities {
 	false: Activity[];
 }
 
-export function Activities() {
+export function ListAlerts() {
 	// const [activities, setActivities] = useState<Activity[]>([]);
 	const [groupedActivities, setGroupedActivities] = useState<GroupedActivities>({
 		true: [],
@@ -88,7 +88,7 @@ export function Activities() {
 	// websocket fetch
 	useEffect(() => {
 		const client = new Client({
-			brokerURL: "ws://localhost:8080/space-websocket",
+			brokerURL: `${import.meta.env.VITE_BROKER_URL}`,
 			onConnect: () => {
 				console.log("Connected to WebSocket");
 				client.subscribe("/topic/alerts", (message) => {

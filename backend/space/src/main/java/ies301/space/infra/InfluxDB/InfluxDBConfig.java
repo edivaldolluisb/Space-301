@@ -1,12 +1,13 @@
 package ies301.space.infra.InfluxDB;
 
-import org.influxdb.InfluxDB;
-import org.influxdb.InfluxDBFactory;
-import org.influxdb.dto.Pong;
+// import org.influxdb.InfluxDB;
+// import org.influxdb.InfluxDBFactory;
+// import org.influxdb.dto.Pong;
 
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.WriteApi;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,14 +18,27 @@ import org.slf4j.LoggerFactory;
 public class InfluxDBConfig {
     private static final Logger LOG = LoggerFactory.getLogger(InfluxDBConfig.class);
 
-    private static final String TOKEN = "MyInitialAdminToken0==";
-    private static final String BUCKET = "home";
-    private static final String ORG = "docs";
-    private static final String URL = "http://localhost:8086";
+
+    @Value("${spring.influx.url}")
+    private String url;
+
+    @Value("${spring.influx.token}")
+    private String token;
+
+    @Value("${spring.influx.org}")
+    private String org;
+
+    @Value("${spring.influx.bucket}")
+    private String bucket;
 
     @Bean
     public InfluxDBClient influxDBClient() {
-        return InfluxDBClientFactory.create(URL, TOKEN.toCharArray(), ORG, BUCKET);
+        return InfluxDBClientFactory.create(url, token.toCharArray(), org, bucket);
+    }
+
+    @Bean
+    public WriteApi writeApi(InfluxDBClient influxDBClient) {
+        return influxDBClient.getWriteApi();
     }
        
 }

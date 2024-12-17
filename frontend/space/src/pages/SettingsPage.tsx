@@ -1,7 +1,7 @@
 import { DestinationAndDateHeader } from "../components/destination-and-date-header";
-import { Plus, X, Loader2, User, AtSign, KeyRound, MapPin, Eye, ClipboardCopy, RefreshCw, EyeOff } from "lucide-react";
+import { User, AtSign, KeyRound, MapPin, Eye, ClipboardCopy, RefreshCw, EyeOff } from "lucide-react";
 import { Button } from "../components/button";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { api } from "../lib/axios";
 import { Link } from "react-router-dom";
 
@@ -19,7 +19,6 @@ const SettingsPage = () => {
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const userId = localStorage.getItem('userId');
 
   const generateRandomKey = () => {
@@ -34,7 +33,6 @@ const SettingsPage = () => {
     address: "",
     password: "",
   });
-  const [formErrors, setFormErrors] = useState<FormErrors>({});
 
   const validateForm = () => {
     const errors: FormErrors = {};
@@ -48,7 +46,6 @@ const SettingsPage = () => {
     e.preventDefault();
     const errors = validateForm();
     if (Object.keys(errors).length > 2) {
-      setFormErrors(errors);
       return;
     }
     
@@ -62,7 +59,6 @@ const SettingsPage = () => {
 
       if (response && response.data) {
         console.log("Usuário atualizado com sucesso:", response.data);
-        const userData = response.data;
       }
 
     } catch (err) {
@@ -70,7 +66,6 @@ const SettingsPage = () => {
     }
 
     console.log("Formulário enviado:", updatedData);
-    setFormErrors({});
   };
 
   const updateUser = async (userId: string, updatedData: { name: string; email: string }) => {
@@ -126,7 +121,6 @@ const SettingsPage = () => {
         password: "",
       });
     } catch (err) {
-      setError('Erro ao carregar os dados do utilizador');
       console.error(err);
     } finally {
       // setIsLoading(false);

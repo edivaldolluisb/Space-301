@@ -1,13 +1,15 @@
-import { Plus } from "lucide-react";
-import { useState, useEffect } from "react";
-import { Activities } from "./activities";
+import { CircleCheckBig, Plus } from "lucide-react";
+import { ListAlerts } from "./list-alerts";
 import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
 import { apiService } from "../../lib/axios";
 
-import AlertsWs from "./alertsws"
+import { useToast } from "@/components/hooks/use-toast"
+import { Toaster } from "@/components/ui/toaster"
+
 
 export function AlertsPage() {
-	const [isCreateActivityModalOpen, setIsCreateActivityModalOpen] = useState(false)
+	
+	const { toast } = useToast()
 
 	function markAllAsSeen() {
 		updateAlerts();
@@ -16,8 +18,19 @@ export function AlertsPage() {
 		try {
 			const response = await apiService.patch<{ updated: number }>('/alerts');
 			console.log("updated:", response)
+			
+			toast({
+				title: "Alertas atualizados.",
+				description: `Foram atualizados ${response.updated} alerta(s).`,
+				action:<CircleCheckBig className="size-5 text-lime-300" />,
+				
+			  });
 		} catch (error) {
 			console.error('Erro ao carregar atualizar alertas:', error);
+			toast({
+				title: "Erro ao atualizar alertas.",
+				description: "Não foi possivel atualizar os alertas.",
+			  });
 		}
 	}
 
@@ -37,10 +50,11 @@ export function AlertsPage() {
 						</button>
 					</div>
 
-					<Activities />
+					<ListAlerts />
 				</div>
 
 			</main>
+			<Toaster />
 		</div>
 	)
 }

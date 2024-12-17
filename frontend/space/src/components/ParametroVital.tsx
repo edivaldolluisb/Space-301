@@ -3,9 +3,9 @@ import {getIcon} from '../util/icon';
 
 interface ParametroVitalProps {
     nome: string;
-    pa_diastolica: number| null;
-    pa_sistolica: number| null;
-    valor: number|null;
+    pa_diastolica?: number;
+    pa_sistolica?: number;
+    valor?: number;
     unidade: string;
     status: string;
 }

@@ -16,9 +16,13 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
+    @Value("${frontend.end}")
+    private String frontend_host;
+
     @Autowired
     TokenService tokenService;
     @Autowired
@@ -29,7 +33,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         var token = this.recoverToken(request);
         var login = tokenService.validateToken(token);
 
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+        response.setHeader("Access-Control-Allow-Origin", frontend_host);
         response.setHeader("Access-Control-Allow-Headers", "origin, content-type, accept, authorization");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PATCH");
         response.setHeader("Access-Control-Allow-Credentials", "true");
@@ -37,7 +41,8 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         if(login != null){
             User user = userRepository.findByEmail(login).orElseThrow(() -> new RuntimeException("User Not Found"));
-            var authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+            // var authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+            var authorities = user.getAuthorities();
             var authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

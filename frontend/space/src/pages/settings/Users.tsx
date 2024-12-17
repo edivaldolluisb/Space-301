@@ -1,10 +1,13 @@
-import { Plus, Siren, User, Search } from "lucide-react";
+import { CircleCheckBig, Plus, User, Search } from "lucide-react";
 import { FormEvent, useState, useEffect } from "react";
-import { CreateUserModal } from "./create-user-modal";
+import { CreateUserModal } from "./CreateUserModal";
 import { Activities } from "./ListUsers";
 import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
 
 import { api } from "../../lib/axios";
+
+import { useToast } from "@/components/hooks/use-toast"
+import { Toaster } from "@/components/ui/toaster"
 
 
 interface User {
@@ -26,6 +29,7 @@ export function Users() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    const { toast } = useToast()
 
 
     function openCreateUserModal() {
@@ -76,6 +80,7 @@ export function Users() {
         }
     };
 
+    // eu poderia utilizar useMemo aqui, mas no momento não é necessário
     const filteredUsers = usersList.filter(user =>
         user.name.toLowerCase().includes(userSearchName.toLowerCase())
     );
@@ -87,30 +92,41 @@ export function Users() {
         setIsLoading(true);
 
         const newUser = {
-            name: user.name, 
-            email: user.email, 
-            password: user.password, 
+            name: user.name,
+            email: user.email,
+            password: user.password,
             // role: user.role
         }
-        
+
         console.log("Utilizador a ser criado:", newUser);
-      
+
         try {
-          const response = await api.post("/user", user);
-      
-          const UserResponse = response.data;
-          console.log("Utilizador registado com sucesso:", UserResponse);
-      
-          setUsersList([...usersList, UserResponse]);
-          setIsLoading(false);
-          closeCreateUserModal();
+            const response = await api.post("/user", user);
+
+            const UserResponse = response.data;
+            console.log("Utilizador registado com sucesso:", UserResponse);
+
+            setUsersList([...usersList, UserResponse]);
+            setIsLoading(false);
+            closeCreateUserModal();
+            toast({
+                title: "Operação realizada com sucesso",
+                description: `Utilizador ${UserResponse.name} registado com sucesso`,
+                action: <CircleCheckBig className="size-5 text-lime-300" />,
+
+            });
         } catch (error) {
-          console.error("Erro ao registrar utilizador:", error);
-          setError("Erro ao registrar utilizador");
-          setIsLoading(false);
+            console.error("Erro ao registrar utilizador:", error);
+            setError("Erro ao registrar utilizador");
+            setIsLoading(false);
+            toast({
+                variant: "destructive",
+                title: "Erro ao registrar utilizador:",
+                description: "Reveja os dados do formulário, ou veja se tem permissões suficientes",
+            })
         }
-      };
-      
+    };
+
 
 
     return (
@@ -173,13 +189,14 @@ export function Users() {
 
             {isCreateUserModalOpen && (
                 <CreateUserModal
-                closeCreateUserModal={closeCreateUserModal}
+                    closeCreateUserModal={closeCreateUserModal}
                     createUser={createUser}
                     error={error}
                     isLoading={isLoading}
 
                 />
             )}
+            <Toaster />
         </div>
     )
 }

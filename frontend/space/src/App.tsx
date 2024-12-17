@@ -1,30 +1,22 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import { History } from "./pages/LaunchHistory/History"
-import HistoryDetails from "./pages/LaunchHistory/HistoryDetails"
-import { CreateTripPage } from "./pages/create-account"
-import { TripDetailsPage } from "./pages/trip-details"
-import { AlertsPage } from "./pages/trip-details"
+import { History } from "./pages/LaunchHistory/LaunchHistory"
+import { AuthPage } from "./pages/create-account"
+import { AlertsPage } from "./pages/alerts"
 import { DashboardPage } from "./pages/company"
 import { RocketDetailsPage } from "./pages/company/rocket-dashboard"
 import SinaisVitais from "./pages/SinaisVitais"
-import Dashboard from "./pages/company/dashboard"
-import SettingsPage from "./pages/SettingsPage"
-import {Users} from "./pages/settings/Users"
+import SettingsPage from "./pages/settings"
+import { Users } from "./pages/settings/Users"
+import { NotFound } from "./pages/notfound"
 import VisitorDashboard from "./pages/visitor/VisitorDashboard"
+
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <CreateTripPage />
-  },
-  {
-    path: "/alerts",
-    element: <AlertsPage />
-  },
-  {
-    path: "/sinais-vitais/:launchId",
-    element: <SinaisVitais />
+    element: <AuthPage />
   },
   {
     path: "/dashboard",
@@ -35,24 +27,43 @@ const router = createBrowserRouter([
     element: <RocketDetailsPage />
   },
   {
-    path: "/history",
-    element: <History />
+    path: "/visitor",
+    element: <VisitorDashboard />
   },
   {
-    path: "/history/details/:id",
-    element: <HistoryDetails />
+    path: "*",
+    element: <NotFound />
   },
   {
-    path: "/settings",
-    element: <SettingsPage />
-  },
-  {
-    path: "/settings/users",
-    element: <Users />
-  },
-  {
-    path:"/visitor",
-    element:<VisitorDashboard/>
+
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: "/alerts",
+        element: <AlertsPage />
+      },
+      {
+        path: "/sinais-vitais/:launchId",
+        element: <SinaisVitais />
+      },
+      {
+        path: "/history",
+        element: <History />
+      },
+      {
+        path: "/settings",
+        element: <SettingsPage />
+      },
+      {
+        element: <ProtectedRoute allowedRoles={['ADMIN']} />,
+        children: [
+          {
+            path: "/settings/users",
+            element: <Users />
+          }
+        ]
+      }
+    ]
   }
 ])
 

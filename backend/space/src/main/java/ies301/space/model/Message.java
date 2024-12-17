@@ -49,7 +49,7 @@ public class Message {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Tripulante {
-        private int id;
+        private Long id;
         private double paSistolica;
         private double paDiastolica;
         private double oxigenioSangue;
@@ -59,11 +59,11 @@ public class Message {
         private List<Alerta> alertas;
 
         // Getters e Setters
-        public int getId() {
+        public Long getId() {
             return id;
         }
 
-        public void setId(int id) {
+        public void setId(Long id) {
             this.id = id;
         }
 
@@ -127,6 +127,13 @@ public class Message {
 
         public void setAlertas(List<Alerta> alertas) {
             this.alertas = alertas;
+        }
+
+        @Override
+        public String toString() {
+            return "Tripulante [id=" + id + ", paSistolica=" + paSistolica + ", paDiastolica=" + paDiastolica
+                    + ", oxigenioSangue=" + oxigenioSangue + ", bpm=" + bpm + ", temperature=" + temperature
+                    + ", respiracao=" + respiracao + ", alertas=" + alertas + "]";
         }
     }
 
@@ -291,6 +298,7 @@ public class Message {
     public static class Alerta {
         private String parametro;
         private String nomeAlerta;
+        private String origem;
 
         private Boolean status;
 
@@ -342,6 +350,15 @@ public class Message {
         public void setStatus(Boolean status) {
             this.status = status;
         }
+        
+        public String getOrigem() {
+            return origem;
+        }
+    
+        public void setOrigem(String origem) {
+            this.origem = origem;
+        }
+    
 
     }
 }

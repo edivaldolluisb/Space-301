@@ -1,27 +1,21 @@
-import { Plus } from "lucide-react";
+import { CircleCheckBig, Plus } from "lucide-react";
 import { FormEvent, useState, } from "react";
-import { CreateActivityModal } from "./create-activity-modal";
-import { ImportantLinks } from "./important-links";
-import { Guests } from "./guests";
-import { Activities } from "./activities";
+import { CreateLaunchComponent } from "./CreateLaunchComponent";
+import { RecentAlerts } from "./RecentAlerts";
+import { RecentHistory } from "./RecentHistory";
+import { ListLaunches } from "./ListLaunches";
 import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
 
 import { api } from "../../lib/axios";
 
+import { useToast } from "@/components/hooks/use-toast"
+import { Toaster } from "@/components/ui/toaster"
+
+import { Launch } from "./types";
 
 
 interface Astronaut {
 	id: number;
-}
-
-interface Launch {
-  id?: number;
-  missionName: string;
-  launchDate: string;
-  rocketId: number | string | null;
-  address: string;
-  status: string;
-  astronauts: number[];
 }
 
 export function DashboardPage() {
@@ -31,12 +25,14 @@ export function DashboardPage() {
 	const [launchDate, setLaunchDate] = useState('');
 	const [rocketId, setRocketId] = useState<number | string | null>(null);
 	const [address, setAddress] = useState('');
-	const [status, setStatus] = useState('PENDING');
+  const [status, setStatus] = useState<'PENDING' | 'LAUNCHED' | 'SUCCESS' | 'FAILED'>('PENDING');
 	const [astronauts, setAstronauts] = useState<Astronaut[]>([]);
   
   const [launches, setLaunches] = useState<Launch[]>([])
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const { toast } = useToast()
 
   function openCreateActivityModal() {
     setIsCreateActivityModalOpen(true)
@@ -58,6 +54,7 @@ export function DashboardPage() {
 
     setError(null);
     setIsLoading(true);
+    setStatus('PENDING');
 
     // check if date is valid
     const date = new Date(launchDate);
@@ -69,8 +66,8 @@ export function DashboardPage() {
       return;
     }
 
-    // check if at least one astronaut is selected
-    if (astronauts.length < 4) {
+    // select only 4 astronauts
+    if (astronauts.length !== 4) {
       setError('Selecione 4 astronautas');
       setIsLoading(false);
       return;
@@ -87,11 +84,11 @@ export function DashboardPage() {
     try {
       // return an array of ids
       const astronautsIds = astronauts.map((astronaut) => astronaut.id);
-
+      // @ts-expect-error - I don't need to pass the id here
       const NewlaunchData: Launch = {
         missionName,
         launchDate: new Date(launchDate).toISOString(),
-        rocketId,
+        rocketId: Number(rocketId),
         address,
         status,
         // array of ids
@@ -102,7 +99,13 @@ export function DashboardPage() {
       const response = await api.post('/launches', NewlaunchData);
 
       const newLaunch = response.data;
-      console.log('Lançamento registrado com sucesso:', newLaunch);
+      console.log('Lançamento registrado com sucesso:', newLaunch);        
+      toast({
+        title: "Sucesso.",
+        description: "Lançamento registrado com sucesso.",
+        action:<CircleCheckBig className="size-5 text-lime-300" />,
+        
+      });
 
       setIsLoading(false);
       closeCreateLaunchModal();
@@ -110,7 +113,11 @@ export function DashboardPage() {
       // Aqui você pode atualizar a lista de lançamentos no estado, se necessário.
     } catch (error) {
       console.error('Erro ao registrar lançamento:', error);
-      alert('Falha ao registrar o lançamento. Verifique os dados e tente novamente.');
+      toast({
+        title: "Erro:",
+        description: "Erro ao registrar lançamento",
+        variant: "destructive",
+      });
     }
   }
   
@@ -130,20 +137,20 @@ export function DashboardPage() {
             </button>
           </div>
 
-          <Activities  launches={launches} />
+          <ListLaunches  launches={launches} />
         </div>
 
         <div className="w-80 space-y-6">
-          <ImportantLinks />
+          <RecentAlerts />
 
           <div className="w-full h-px bg-zinc-800" />
 
-          <Guests />
+          <RecentHistory />
         </div>
       </main>
 
       {isCreateActivityModalOpen && (
-        <CreateActivityModal 
+        <CreateLaunchComponent 
           closeCreateLaunchModal={closeCreateLaunchModal}
           setMissionName={setMissionName}
           setLaunchDate={setLaunchDate}
@@ -156,6 +163,7 @@ export function DashboardPage() {
 
         />
       )}
+      <Toaster />
     </div>
   )
 }

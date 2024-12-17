@@ -10,6 +10,7 @@ import ies301.space.dto.LoginRequestDTO;
 import ies301.space.dto.RegisterRequestDTO;
 import ies301.space.dto.ResponseDTO;
 import ies301.space.entities.user.User;
+import ies301.space.entities.user.UserRole;
 import ies301.space.infra.security.TokenService;
 import ies301.space.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class AuthController {
         User user = this.repository.findByEmail(body.email()).orElseThrow(() -> new RuntimeException("User not found"));
         if(passwordEncoder.matches(body.password(), user.getPassword())) {
             String token = this.tokenService.generateToken(user);
-            return ResponseEntity.ok(new ResponseDTO(user.getName(), token, user.getId()));
+            return ResponseEntity.ok(new ResponseDTO(user.getName(), token, user.getId(), user.getRole()));
         }
         return ResponseEntity.badRequest().build();
     }
@@ -42,10 +43,11 @@ public class AuthController {
             newUser.setPassword(passwordEncoder.encode(body.password()));
             newUser.setEmail(body.email());
             newUser.setName(body.name());
+            newUser.setRole(UserRole.ADMIN);
             this.repository.save(newUser);
 
             String token = this.tokenService.generateToken(newUser);
-            return ResponseEntity.ok(new ResponseDTO(newUser.getName(), token, newUser.getId()));
+            return ResponseEntity.ok(new ResponseDTO(newUser.getName(), token, newUser.getId(), newUser.getRole()));
         }
         return ResponseEntity.badRequest().build();
     }
