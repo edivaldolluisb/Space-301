@@ -64,6 +64,68 @@ paths:
             '*/*':
               schema:
                 type: string
+  /api/v1/user:
+    get:
+      tags:
+      - user-controller
+      operationId: getAllUsers
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserResponseDTO"
+    post:
+      tags:
+      - user-controller
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserResponseDTO"
+  /api/v1/rockets:
+    get:
+      tags:
+      - rocket-controller
+      operationId: getAllRockets
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Rocket"
+    post:
+      tags:
+      - rocket-controller
+      operationId: createRocket
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Rocket"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Rocket"
   /api/v1/messages/publish:
     post:
       tags:
@@ -164,37 +226,6 @@ paths:
             '*/*':
               schema:
                 type: string
-  /api/v1/history/launches:
-    get:
-      tags:
-      - history-controller
-      operationId: getAllHistoryLaunchs
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/HistoryLaunch"
-    post:
-      tags:
-      - history-controller
-      operationId: createHistory
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/HistoryLaunch"
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/HistoryLaunch"
   /api/v1/astronauts:
     get:
       tags:
@@ -244,6 +275,60 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/Alert"
+  /api/v1/user/{id}:
+    get:
+      tags:
+      - user-controller
+      operationId: getUserById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserResponseDTO"
+    delete:
+      tags:
+      - user-controller
+      operationId: deleteUser
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+    patch:
+      tags:
+      - user-controller
+      operationId: updateUser
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserResponseDTO"
   /api/v1/alerts:
     get:
       tags:
@@ -297,18 +382,176 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/Alert"
-  /user:
+  /api/v1/visitor/launches/{launchId}/{entity}/{entityId}/{field}:
     get:
       tags:
-      - user-controller
-      operationId: getUser
+      - launch-controller
+      operationId: getDynamicDataVisitor
+      parameters:
+      - name: launchId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: entity
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: entityId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: field
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: interval
+        in: query
+        required: false
+        schema:
+          type: string
+          default: 1d
       responses:
         "200":
           description: OK
           content:
             '*/*':
               schema:
-                type: string
+                type: object
+  /api/v1/visitor/launches/{launchId}/rocket:
+    get:
+      tags:
+      - launch-controller
+      operationId: getVisitorRocketByLaunchAndRocketId
+      parameters:
+      - name: launchId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/visitor/launches/{id}:
+    get:
+      tags:
+      - launch-controller
+      operationId: getVisitorLaunchById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Launch"
+  /api/v1/visitor/launches/active:
+    get:
+      tags:
+      - launch-controller
+      operationId: getVisitorActiveLaunches
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Launch"
+  /api/v1/rockets/{id}:
+    get:
+      tags:
+      - rocket-controller
+      operationId: getRocketById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Rocket"
+  /api/v1/launches/{launchId}/{entity}/{entityId}/{field}:
+    get:
+      tags:
+      - launch-controller
+      operationId: getDynamicData
+      parameters:
+      - name: launchId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: entity
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: entityId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: field
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: interval
+        in: query
+        required: false
+        schema:
+          type: string
+          default: 1d
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/launches/{launchId}/rocket:
+    get:
+      tags:
+      - launch-controller
+      operationId: getRocketByLaunchAndRocketId
+      parameters:
+      - name: launchId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
   /api/v1/launches/{id}:
     get:
       tags:
@@ -349,25 +592,34 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Astronaut"
-  /api/v1/history/launches/{id}:
+  /api/v1/launches/completed:
     get:
       tags:
-      - history-controller
-      operationId: getHistoryById
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+      - launch-controller
+      operationId: getAllCompletedLaunches
       responses:
         "200":
           description: OK
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/HistoryLaunch"
+                type: array
+                items:
+                  $ref: "#/components/schemas/Launch"
+  /api/v1/launches/active:
+    get:
+      tags:
+      - launch-controller
+      operationId: getActiveLaunches
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Launch"
   /api/v1/alerts/launch/{id}:
     get:
       tags:
@@ -445,24 +697,80 @@ components:
           type: string
         password:
           type: string
-    Alert:
-      required:
-      - date
-      - message
+    GrantedAuthority:
+      type: object
+      properties:
+        authority:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+          enum:
+          - USER
+          - ADMIN
+        enabled:
+          type: boolean
+        username:
+          type: string
+        authorities:
+          type: array
+          items:
+            $ref: "#/components/schemas/GrantedAuthority"
+        accountNonLocked:
+          type: boolean
+        accountNonExpired:
+          type: boolean
+        credentialsNonExpired:
+          type: boolean
+    UserResponseDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum:
+          - USER
+          - ADMIN
+    Rocket:
       type: object
       properties:
         id:
           type: integer
           format: int64
-        message:
+        name:
           type: string
-        date:
+        capacity:
+          type: integer
+          format: int32
+        weight:
+          type: number
+          format: double
+        numAstronauts:
+          type: integer
+          format: int32
+        height:
+          type: number
+          format: double
+        diameter:
+          type: number
+          format: double
+        originCountry:
           type: string
-          format: date-time
-        status:
-          type: boolean
-        launch:
-          $ref: "#/components/schemas/Launch"
     Launch:
       required:
       - address
@@ -472,8 +780,8 @@ components:
       type: object
       properties:
         id:
-          type: number
-          format: double
+          type: integer
+          format: int64
         missionName:
           type: string
         launchDate:
@@ -481,7 +789,7 @@ components:
           format: date-time
         rocketId:
           type: integer
-          format: int32
+          format: int64
         address:
           type: string
         status:
@@ -497,58 +805,6 @@ components:
           items:
             type: integer
             format: int64
-        alerts:
-          type: array
-          items:
-            $ref: "#/components/schemas/Alert"
-    HistoryLaunch:
-      type: object
-      properties:
-        historyId:
-          type: integer
-          format: int64
-        launch:
-          $ref: "#/components/schemas/Launch"
-        velocity:
-          type: array
-          items:
-            type: number
-            format: double
-        aceleration:
-          type: array
-          items:
-            type: number
-            format: double
-        fuel:
-          type: array
-          items:
-            type: number
-            format: double
-        intern_temperature:
-          type: array
-          items:
-            type: number
-            format: double
-        extern_temperature:
-          type: array
-          items:
-            type: number
-            format: double
-        height:
-          type: array
-          items:
-            type: number
-            format: double
-        g_force:
-          type: array
-          items:
-            type: number
-            format: double
-        radiation:
-          type: array
-          items:
-            type: number
-            format: double
     Astronaut:
       type: object
       properties:
@@ -570,29 +826,39 @@ components:
         weight:
           type: number
           format: double
-        heartRate:
-          type: number
-          format: double
-        bloodPressure:
-          type: number
-          format: double
-        bodyTemperature:
-          type: number
-          format: double
-        respiratoryRate:
-          type: number
-          format: double
         launch:
           $ref: "#/components/schemas/Launch"
         bmi:
           type: number
           format: double
+    Alert:
+      required:
+      - date
+      - message
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        message:
+          type: string
+        date:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        status:
+          type: boolean
+        parametro:
+          type: string
+        launch:
+          $ref: "#/components/schemas/Launch"
     UpdateStatusRequest:
       type: object
       properties:
         status:
           type: boolean
-
 `;
 
         window.ui = SwaggerUIBundle({

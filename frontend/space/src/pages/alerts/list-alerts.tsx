@@ -2,32 +2,13 @@ import { CircleCheck } from "lucide-react";
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
-import { apiService } from "../../lib/axios";
+import { apiService } from "@/lib/axios";
 
 import { Client } from "@stomp/stompjs";
 
 import { Link } from "react-router-dom";
 
-// {
-// 	"id": 1,
-// 	"message": "Qualidade do sinal baixa!",
-// 	"date": "2024-12-07T15:15:36.300+00:00",
-// 	"status": true,
-// 	"launch": {
-// 		"id": 1,
-// 		"missionName": "Missão de teste",
-// 		"launchDate": "2024-12-07T15:14:00.000+00:00",
-// 		"rocketId": 2,
-// 		"address": "Universidade de Aveiro",
-// 		"status": "PENDING",
-// 		"astronauts": [
-// 			1,
-// 			2,
-// 			3,
-// 			4
-// 		]
-// 	}
-// }
+
 interface Activity {
 	date: string;
 	id: number;

@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,7 +20,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.beans.factory.annotation.Value;
 
 @Configuration
 @EnableWebSecurity
@@ -52,9 +52,12 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs.yaml", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                        .requestMatchers("/visitor/launches/active").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/v1/visitor/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/space-websocket").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/topic/alerts").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/topic/alerts").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/topic/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/v1/astronauts").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/v1/rockets").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/user/{id}").authenticated()
                         .requestMatchers(HttpMethod.POST,"/api/v1/user/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH,"/api/v1/user/**").hasRole("ADMIN")

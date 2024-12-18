@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { auth } from '../lib/axios'; 
+import { auth } from "@/lib/axios"; 
 
 interface ProtectedRouteProps {
   allowedRoles?: string[]; 
