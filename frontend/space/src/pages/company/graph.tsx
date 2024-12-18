@@ -21,6 +21,8 @@ import {
 import { useState, useEffect } from "react";
 import { api, auth } from "../../lib/axios";
 
+import { getEndpoint } from "@/pages/company/utils/getEndpoint";
+
 interface ApiResponseData {
 	_value: number;
 	_field: string;
@@ -70,11 +72,7 @@ export function SpeedGraph({ launchId }: { launchId: string }) {
 	useEffect(() => {
 		const fetchSpeedData = async () => {
 			try {
-				const endpoint = authenticated
-					? `/launches/${launchId}/nave/null/velocidade`
-					: `/visitor/launches/${launchId}/nave/null/velocidade`;
-
-				const response = await api.get(endpoint);
+				const response = await api.get(getEndpoint('velocidade', authenticated, launchId));
 				// const response = await api.get(`/launches/${launchId}/nave/null/velocidade`);
 				const formattedData = response.data.map((item: ApiResponseData) => ({
 					day: `${new Date(item._time).getHours()}:${new Date(item._time).getMinutes()}`,
@@ -205,11 +203,8 @@ export function TemperatureGraph({ launchId }: { launchId: string }) {
 	useEffect(() => {
 		const fetchTemperatureData = async () => {
 			try {
-				const endpoint = authenticated
-					? `/launches/${launchId}/nave/null/temperaturaAtual`
-					: `/visitor/launches/${launchId}/nave/null/temperaturaAtual`;
 
-				const response = await api.get(endpoint);
+				const response = await api.get(getEndpoint('temperaturaAtual', authenticated, launchId));
 				// const response = await api.get(`/launches/${launchId}/nave/null/temperaturaAtual`);
 				const formattedData = response.data.map((item: ApiResponseData) => {
 					// Obtém o mês da data
@@ -321,9 +316,8 @@ export function AltitudeGraph({ launchId }: { launchId: string }) {
 	useEffect(() => {
 		const fetchAltitudeData = async () => {
 			try {
-				const endpoint = authenticated
-					? `/launches/${launchId}/nave/null/altitude`
-					: `/visitor/launches/${launchId}/nave/null/altitude`;
+
+				const endpoint = getEndpoint('altitude', authenticated, launchId)
 
 				const response = await api.get(endpoint);
 				// const response = await api.get(`/launches/${launchId}/nave/null/altitude`);
@@ -411,9 +405,7 @@ export function PressureGraph({ launchId }: { launchId: string }) {
 	useEffect(() => {
 		const fetchPressureData = async () => {
 			try {
-				const endpoint = authenticated
-					? `/launches/${launchId}/nave/null/pressaoAtual`
-					: `/visitor/launches/${launchId}/nave/null/pressaoAtual`;
+				const endpoint = getEndpoint('pressaoAtual', authenticated, launchId);
 
 				const response = await api.get(endpoint);
 				// const response = await api.get(`/launches/${launchId}/nave/null/pressaoAtual`);
@@ -501,9 +493,7 @@ export function OxygenGraph({ launchId }: { launchId: string }) {
 	useEffect(() => {
 		const fetchOxygenData = async () => {
 			try {
-				const endpoint = authenticated
-					? `/launches/${launchId}/nave/null/oxigenioAtual`
-					: `/visitor/launches/${launchId}/nave/null/oxigenioAtual`;
+				const endpoint = getEndpoint('oxigenioAtual', authenticated, launchId);
 
 				const response = await api.get(endpoint);
 				// const response = await api.get(`/launches/${launchId}/nave/null/oxigenioAtual`);
@@ -590,9 +580,7 @@ export function ExternalTemperatureGraph({ launchId }: { launchId: string }) {
 	useEffect(() => {
 		const fetchExternalTemperatureData = async () => {
 			try {
-				const endpoint = authenticated
-					? `/launches/${launchId}/nave/null/temperaturaExterna`
-					: `/visitor/launches/${launchId}/nave/null/temperaturaExterna`;
+				const endpoint = getEndpoint('temperaturaExterna', authenticated, launchId);
 
 				const response = await api.get(endpoint);
 				// const response = await api.get(`/launches/${launchId}/nave/null/temperaturaExterna`);
