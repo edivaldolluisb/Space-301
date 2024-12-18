@@ -10,4 +10,10 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    // Specify the development server port
+    port: 3001,
+  },
+  // Base name of your app
+  base: "/",
 })
