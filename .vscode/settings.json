@@ -6,5 +6,8 @@
     },
     "[java]": {
         "editor.defaultFormatter": "redhat.java"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
     }
 }
