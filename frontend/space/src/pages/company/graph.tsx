@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/chart"
 
 import { useState, useEffect } from "react";
-import { api, auth } from "../../lib/axios";
+import { api, auth } from "@/lib/axios";
 
 import { getEndpoint } from "@/pages/company/utils/getEndpoint";
 

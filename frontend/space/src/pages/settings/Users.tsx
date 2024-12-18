@@ -4,7 +4,7 @@ import { CreateUserModal } from "./CreateUserModal";
 import { Activities } from "./ListUsers";
 import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
 
-import { api } from "../../lib/axios";
+import { api } from "@/lib/axios";
 
 import { useToast } from "@/components/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"

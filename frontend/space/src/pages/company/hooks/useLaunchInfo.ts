@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { api, auth } from '../../../lib/axios';
+import { api, auth } from "@/lib/axios";
 import { Rocket, Launch } from '../types';
 
 export const useLaunchInfo = (launchId: string) => {

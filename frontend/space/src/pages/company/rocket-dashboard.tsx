@@ -8,7 +8,9 @@ import { InternalExternalGraph } from "./graphs/InternalExternalGraph"
 import { useNavigate, useParams } from "react-router-dom";
 
 import { Link } from "react-router-dom";
-import { useState, useRef, useEffect  } from "react";
+import { useState, useRef, useEffect } from "react";
+
+import { auth } from "@/lib/axios";
 
 
 export function RocketDetailsPage() {
@@ -16,8 +18,10 @@ export function RocketDetailsPage() {
   const { launchId } = useParams()
 
   const [isHistorySectionOpen, setIsHistorySectionOpen] = useState(false)
-  
-  
+
+  const { authenticated } = auth.isAuthenticated();
+
+
   const speedGraphRef = useRef<HTMLDivElement>(null);
   const temperatureGraphRef = useRef<HTMLDivElement>(null);
   const pressureGraphRef = useRef<HTMLDivElement>(null);
@@ -34,14 +38,14 @@ export function RocketDetailsPage() {
 
 
   useEffect(() => {
-    
+
     if (isHistorySectionOpen) {
-      
+
       const lastVisibleRef = graphRefs.reverse().find(ref => ref.current);
-      
+
       if (lastVisibleRef?.current) {
         lastVisibleRef.current.focus();
-        
+
         lastVisibleRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     }
@@ -67,12 +71,14 @@ export function RocketDetailsPage() {
 
 
             <div className="flex items-center gap-5">
-              <Link to={`/sinais-vitais/${launchId}`}>
-                <Button variant="secondary">
-                  <Users className="size-5" />
-                  Ver tripulantes
-                </Button>
-              </Link>
+              {authenticated && (
+                <Link to={`/sinais-vitais/${launchId}`}>
+                  <Button variant="secondary">
+                    <Users className="size-5" />
+                    Ver tripulantes
+                  </Button>
+                </Link>
+              )}
               <Button variant="secondary" onClick={() => setIsHistorySectionOpen(!isHistorySectionOpen)}
                 aria-expanded={isHistorySectionOpen}
                 aria-label="Ver histórico completo"
@@ -91,22 +97,22 @@ export function RocketDetailsPage() {
           {/* show the others graphs if history is clicked */}
           {isHistorySectionOpen && (
             <>
-            <div ref={temperatureGraphRef} tabIndex={-1}>
-              <TemperatureGraph launchId={launchId} />
-            </div>
-            <div ref={speedGraphRef} tabIndex={-1}>
-              <SpeedGraph launchId={launchId} />
-            </div>
-            <div ref={pressureGraphRef} tabIndex={-1}>
-              <PressureGraph launchId={launchId} />
-            </div>
-            <div ref={oxygenGraphRef} tabIndex={-1}>
-              <OxygenGraph launchId={launchId} />
-            </div>
-            <div ref={externalTemperatureGraphRef} tabIndex={-1}>
-              <ExternalTemperatureGraph launchId={launchId} />
-            </div>
-          </>
+              <div ref={temperatureGraphRef} tabIndex={-1}>
+                <TemperatureGraph launchId={launchId} />
+              </div>
+              <div ref={speedGraphRef} tabIndex={-1}>
+                <SpeedGraph launchId={launchId} />
+              </div>
+              <div ref={pressureGraphRef} tabIndex={-1}>
+                <PressureGraph launchId={launchId} />
+              </div>
+              <div ref={oxygenGraphRef} tabIndex={-1}>
+                <OxygenGraph launchId={launchId} />
+              </div>
+              <div ref={externalTemperatureGraphRef} tabIndex={-1}>
+                <ExternalTemperatureGraph launchId={launchId} />
+              </div>
+            </>
           )}
 
         </div>

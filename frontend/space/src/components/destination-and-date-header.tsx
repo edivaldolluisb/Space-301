@@ -1,20 +1,15 @@
 import { MapPin, Calendar, Settings2, Rocket } from "lucide-react";
 import { Button } from "./button";
-import { useParams } from "react-router-dom";
-import { useEffect } from "react";
-// import { api } from "../../lib/axios";
+import { auth } from "@/lib/axios";
 import { format } from "date-fns";
-import { pt } from "date-fns/locale"; 
+import { pt } from "date-fns/locale";
 import { Link } from "react-router-dom";
 
 
 export function DestinationAndDateHeader() {
-  const { tripId } = useParams()
 
-  useEffect(() => {
-    // api.get(`trips/${tripId}`).then(response => setTrip(response.data.trip))
-  }, [tripId])
 
+  const { authenticated } = auth.isAuthenticated();
   const todayDate = new Date()
   const displayedDate = format(todayDate, "d' de 'LLLL", { locale: pt })
 
@@ -43,13 +38,14 @@ export function DestinationAndDateHeader() {
           </Button>
         </Link>
 
-
-        <Link to={"/settings"} className="">
-          <Button variant="secondary">
-            Definições
-            <Settings2 className="size-5" />
-          </Button>
-        </Link>
+        {authenticated && (
+          <Link to={"/settings"} className="">
+            <Button variant="secondary">
+              Definições
+              <Settings2 className="size-5" />
+            </Button>
+          </Link>
+        )}
       </div>
     </div>
   )

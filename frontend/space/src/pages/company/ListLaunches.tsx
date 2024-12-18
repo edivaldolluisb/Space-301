@@ -1,5 +1,5 @@
 import { CircleDashed, Rocket } from "lucide-react";
-import { api, auth } from "../../lib/axios";
+import { api, auth } from "@/lib/axios";
 import { useState, useEffect } from "react";
 // import { useParams } from "react-router-dom";
 import { format } from "date-fns";

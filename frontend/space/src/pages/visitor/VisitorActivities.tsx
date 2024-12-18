@@ -1,5 +1,5 @@
 import { CircleDashed, Rocket } from "lucide-react";
-import { api } from "../../lib/axios";
+import { api } from "@/lib/axios";
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";

@@ -2,7 +2,7 @@ import { DestinationAndDateHeader } from "../../components/destination-and-date-
 import { CircleCheckBig, User, AtSign, KeyRound, Eye, ClipboardCopy, RefreshCw, EyeOff } from "lucide-react";
 import { Button } from "../../components/button";
 import React, { useState, useEffect } from "react";
-import { api } from "../../lib/axios";
+import { api } from "@/lib/axios";
 import { Link } from "react-router-dom";
 import { useToast } from "@/components/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"

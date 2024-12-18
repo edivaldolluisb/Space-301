@@ -29,7 +29,8 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 
-import { api } from "../../../lib/axios";
+import { api, auth } from "@/lib/axios";
+import { getEndpoint } from "@/pages/company/utils/getEndpoint";
 
 interface ApiResponseData {
 	_value: number;
@@ -45,6 +46,8 @@ interface TemperatureData {
     temperaturaExterna: number
 }
 
+
+const { authenticated } = auth.isAuthenticated();
 
 const internal_externalConfig = {
     visitors: {
@@ -71,10 +74,12 @@ export function InternalExternalGraph({ launchId }: { launchId: string }) {
             try {
                 
                 setIsLoading(true)
+                const internalEndpoint = getEndpoint('temperaturaAtual', authenticated, launchId)
+                const externalEndpoint = getEndpoint('temperaturaExterna', authenticated, launchId)
 
                 const [internalTempResponse, externalTempResponse] = await Promise.all([
-                    api.get(`/launches/${launchId}/nave/null/temperaturaAtual`),
-                    api.get(`/launches/${launchId}/nave/null/temperaturaExterna`),
+                    api.get(internalEndpoint),
+                    api.get(externalEndpoint),
                 ])
 
                 
