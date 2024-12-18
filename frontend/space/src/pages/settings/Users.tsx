@@ -2,7 +2,7 @@ import { CircleCheckBig, Plus, User, Search } from "lucide-react";
 import { FormEvent, useState, useEffect } from "react";
 import { CreateUserModal } from "./CreateUserModal";
 import { Activities } from "./ListUsers";
-import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
+import { DestinationAndDateHeader } from "@/components/destination-and-date-header";
 
 import { api } from "@/lib/axios";
 

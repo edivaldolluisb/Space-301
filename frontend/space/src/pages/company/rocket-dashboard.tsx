@@ -1,9 +1,9 @@
 import { Users, History } from "lucide-react";
-import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
-import { Button } from "../../components/button";
+import { DestinationAndDateHeader } from "@/components/destination-and-date-header";
+import { Button } from "@/components/button";
 import Dashboard from "./dashboard";
 import { SpeedGraph, TemperatureGraph, AltitudeGraph, PressureGraph, OxygenGraph, ExternalTemperatureGraph } from "./graph";
-import { InternalExternalGraph } from "./graphs/InternalExternalGraph"
+import { InternalExternalGraph } from "@/components/graphs/InternalExternalGraph"
 
 import { useNavigate, useParams } from "react-router-dom";
 

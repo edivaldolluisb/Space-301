@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api, auth } from "@/lib/axios";
-import { Rocket, Launch } from '../types';
+import { Rocket, Launch } from '@/components/types';
 
 export const useLaunchInfo = (launchId: string) => {
   const [launch, setLaunch] = useState<Launch | null>(null);

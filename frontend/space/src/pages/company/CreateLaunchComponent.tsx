@@ -1,5 +1,5 @@
 import { Calendar, X, Loader2, Rocket, MapPin } from "lucide-react";
-import { Button } from "../../components/button";
+import { Button } from "@/components/button";
 import { FormEvent, useEffect, useState } from "react";
 import { api } from "@/lib/axios";
 

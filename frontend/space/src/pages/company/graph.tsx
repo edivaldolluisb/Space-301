@@ -21,7 +21,7 @@ import {
 import { useState, useEffect } from "react";
 import { api, auth } from "@/lib/axios";
 
-import { getEndpoint } from "@/pages/company/utils/getEndpoint";
+import { getEndpoint } from "@/components/utils/getEndpoint";
 
 interface ApiResponseData {
 	_value: number;

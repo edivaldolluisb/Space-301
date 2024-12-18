@@ -4,14 +4,14 @@ import { CreateLaunchComponent } from "./CreateLaunchComponent";
 import { RecentAlerts } from "./RecentAlerts";
 import { RecentHistory } from "./RecentHistory";
 import { ListLaunches } from "./ListLaunches";
-import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
+import { DestinationAndDateHeader } from "@/components/destination-and-date-header";
 
 import { api, auth } from "@/lib/axios";
 
 import { useToast } from "@/components/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
 
-import { Launch } from "./types";
+import { Launch } from "@/components/types";
 
 
 interface Astronaut {

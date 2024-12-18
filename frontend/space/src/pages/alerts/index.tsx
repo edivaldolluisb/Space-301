@@ -1,6 +1,6 @@
 import { CircleCheckBig, Plus } from "lucide-react";
 import { ListAlerts } from "./list-alerts";
-import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
+import { DestinationAndDateHeader } from "@/components/destination-and-date-header";
 import { apiService } from "@/lib/axios";
 
 import { useToast } from "@/components/hooks/use-toast"

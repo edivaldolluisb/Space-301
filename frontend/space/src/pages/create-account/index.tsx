@@ -1,7 +1,7 @@
 // import { DateRange } from "react-day-picker";
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../../components/button";
+import { Button } from "@/components/button";
 import { auth } from "@/lib/axios";
 import { LoginComponent } from "./login";
 import { RegisterComponent } from "./RegisterUser";

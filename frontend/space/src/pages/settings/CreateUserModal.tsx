@@ -1,5 +1,5 @@
 import { X, Loader2, User, AtSign, KeyRound } from "lucide-react";
-import { Button } from "../../components/button";
+import { Button } from "@/components/button";
 import React, { FormEvent, useState } from "react";
 
 

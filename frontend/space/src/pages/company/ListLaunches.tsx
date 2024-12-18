@@ -1,13 +1,12 @@
 import { CircleDashed, Rocket } from "lucide-react";
 import { api, auth } from "@/lib/axios";
 import { useState, useEffect } from "react";
-// import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 
 import { Link } from "react-router-dom";
-import { Launch, OrganizedLaunches } from "./types";
-import { organizeLaunches } from "./utils/organizeLaunches";
+import { Launch, OrganizedLaunches } from "@/components/types";
+import { organizeLaunches } from "@/components/utils/organizeLaunches";
 
 
 export function ListLaunches({ launches }: { launches: Launch[] }) {
