@@ -1,0 +1,26 @@
+.profile {
+    width: 320px;
+    height: 93px;
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background-color: #18181B;
+    border-radius: 8px;
+}
+
+.profile:hover {
+    cursor: pointer;
+}
+
+.profile-image {
+    width: 58px;
+    height: 57px;
+    border-radius: 50%;
+}
+
+.active-astronaut {
+    border: 3px solid #BEF264;
+  }

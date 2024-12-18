@@ -2,6 +2,9 @@
 
 Bem-vindo ao **Space301**! Este projeto é um sistema de monitoramento em tempo real de foguetões, focado em fornecer dados cruciais durante os lançamentos espaciais. Ele inclui desde o acompanhamento dos parâmetros do foguete até a análise dos sinais vitais da tripulação a bordo.
 
+## Execução:
+`$ docker-compose up --build`
+
 ## 📋 Índice
 
 - [Sobre o Projeto](#sobre-o-projeto)
