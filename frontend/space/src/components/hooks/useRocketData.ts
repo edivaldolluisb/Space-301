@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Client } from '@stomp/stompjs';
-import { WebSocketData } from '../types';
+import { WebSocketData } from '@/components/types';
 
 export const useRocketData = (launchId: string) => {
   const [rocketData, setRocketData] = useState<WebSocketData | null>(null);

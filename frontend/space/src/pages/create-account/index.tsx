@@ -1,8 +1,8 @@
 // import { DateRange } from "react-day-picker";
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../../components/button";
-import { auth } from "../../lib/axios";
+import { Button } from "@/components/button";
+import { auth } from "@/lib/axios";
 import { LoginComponent } from "./login";
 import { RegisterComponent } from "./RegisterUser";
 import { Link } from "react-router-dom";
@@ -137,8 +137,8 @@ export function AuthPage() {
             Registrar
           </Button>
           <div className="col-span-2">
-            <Link to="/visitor">
-            <Button size="full" disabled={isLoading}>
+            <Link to="/dashboard">
+            <Button size="full">
               Visitante
             </Button>
             </Link>

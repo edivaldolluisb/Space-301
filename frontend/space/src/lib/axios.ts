@@ -59,6 +59,23 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Interceptor para tratar erros de autenticação
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      
+      auth.logout();
+      console.log('Usuário não autenticado');
+    }
+    if (error.response && error.response.status === 403) {
+      auth.logout();
+      console.log('Usuário não autorizado');
+    }
+    return Promise.reject(error);
+  }
+);
+
 // Funções de autenticação
 export const auth = {
   async register(user: User): Promise<AuthResponse> {

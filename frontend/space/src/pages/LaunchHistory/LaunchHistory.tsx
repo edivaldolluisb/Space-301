@@ -1,5 +1,5 @@
 import { ListLaunchHistory } from "./ListLaunch";
-import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
+import { DestinationAndDateHeader } from "@/components/destination-and-date-header";
 
 
 export function History() {

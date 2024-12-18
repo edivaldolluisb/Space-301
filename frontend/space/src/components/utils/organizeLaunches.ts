@@ -1,4 +1,4 @@
-import { Launch, OrganizedLaunches } from "../types";
+import { Launch, OrganizedLaunches } from "@/components/types";
 
 export const organizeLaunches = (launches: Launch[]): OrganizedLaunches => {
     return launches.reduce((acc, launch) => {

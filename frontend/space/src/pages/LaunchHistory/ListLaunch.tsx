@@ -2,7 +2,7 @@ import { CircleCheck, CircleX } from "lucide-react";
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
-import { api } from "../../lib/axios";
+import { api } from "@/lib/axios";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 

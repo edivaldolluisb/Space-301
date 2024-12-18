@@ -3,18 +3,18 @@ import {
 	MapPin
 } from 'lucide-react';
 
-import { RocketInfoProps, DashboardProps, CardProps, StatusCardProps } from './types';
+import { RocketInfoProps, DashboardProps, CardProps, StatusCardProps } from '@/components/types';
 
-import { iconMappings } from './constants/iconMappings';
-import { unitMappings } from './constants/unitMappings';
-import { titleMappings, camelCaseToTitleCase } from './constants/titleMappings';
+import { iconMappings } from '@/components/constants/iconMappings';
+import { unitMappings } from '@/components/constants/unitMappings';
+import { titleMappings, camelCaseToTitleCase } from '@/components/constants/titleMappings';
 
-import { statusMappings } from './utils/statusMappings';
-import { getStatusColor } from './utils/getStatusColor';
-import { customIconTextColors, customIconBgColors } from './constants/customIcon';
+import { statusMappings } from '@/components/utils/statusMappings';
+import { getStatusColor } from '@/components/utils/getStatusColor';
+import { customIconTextColors, customIconBgColors } from '@/components/constants/customIcon';
 
-import { useRocketData } from './hooks/useRocketData';
-import { useLaunchInfo } from './hooks/useLaunchInfo';
+import { useRocketData } from '@/components/hooks/useRocketData';
+import { useLaunchInfo } from '@/components/hooks/useLaunchInfo';
 
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
@@ -127,7 +127,7 @@ const Dashboard: React.FC<DashboardProps> = ({ launchId }) => {
 		return null
 	}
 	// unsado os conceitos de hooks customizados que viram nas aulas teoricas
-	const { rocketData, 
+	const { rocketData,
 		// isConnected, 
 		error: rocketDataError } = useRocketData(launchId);
 	const {

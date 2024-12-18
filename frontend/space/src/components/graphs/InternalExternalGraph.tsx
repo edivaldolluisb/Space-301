@@ -29,12 +29,13 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 
-import { api } from "../../../lib/axios";
+import { api, auth } from "@/lib/axios";
+import { getEndpoint } from "@/components/utils/getEndpoint";
 
 interface ApiResponseData {
-	_value: number;
-	_field: string;
-	_time: string;
+    _value: number;
+    _field: string;
+    _time: string;
 }
 
 // internal and external temperature graph
@@ -46,11 +47,13 @@ interface TemperatureData {
 }
 
 
+const { authenticated } = auth.isAuthenticated();
+
 const internal_externalConfig = {
     visitors: {
         label: "Visitors",
     },
-    temperaturaInterna : {
+    temperaturaInterna: {
         label: "Temperatura Interna",
         color: "hsl(var(--chart-1))",
     },
@@ -66,31 +69,33 @@ export function InternalExternalGraph({ launchId }: { launchId: string }) {
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        
+
         const fetchData = async () => {
             try {
-                
+
                 setIsLoading(true)
+                const internalEndpoint = getEndpoint('temperaturaAtual', authenticated, launchId)
+                const externalEndpoint = getEndpoint('temperaturaExterna', authenticated, launchId)
 
                 const [internalTempResponse, externalTempResponse] = await Promise.all([
-                    api.get(`/launches/${launchId}/nave/null/temperaturaAtual`),
-                    api.get(`/launches/${launchId}/nave/null/temperaturaExterna`),
+                    api.get(internalEndpoint),
+                    api.get(externalEndpoint),
                 ])
 
-                
+
                 if (!internalTempResponse.data || !externalTempResponse.data) {
                     throw new Error("Erro ao buscar os dados de temperatura")
                 }
 
-                
+
                 const internalTempData = internalTempResponse.data
                 const externalTempData = externalTempResponse.data
 
-                const formattedData = internalTempData.map((item: ApiResponseData, index: number) => ({ 
-					date: item._time, 
-					temperaturaInterna: item._value,  
-					temperaturaExterna: externalTempData[index]?._value || 0, 
-				}))
+                const formattedData = internalTempData.map((item: ApiResponseData, index: number) => ({
+                    date: item._time,
+                    temperaturaInterna: item._value,
+                    temperaturaExterna: externalTempData[index]?._value || 0,
+                }))
 
                 // Atualiza o estado com os dados formatados
                 setData(formattedData)
@@ -101,7 +106,7 @@ export function InternalExternalGraph({ launchId }: { launchId: string }) {
             }
         }
 
-    
+
         const interval = setInterval(fetchData, 120000);
         fetchData();
         return () => clearInterval(interval);
@@ -113,23 +118,23 @@ export function InternalExternalGraph({ launchId }: { launchId: string }) {
         // @ts-expect-error timeDiff[timeRange] não é um valor válido # TODO colocar o tipo de dados 
         return data.filter(item => now.getTime() - new Date(item.date).getTime() <= (timeDiff[timeRange] || 20 * 60 * 1000));
     }, [data, timeRange]);
-    
+
 
     if (!data.length) {
         return (
-			<Card>
-				<CardHeader>
-					<CardTitle>Temperatura</CardTitle>
-				</CardHeader>
-				<CardContent>
-                {isLoading ? (
-                    <p className="text-zinc-500 text-sm">Carregando dados...</p>
-                ) : (
-                    <p className="text-zinc-500 text-sm">Nenhum dado disponível.</p>
-                )}
-				</CardContent>
-			</Card>
-		);
+            <Card>
+                <CardHeader>
+                    <CardTitle>Temperatura</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    {isLoading ? (
+                        <p className="text-zinc-500 text-sm">Carregando dados...</p>
+                    ) : (
+                        <p className="text-zinc-500 text-sm">Nenhum dado disponível.</p>
+                    )}
+                </CardContent>
+            </Card>
+        );
     }
 
 

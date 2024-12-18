@@ -4,30 +4,32 @@ import { CreateLaunchComponent } from "./CreateLaunchComponent";
 import { RecentAlerts } from "./RecentAlerts";
 import { RecentHistory } from "./RecentHistory";
 import { ListLaunches } from "./ListLaunches";
-import { DestinationAndDateHeader } from "../../components/destination-and-date-header";
+import { DestinationAndDateHeader } from "@/components/destination-and-date-header";
 
-import { api } from "../../lib/axios";
+import { api, auth } from "@/lib/axios";
 
 import { useToast } from "@/components/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
 
-import { Launch } from "./types";
+import { Launch } from "@/components/types";
 
 
 interface Astronaut {
-	id: number;
+  id: number;
 }
 
 export function DashboardPage() {
   const [isCreateActivityModalOpen, setIsCreateActivityModalOpen] = useState(false)
-  
-	const [missionName, setMissionName] = useState('');
-	const [launchDate, setLaunchDate] = useState('');
-	const [rocketId, setRocketId] = useState<number | string | null>(null);
-	const [address, setAddress] = useState('');
+
+  const { authenticated } = auth.isAuthenticated();
+
+  const [missionName, setMissionName] = useState('');
+  const [launchDate, setLaunchDate] = useState('');
+  const [rocketId, setRocketId] = useState<number | string | null>(null);
+  const [address, setAddress] = useState('');
   const [status, setStatus] = useState<'PENDING' | 'LAUNCHED' | 'SUCCESS' | 'FAILED'>('PENDING');
-	const [astronauts, setAstronauts] = useState<Astronaut[]>([]);
-  
+  const [astronauts, setAstronauts] = useState<Astronaut[]>([]);
+
   const [launches, setLaunches] = useState<Launch[]>([])
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -40,10 +42,10 @@ export function DashboardPage() {
 
   function closeCreateLaunchModal() {
     setMissionName('');
-		setLaunchDate('');
-		setRocketId(null);
-		setAddress('');
-		setAstronauts([]);
+    setLaunchDate('');
+    setRocketId(null);
+    setAddress('');
+    setAstronauts([]);
     setError(null);
     setIsCreateActivityModalOpen(false)
   }
@@ -80,7 +82,7 @@ export function DashboardPage() {
       return;
     }
     console.log('Criando lançamento...');
-  
+
     try {
       // return an array of ids
       const astronautsIds = astronauts.map((astronaut) => astronaut.id);
@@ -99,12 +101,12 @@ export function DashboardPage() {
       const response = await api.post('/launches', NewlaunchData);
 
       const newLaunch = response.data;
-      console.log('Lançamento registrado com sucesso:', newLaunch);        
+      console.log('Lançamento registrado com sucesso:', newLaunch);
       toast({
         title: "Sucesso.",
         description: "Lançamento registrado com sucesso.",
-        action:<CircleCheckBig className="size-5 text-lime-300" />,
-        
+        action: <CircleCheckBig className="size-5 text-lime-300" />,
+
       });
 
       setIsLoading(false);
@@ -120,7 +122,7 @@ export function DashboardPage() {
       });
     }
   }
-  
+
 
   return (
     <div className="max-w-6xl px-6 py-10 mx-auto space-y-8">
@@ -131,26 +133,29 @@ export function DashboardPage() {
           <div className="flex items-center justify-between">
             <h2 className="text-3xl font-semibold">Lançamentos</h2>
 
-            <button onClick={openCreateActivityModal} className="bg-lime-300 text-lime-950 rounded-lg px-5 py-2 font-medium flex items-center gap-2 hover:bg-lime-400">
-              <Plus className="size-5" />
-              Cadastrar lançamento
-            </button>
+            {authenticated && (
+              <button onClick={openCreateActivityModal} className="bg-lime-300 text-lime-950 rounded-lg px-5 py-2 font-medium flex items-center gap-2 hover:bg-lime-400">
+                <Plus className="size-5" />
+                Cadastrar lançamento
+              </button>
+            )}
           </div>
 
-          <ListLaunches  launches={launches} />
+          <ListLaunches launches={launches} />
         </div>
+        {authenticated && (
+          <div className="w-80 space-y-6">
+            <RecentAlerts />
 
-        <div className="w-80 space-y-6">
-          <RecentAlerts />
+            <div className="w-full h-px bg-zinc-800" />
 
-          <div className="w-full h-px bg-zinc-800" />
-
-          <RecentHistory />
-        </div>
+            <RecentHistory />
+          </div>
+        )}
       </main>
 
       {isCreateActivityModalOpen && (
-        <CreateLaunchComponent 
+        <CreateLaunchComponent
           closeCreateLaunchModal={closeCreateLaunchModal}
           setMissionName={setMissionName}
           setLaunchDate={setLaunchDate}
