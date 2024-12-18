@@ -3,7 +3,12 @@
 Bem-vindo ao **Space301**! Este projeto é um sistema de monitoramento em tempo real de foguetões, focado em fornecer dados cruciais durante os lançamentos espaciais. Ele inclui desde o acompanhamento dos parâmetros do foguete até a análise dos sinais vitais da tripulação a bordo.
 
 ## Execução:
+### Executar o docker
 `$ docker-compose up --build`
+
+### Inserir dados:
+`$ ./scripts/astronauts.sh`
+`$ ./scripts/rockets.sh`
 
 ## 📋 Índice
 
@@ -173,37 +178,3 @@ O **Space301** foi desenvolvido para atender à necessidade de monitoramento com
 16. Pressao arterial
 17. Niveis de oxigeneo no sangue
 18. Frequencia cardiaca
-
-# Tabela de Requisitos
-
-| ID   | User Story / Requisito | Descrição | Estimativa | Prioridade | Responsável | Critérios de Aceitação | Status |
-|------|------------------------|-----------|------------|------------|-------------|------------------------|--------|
-| R01 | **Monitoramento em tempo real de foguetes lançados** | Permitir a visualização dos parâmetros do foguete em tempo real. | 4 | Alta | N/A | Interface que exibe parâmetros como velocidade, altitude e aceleração. Atualização em tempo real. | Não Iniciado |
-| R02  | **Sistema de alertas para parâmetros fora do padrão** | Notificações automáticas para avisar quando parâmetros de voo estiverem fora dos limites estabelecidos. | 2 | Alta | N/A | Notificações configuráveis para alertar sobre velocidade, temperatura e combustível fora dos padrões. | Não Iniciado |
-| R03 | **Monitoramento de sinais vitais da tripulação** | Monitorar em tempo real os sinais vitais da tripulação (em caso de presença de humanos a bordo). | 3 | Alta | N/A | Monitoramento contínuo de sinais como frequência cardíaca e pressão arterial. Alertas automáticos. | Não Iniciado |
-| R04  | **Monitoramento do estado da carga** | Acompanhar as condições da carga transportada durante o voo. | 2 | Média | N/A | Exibição da temperatura e pressão da carga. Alertas em caso de falha de integridade. | Não Iniciado |
-| R05  | **Trajetória completa do lançamento** | Fornecer uma visualização detalhada da trajetória em 2D durante o lançamento. | 3 | Alta | N/A | Trajetória em tempo real, altitude, velocidade e rota simulada. | Não Iniciado |
-| R06  | **Histórico de lançamentos** | Exibir informações e estatísticas dos lançamentos anteriores para análise. | 2 | Média | N/A | Histórico com filtros por data, tipo de foguete, e tripulação. Estatísticas automáticas de desempenho. | Não Iniciado   |
-| R07  | **Localização e status das estações de lançamento** | Mostrar a localização e condições das estações de lançamento no mapa. | 3 | Baixa | N/A | Mapa global com status da estação, incluindo condições meteorológicas e prontidão para o lançamento. | Não Iniciado   |
-| R08  | **Monitoramento da integridade da nave** | Monitorar a integridade física da nave durante o voo. | 3 | Alta | N/A  | Exibição de dados sobre danos e temperatura externa. Alertas automáticos em caso de falha. | Não Iniciado   |
-| R09  | **Login e permissões dos membros da missão** | Permitir login seguro e gerenciamento de permissões para diferentes níveis de acesso. | 3 | Média | N/A | Diferentes níveis de acesso (admin, operador, visualizador). | Não Iniciado |
-| R10  | **Monitoramento de estágios reutilizáveis** | Acompanhar os estágios do foguete que se separam e que podem ser reutilizados. | 4 | Baixa | N/A | Monitoramento de localização e integridade dos estágios reutilizáveis. | Não Iniciado   |
-| R11  | **Dashboard dentro da nave** | Interface dentro da nave para monitorar parâmetros críticos do voo. | 3 | Baixa | N/A | Exibição de dados críticos como velocidade, combustível e temperatura. | Não Iniciado |
-| R12  | **Acesso aos dados históricos de lançamentos** | Acesso aos dados de lançamentos anteriores para análise e identificação de padrões. | 3 | Média | N/A | Acesso a dados de lançamentos anteriores. | Não Iniciado |
-| R13  | **Análise do foguete em tempo real** | Permitir análise em tempo real dos parâmetros do foguete, nível de integridade e estados da tripulação e carga. | 3 | Alta | N/A | Visualização contínua e alertas automáticos para parâmetros fora do normal. | Não Iniciado |
-| R14  | **Acompanhamento público de lançamentos** | Permitir que o público acompanhe os lançamentos em tempo real através de gráficos e dados. | 2 | Média | N/A | Exibição pública de gráficos com dados em tempo real (velocidade, altitude, posicao). | Não Iniciado |
-| R15  | **Monitoramento do sinal de comunicação** | Acompanhar o estado de comunicação entre o foguete e a base. | 2 | Alta | N/A | Monitoramento contínuo da qualidade do sinal e alertas de queda de comunicação. | Não Iniciado   |
-| R16  | **Receber dados de emergência para resposta rápida** | Receber avisos automáticos de problemas nos parâmetros para rápida resposta de emergência. | 3 | Alta | N/A | Sistema de alerta que notifica automaticamente e detalha causas de anomalias. | Não Iniciado |
-
----
-
-### Legenda:
-
-- **ID**: Identificador único do requisito.
-- **User Story / Requisito**: Breve descrição da funcionalidade ou necessidade.
-- **Descrição**: Explicação mais detalhada do requisito.
-- **Estimativa**: Um valor na escala de 0 a 5 indicando o quanto de esforço e tempo será necessario para o implementar.
-- **Prioridade**: Classificação de importância do requisito (Alta, Média, Baixa).
-- **Responsável**: A equipe ou pessoa responsável pelo desenvolvimento do requisito.
-- **Critérios de Aceitação**: Requisitos mínimos que devem ser atendidos para o requisito ser considerado completo.
-- **Status**: O andamento atual do requisito (Não Iniciado, Em Progresso, Concluído).
