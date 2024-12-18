@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import ParametroVital from '../components/ParametroVital';
 import Profile from '../components/Profile';
 import '../styles/sinaisvitais.css';
-import { api } from '../lib/axios';
+import { api } from "@/lib/axios";
 import { DestinationAndDateHeader } from '../components/destination-and-date-header';
 import { Client } from '@stomp/stompjs';
 import { useNavigate, useParams } from 'react-router-dom';

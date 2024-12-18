@@ -1,6 +1,6 @@
 import { User, X, AtSign, Loader2, KeyRound } from "lucide-react";
 import { FormEvent } from "react";
-import { Button } from "../../components/button";
+import { Button } from "@/components/button";
 
 interface RegisterComponentProps {
   closeRegisterComponent: () => void

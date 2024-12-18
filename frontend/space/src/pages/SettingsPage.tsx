@@ -1,8 +1,8 @@
-import { DestinationAndDateHeader } from "../components/destination-and-date-header";
+import { DestinationAndDateHeader } from "@/components/destination-and-date-header";
 import { User, AtSign, KeyRound, MapPin, Eye, ClipboardCopy, RefreshCw, EyeOff } from "lucide-react";
-import { Button } from "../components/button";
+import { Button } from "@/components/button";
 import React, { useState, useEffect } from "react";
-import { api } from "../lib/axios";
+import { api } from "@/lib/axios";
 import { Link } from "react-router-dom";
 
 

@@ -1,6 +1,6 @@
 import { UserRound, BookUser } from "lucide-react";
 import { useMemo } from "react";
-import { Button } from "../../components/button";
+import { Button } from "@/components/button";
 
 import { mapRoleName } from "./utils/mapRoleName";
 import { User, ActivitiesProps } from "./types";

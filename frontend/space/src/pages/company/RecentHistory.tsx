@@ -1,7 +1,7 @@
 import { CheckCircle2, CircleX, UserCog } from "lucide-react";
-import { Button } from "../../components/button";
+import { Button } from "@/components/button";
 import { useState, useEffect } from "react";
-import { api } from "../../lib/axios";
+import { api } from "@/lib/axios";
 import { Link } from "react-router-dom";
 
 import { format } from "date-fns";
