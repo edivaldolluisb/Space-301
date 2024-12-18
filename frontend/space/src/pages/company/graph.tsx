@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/chart"
 
 import { useState, useEffect } from "react";
-import { api } from "../../lib/axios";
+import { api, auth } from "../../lib/axios";
 
 interface ApiResponseData {
 	_value: number;
@@ -33,7 +33,7 @@ interface GraphData {
 	day: string;
 	value: number;
 	time: string;
-  }
+}
 
 
 // Função para formatar a data
@@ -47,6 +47,9 @@ function formatDate(date: Date): string {
 	};
 	return new Intl.DateTimeFormat("pt-PT", options).format(date);
 }
+
+
+const { authenticated } = auth.isAuthenticated();
 
 const speedConfig = {
 	speed: {
@@ -66,8 +69,13 @@ export function SpeedGraph({ launchId }: { launchId: string }) {
 
 	useEffect(() => {
 		const fetchSpeedData = async () => {
-			try {				
-				const response = await api.get(`/launches/${launchId}/nave/null/velocidade`);
+			try {
+				const endpoint = authenticated
+					? `/launches/${launchId}/nave/null/velocidade`
+					: `/visitor/launches/${launchId}/nave/null/velocidade`;
+
+				const response = await api.get(endpoint);
+				// const response = await api.get(`/launches/${launchId}/nave/null/velocidade`);
 				const formattedData = response.data.map((item: ApiResponseData) => ({
 					day: `${new Date(item._time).getHours()}:${new Date(item._time).getMinutes()}`,
 					speed: item._value,
@@ -197,8 +205,12 @@ export function TemperatureGraph({ launchId }: { launchId: string }) {
 	useEffect(() => {
 		const fetchTemperatureData = async () => {
 			try {
-				// Endpoint para obter as temperaturas
-				const response = await api.get(`/launches/${launchId}/nave/null/temperaturaAtual`);
+				const endpoint = authenticated
+					? `/launches/${launchId}/nave/null/temperaturaAtual`
+					: `/visitor/launches/${launchId}/nave/null/temperaturaAtual`;
+
+				const response = await api.get(endpoint);
+				// const response = await api.get(`/launches/${launchId}/nave/null/temperaturaAtual`);
 				const formattedData = response.data.map((item: ApiResponseData) => {
 					// Obtém o mês da data
 					const date = new Date(item._time);
@@ -309,7 +321,12 @@ export function AltitudeGraph({ launchId }: { launchId: string }) {
 	useEffect(() => {
 		const fetchAltitudeData = async () => {
 			try {
-				const response = await api.get(`/launches/${launchId}/nave/null/altitude`);
+				const endpoint = authenticated
+					? `/launches/${launchId}/nave/null/altitude`
+					: `/visitor/launches/${launchId}/nave/null/altitude`;
+
+				const response = await api.get(endpoint);
+				// const response = await api.get(`/launches/${launchId}/nave/null/altitude`);
 				const formattedData = response.data.map((item: ApiResponseData) => ({
 					day: `${new Date(item._time).getHours()}:${new Date(item._time).getMinutes()}`,
 					altitude: item._value,
@@ -394,7 +411,12 @@ export function PressureGraph({ launchId }: { launchId: string }) {
 	useEffect(() => {
 		const fetchPressureData = async () => {
 			try {
-				const response = await api.get(`/launches/${launchId}/nave/null/pressaoAtual`);
+				const endpoint = authenticated
+					? `/launches/${launchId}/nave/null/pressaoAtual`
+					: `/visitor/launches/${launchId}/nave/null/pressaoAtual`;
+
+				const response = await api.get(endpoint);
+				// const response = await api.get(`/launches/${launchId}/nave/null/pressaoAtual`);
 				const formattedData = response.data.map((item: ApiResponseData) => ({
 					day: `${new Date(item._time).getHours()}:${new Date(item._time).getMinutes()}`,
 					pressure: item._value,
@@ -479,7 +501,12 @@ export function OxygenGraph({ launchId }: { launchId: string }) {
 	useEffect(() => {
 		const fetchOxygenData = async () => {
 			try {
-				const response = await api.get(`/launches/${launchId}/nave/null/oxigenioAtual`);
+				const endpoint = authenticated
+					? `/launches/${launchId}/nave/null/oxigenioAtual`
+					: `/visitor/launches/${launchId}/nave/null/oxigenioAtual`;
+
+				const response = await api.get(endpoint);
+				// const response = await api.get(`/launches/${launchId}/nave/null/oxigenioAtual`);
 				const formattedData = response.data.map((item: ApiResponseData) => ({
 					day: `${new Date(item._time).getHours()}:${new Date(item._time).getMinutes()}`,
 					oxygen: item._value,
@@ -563,7 +590,12 @@ export function ExternalTemperatureGraph({ launchId }: { launchId: string }) {
 	useEffect(() => {
 		const fetchExternalTemperatureData = async () => {
 			try {
-				const response = await api.get(`/launches/${launchId}/nave/null/temperaturaExterna`);
+				const endpoint = authenticated
+					? `/launches/${launchId}/nave/null/temperaturaExterna`
+					: `/visitor/launches/${launchId}/nave/null/temperaturaExterna`;
+
+				const response = await api.get(endpoint);
+				// const response = await api.get(`/launches/${launchId}/nave/null/temperaturaExterna`);
 
 				const formattedData = response.data.map((item: ApiResponseData) => {
 					const date = new Date(item._time);

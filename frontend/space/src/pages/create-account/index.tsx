@@ -137,8 +137,8 @@ export function AuthPage() {
             Registrar
           </Button>
           <div className="col-span-2">
-            <Link to="/visitor">
-            <Button size="full" disabled={isLoading}>
+            <Link to="/dashboard">
+            <Button size="full">
               Visitante
             </Button>
             </Link>

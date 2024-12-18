@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { api } from '../../../lib/axios';
+import { api, auth } from '../../../lib/axios';
 import { Rocket, Launch } from '../types';
 
 export const useLaunchInfo = (launchId: string) => {
@@ -7,6 +7,8 @@ export const useLaunchInfo = (launchId: string) => {
   const [rocket, setRocket] = useState<Rocket | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  
+  const { authenticated } = auth.isAuthenticated();
 
   useEffect(() => {
     const fetchLaunchAndRocketData = async () => {
@@ -17,12 +19,19 @@ export const useLaunchInfo = (launchId: string) => {
 
       try {
         setIsLoading(true);
-         
-        const launchResponse = await api.get(`/launches/${launchId}`);
+        const endpoint = authenticated
+          ? `/launches/${launchId}`
+          : `/visitor/launches/${launchId}`;
+
+          const rocketendpoint = authenticated
+          ? `/launches/${launchId}/rocket`
+          : `/visitor/launches/${launchId}/rocket`;
+
+        const launchResponse = await api.get(endpoint);
         setLaunch(launchResponse.data);
 
-        
-        const rocketResponse = await api.get(`/launches/${launchId}/rocket`);
+
+        const rocketResponse = await api.get(rocketendpoint);
         setRocket(rocketResponse.data);
       } catch (fetchError) {
         setError('Erro ao buscar informações de lançamento');
@@ -35,10 +44,10 @@ export const useLaunchInfo = (launchId: string) => {
     fetchLaunchAndRocketData();
   }, [launchId]);
 
-  return { 
-    launch, 
-    rocket, 
-    isLoading, 
-    error 
+  return {
+    launch,
+    rocket,
+    isLoading,
+    error
   };
 };

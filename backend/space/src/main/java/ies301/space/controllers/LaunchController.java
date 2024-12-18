@@ -39,7 +39,8 @@ public class LaunchController {
     @Autowired
     private QueueSender queueSender;
 
-    public LaunchController(AstronautService astronautService, LaunchService launchService, RocketService rocketService) {
+    public LaunchController(AstronautService astronautService, LaunchService launchService,
+            RocketService rocketService) {
         this.astronautService = astronautService;
         this.launchService = launchService;
         this.rocketService = rocketService;
@@ -84,7 +85,7 @@ public class LaunchController {
             return new ResponseEntity<>(rocket.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } 
+        }
     }
 
     @PostMapping("launches/{launchId}/astronaut/{astronautId}")
@@ -162,6 +163,48 @@ public class LaunchController {
             // List<Map<String, Object>> data = launchService.getAveragedData(launchId,
             // entity, parsedEntityId, field, interval);
 
+            return ResponseEntity.ok(data);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error fetching data: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/visitor/launches/{launchId}/rocket")
+    public ResponseEntity<?> getVisitorRocketByLaunchAndRocketId(@PathVariable Long launchId) {
+        Optional<Launch> launch = launchService.getLaunchById(launchId);
+        Long rocketId = launch.get().getRocketId();
+        Optional<Rocket> rocket = rocketService.getRocketById(rocketId);
+        if (rocket.isPresent()) {
+            return new ResponseEntity<>(rocket.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/visitor/launches/{id}")
+    public ResponseEntity<Launch> getVisitorLaunchById(@PathVariable Long id) {
+        Optional<Launch> launch = launchService.getLaunchById(id);
+        if (launch.isPresent()) {
+            return new ResponseEntity<>(launch.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/visitor/launches/{launchId}/{entity}/{entityId}/{field}")
+    public ResponseEntity<?> getDynamicDataVisitor(
+            @PathVariable Long launchId,
+            @PathVariable String entity,
+            @PathVariable(required = false) String entityId,
+            @PathVariable String field,
+            @RequestParam(defaultValue = "1d") String interval) {
+
+        Long parsedEntityId = "null".equals(entityId) ? null : Long.valueOf(entityId);
+        try {
+            List<Map<String, Object>> data = launchService.getDynamicData(launchId, entity, parsedEntityId, field);
             return ResponseEntity.ok(data);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
