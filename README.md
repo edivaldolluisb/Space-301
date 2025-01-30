@@ -178,3 +178,24 @@ O **Space301** foi desenvolvido para atender à necessidade de monitoramento com
 16. Pressao arterial
 17. Niveis de oxigeneo no sangue
 18. Frequencia cardiaca
+
+
+# Design
+![Home page](https://github.com/user-attachments/assets/e4ec7323-e036-444d-b1ec-8d3c7d080f72)
+![Register](https://github.com/user-attachments/assets/80e4b316-b543-4dc6-bc3c-a58446d8a089)
+![Login](https://github.com/user-attachments/assets/b9a4d6be-711b-4d78-b7bd-7d86a05404a2)
+
+![Company main dashboard](https://github.com/user-attachments/assets/aaabeefd-bfc7-454c-a53e-9c1b05b3b098)
+![Definições da empresa](https://github.com/user-attachments/assets/c3e2c26e-ba93-458e-ae19-73311e5cf9d7)
+![Historico de lançamentos](https://github.com/user-attachments/assets/0d6ff5c4-6bb1-4572-bb4f-82dae21e5ba1)
+![Alert Dashboard](https://github.com/user-attachments/assets/83262d70-ec45-407f-a04a-28d3442dfac5)
+![Dados do foguete](https://github.com/user-attachments/assets/8209d9c7-e049-4cc1-812a-14103028a88a)
+![Register a new launch](https://github.com/user-attachments/assets/3bba7643-2ff2-4504-a9f2-eaa6e7850d76)
+![User managment](https://github.com/user-attachments/assets/aa058e8e-da7a-4dfa-aba0-d4e96323705d)
+
+
+
+
+
+
+
